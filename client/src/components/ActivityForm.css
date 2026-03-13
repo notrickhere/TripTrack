@@ -1,0 +1,38 @@
+.activity-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.activity-form label {
+  color: #1c2434;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.activity-form input,
+.activity-form textarea {
+  border: 1px solid #c6d0dc;
+  border-radius: 12px;
+  font: inherit;
+  padding: 0.75rem 0.9rem;
+  width: 100%;
+}
+
+.activity-form button {
+  background: #17324d;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+}
+
+.activity-form button:disabled,
+.activity-form input:disabled,
+.activity-form textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

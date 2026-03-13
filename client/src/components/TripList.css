@@ -1,0 +1,40 @@
+.trip-list {
+  display: grid;
+  gap: 0.9rem;
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+.trip-card {
+  background: #f3f8fc;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  color: #17324d;
+  cursor: pointer;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  text-align: left;
+  width: 100%;
+}
+
+.trip-card.active {
+  border-color: #0a5c8f;
+  box-shadow: 0 0 0 2px rgba(10, 92, 143, 0.15);
+}
+
+.trip-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.trip-card-notes {
+  color: #46617d;
+  font-size: 0.92rem;
+}
+
+.empty-state {
+  color: #5a6b82;
+  margin-top: 1rem;
+}

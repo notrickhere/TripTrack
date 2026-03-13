@@ -1,0 +1,31 @@
+.trip-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.trip-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  color: #1c2434;
+}
+
+.trip-form input,
+.trip-form textarea {
+  border: 1px solid #c6d0dc;
+  border-radius: 12px;
+  font: inherit;
+  padding: 0.75rem 0.9rem;
+  width: 100%;
+}
+
+.trip-form button {
+  background: #0a5c8f;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+}

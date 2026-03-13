@@ -1,0 +1,29 @@
+.activity-list {
+  display: grid;
+  gap: 0.9rem;
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+.activity-card {
+  background: #fff7ec;
+  border: 1px solid #f1d4ab;
+  border-radius: 18px;
+  color: #4a3314;
+  padding: 1rem;
+}
+
+.activity-card-header {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.activity-card h3 {
+  margin: 0;
+}
+
+.activity-card p {
+  margin-bottom: 0;
+}

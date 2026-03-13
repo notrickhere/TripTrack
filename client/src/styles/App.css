@@ -1,0 +1,69 @@
+.app-shell {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 2.5rem 1.25rem 3rem;
+}
+
+.hero {
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  color: #0a5c8f;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.hero-copy {
+  color: #4a5d76;
+  font-size: 1.05rem;
+  max-width: 42rem;
+}
+
+.dashboard {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(151, 170, 190, 0.35);
+  border-radius: 24px;
+  box-shadow: 0 16px 45px rgba(25, 55, 84, 0.08);
+  padding: 1.5rem;
+}
+
+.panel-header h2 {
+  margin-bottom: 0.25rem;
+  margin-top: 0;
+}
+
+.panel-header p {
+  color: #576b84;
+  margin-top: 0;
+}
+
+.status.error {
+  background: #fff1f1;
+  border: 1px solid #f3c4c4;
+  border-radius: 14px;
+  color: #8d2020;
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+}
+
+@media (max-width: 840px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}

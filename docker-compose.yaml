@@ -1,0 +1,20 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-triptrack}
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo-data:

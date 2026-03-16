@@ -26,6 +26,7 @@ TripTrack is designed for real travel planning workflows:
 - Store trip details such as destination, travel dates, and notes.
 - Create, view, update, and delete itinerary activities for a specific trip.
 - Track activity details such as name, description, date, and time.
+- Select a trip and manage its itinerary from the same dashboard.
 
 ## User Stories
 ### Trip Management
@@ -44,6 +45,7 @@ TripTrack is designed for real travel planning workflows:
 - **Frontend:** React with Hooks
 - **Backend:** Node.js with Express
 - **Database:** MongoDB using the Node.js driver
+- **Local Database:** MongoDB in Docker with MongoDB Compass for inspection
 
 ## Team Responsibilities
 - **Ricky Lee:** Full CRUD for trip management, including trip creation, editing, deletion, trip list views, and trip detail views.
@@ -59,7 +61,7 @@ Example Markdown once the image is available:
 ```
 
 ## How To Build and Run
-These instructions match the current project scaffold.
+These instructions match the current local development workflow.
 
 ### 1. Clone the repository
 ```bash
@@ -82,7 +84,7 @@ npm install
 Create a root `.env` file in `TripTrack/` based on `.env.example`:
 
 ```env
-PORT=5000
+PORT=5001
 NODE_ENV=development
 MONGO_PORT=27017
 MONGO_DB_NAME=triptrack
@@ -92,6 +94,7 @@ MONGODB_URI=your_mongodb_connection_string
 For local development with Docker and MongoDB Compass:
 
 ```env
+PORT=5001
 MONGODB_URI=mongodb://localhost:27017/triptrack
 ```
 
@@ -104,8 +107,18 @@ From the project root:
 docker compose up -d
 ```
 
-### 5. Start the development servers
-Run the frontend and backend in separate terminals:
+### 5. Start the app
+From the project root, start the frontend and backend together:
+
+```bash
+npm run dev
+```
+
+This command starts:
+- the React frontend with Vite
+- the Express backend with Nodemon
+
+If you prefer to start them separately, you can still run:
 
 ```bash
 cd client
@@ -118,7 +131,7 @@ npm run dev
 ```
 
 ### 6. Open the app
-Once both servers are running, open the frontend in your browser at:
+Once the app is running, open the frontend in your browser at:
 
 ```text
 http://localhost:5173
@@ -127,24 +140,46 @@ http://localhost:5173
 The backend API runs at:
 
 ```text
-http://localhost:5000/api
+http://localhost:5001/api
 ```
 
-## Expected Project Structure
-The finished project should include:
-- A frontend `package.json`
-- A backend `package.json`
-- Organized React components in separate files
-- Separate database/backend files
-- Component-specific CSS files
-- ESLint configuration
-- Prettier formatting
-- An MIT License
+## Current Project Structure
+```text
+TripTrack/
+  client/
+    src/
+      components/
+      lib/
+      styles/
+  server/
+    src/
+      config/
+      controllers/
+      routes/
+  seeding_data/
+  .env.example
+  .gitignore
+  docker-compose.yaml
+  eslint.config.js
+  package.json
+  README.md
+```
+
+## Current Status
+The current version supports:
+- Creating, editing, and deleting trips
+- Creating, editing, and deleting activities
+- Persisting trips and activities to MongoDB locally
+- Running the frontend and backend together with a single root command
+
+The current local test flow has been verified by:
+- opening the React app on `localhost:5173`
+- checking the backend health route on `localhost:5001/api/health`
+- creating trip and activity records and confirming they were written to MongoDB
 
 ## Notes For Final Submission
 Before submitting, make sure this README includes:
-- The actual class link
 - A real screenshot of the application
 - The deployed public URL
 - The demo video link
-- Finalized build steps that match the finished folder structure
+- Any final deployment-specific setup steps for Render and MongoDB Atlas

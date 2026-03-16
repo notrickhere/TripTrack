@@ -3,14 +3,25 @@ import { useEffect, useState } from "react";
 
 import "./TripForm.css";
 
+const CONTINENT_OPTIONS = [
+  "Africa",
+  "Asia",
+  "Europe",
+  "North America",
+  "South America",
+  "Oceania",
+];
+
 const initialFormState = {
+  continent: "",
+  country: "",
   destination: "",
   startDate: "",
   endDate: "",
   notes: "",
 };
 
-function TripForm({ editingTrip, onCancelEdit, onSubmit }) {
+function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
   const [formValues, setFormValues] = useState(initialFormState);
 
   useEffect(() => {
@@ -20,6 +31,8 @@ function TripForm({ editingTrip, onCancelEdit, onSubmit }) {
     }
 
     setFormValues({
+      continent: editingTrip.continent || "",
+      country: editingTrip.country || "",
       destination: editingTrip.destination,
       endDate: editingTrip.endDate,
       notes: editingTrip.notes || "",
@@ -50,8 +63,34 @@ function TripForm({ editingTrip, onCancelEdit, onSubmit }) {
         />
       </label>
       <label>
+        Continent
+        <select
+          name="continent"
+          onChange={handleChange}
+          required
+          value={formValues.continent}
+        >
+          <option value="">Select a continent</option>
+          {CONTINENT_OPTIONS.map((continent) => (
+            <option key={continent} value={continent}>
+              {continent}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Country
+        <input
+          name="country"
+          onChange={handleChange}
+          required
+          value={formValues.country}
+        />
+      </label>
+      <label>
         Start Date
         <input
+          min={minStartDate || undefined}
           name="startDate"
           onChange={handleChange}
           required
@@ -62,6 +101,7 @@ function TripForm({ editingTrip, onCancelEdit, onSubmit }) {
       <label>
         End Date
         <input
+          min={formValues.startDate || minStartDate || undefined}
           name="endDate"
           onChange={handleChange}
           required
@@ -69,6 +109,9 @@ function TripForm({ editingTrip, onCancelEdit, onSubmit }) {
           value={formValues.endDate}
         />
       </label>
+      {!editingTrip && minStartDate ? (
+        <p className="form-hint">Next trip can start on or after {minStartDate}.</p>
+      ) : null}
       <label>
         Notes
         <textarea
@@ -95,17 +138,21 @@ function TripForm({ editingTrip, onCancelEdit, onSubmit }) {
 TripForm.propTypes = {
   editingTrip: PropTypes.shape({
     _id: PropTypes.string.isRequired,
+    continent: PropTypes.string,
+    country: PropTypes.string,
     destination: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
     notes: PropTypes.string,
     startDate: PropTypes.string.isRequired,
   }),
+  minStartDate: PropTypes.string,
   onCancelEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 
 TripForm.defaultProps = {
   editingTrip: null,
+  minStartDate: "",
 };
 
 export default TripForm;

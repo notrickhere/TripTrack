@@ -10,6 +10,17 @@ function getActivitiesCollection() {
   return getDatabase().collection("activities");
 }
 
+async function getLatestPlannerTripEndDate() {
+  const latestTrip = await getTripsCollection().findOne(
+    { seeded: { $ne: true } },
+    {
+      sort: { endDate: -1 },
+    }
+  );
+
+  return latestTrip?.endDate || "";
+}
+
 function parseObjectId(id) {
   if (!ObjectId.isValid(id)) {
     return null;
@@ -46,15 +57,38 @@ export async function getTripById(request, response) {
 }
 
 export async function createTrip(request, response) {
-  const { destination, startDate, endDate, notes = "" } = request.body;
+  const {
+    continent = "",
+    country = "",
+    destination,
+    startDate,
+    endDate,
+    notes = "",
+  } = request.body;
 
-  if (!destination || !startDate || !endDate) {
+  if (!destination || !continent || !country || !startDate || !endDate) {
     return response.status(400).json({
-      message: "Destination, startDate, and endDate are required.",
+      message: "Destination, continent, country, startDate, and endDate are required.",
+    });
+  }
+
+  if (endDate < startDate) {
+    return response.status(400).json({
+      message: "A trip cannot end before it starts.",
+    });
+  }
+
+  const latestPlannerEndDate = await getLatestPlannerTripEndDate();
+
+  if (latestPlannerEndDate && startDate <= latestPlannerEndDate) {
+    return response.status(400).json({
+      message: `New trips must start after ${latestPlannerEndDate}.`,
     });
   }
 
   const trip = {
+    continent,
+    country,
     destination,
     startDate,
     endDate,
@@ -74,9 +108,30 @@ export async function updateTrip(request, response) {
     return response.status(400).json({ message: "Invalid trip id." });
   }
 
-  const { destination, startDate, endDate, notes = "" } = request.body;
+  const {
+    continent = "",
+    country = "",
+    destination,
+    startDate,
+    endDate,
+    notes = "",
+  } = request.body;
+
+  if (!destination || !continent || !country || !startDate || !endDate) {
+    return response.status(400).json({
+      message: "Destination, continent, country, startDate, and endDate are required.",
+    });
+  }
+
+  if (endDate < startDate) {
+    return response.status(400).json({
+      message: "A trip cannot end before it starts.",
+    });
+  }
 
   const update = {
+    continent,
+    country,
     destination,
     startDate,
     endDate,

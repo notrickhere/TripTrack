@@ -28,6 +28,9 @@ function TripList({
             type="button"
           >
             <span className="trip-card-title">{trip.destination}</span>
+            <span className="trip-card-location">
+              {[trip.continent, trip.country].filter(Boolean).join(" · ")}
+            </span>
             <span>
               {trip.startDate} to {trip.endDate}
             </span>
@@ -60,6 +63,8 @@ TripList.propTypes = {
   trips: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
+      continent: PropTypes.string,
+      country: PropTypes.string,
       destination: PropTypes.string.isRequired,
       endDate: PropTypes.string.isRequired,
       notes: PropTypes.string,

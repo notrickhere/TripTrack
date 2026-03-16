@@ -34,6 +34,12 @@
   font-weight: 700;
 }
 
+.trip-card-location {
+  color: #35516d;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
 .trip-card-notes {
   color: #46617d;
   font-size: 0.92rem;

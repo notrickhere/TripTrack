@@ -10,7 +10,14 @@
   color: #1c2434;
 }
 
+.form-hint {
+  color: #5c7089;
+  font-size: 0.9rem;
+  margin: -0.2rem 0 0;
+}
+
 .trip-form input,
+.trip-form select,
 .trip-form textarea {
   border: 1px solid #c6d0dc;
   border-radius: 12px;

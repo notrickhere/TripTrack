@@ -130,7 +130,30 @@ cd server
 npm run dev
 ```
 
-### 6. Open the app
+### 6. Seed the database
+To import the CSV seed data into your current Mongo database target:
+
+```bash
+npm run seed
+```
+
+To clear existing `trips` and `activities` first, run:
+
+```bash
+cd server
+npm run seed -- --reset
+```
+
+This script:
+- reads `seeding_data/seed_trips.csv`
+- reads `seeding_data/seed_activities.csv`
+- inserts trips first
+- assigns each activity to a real inserted trip
+- normalizes trip dates if a seeded end date comes before a start date
+
+For MongoDB Atlas later, use the same script with your Atlas `MONGODB_URI` in `.env` or in your deployment environment.
+
+### 7. Open the app
 Once the app is running, open the frontend in your browser at:
 
 ```text

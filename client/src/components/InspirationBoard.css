@@ -1,0 +1,157 @@
+.inspiration-board {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.inspiration-header {
+  align-items: end;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.inspiration-header h2 {
+  margin: 0.25rem 0 0;
+}
+
+.inspiration-header p:last-child {
+  color: #566980;
+  margin: 0;
+  max-width: 30rem;
+}
+
+.inspiration-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.continent-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.continent-filter button {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(170, 186, 203, 0.8);
+  border-radius: 999px;
+  color: #17324d;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+}
+
+.continent-filter .active-continent {
+  background: #17324d;
+  border-color: #17324d;
+  color: #fff;
+}
+
+.inspiration-card {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 242, 0.98), rgba(240, 247, 255, 0.98));
+  border: 1px solid rgba(187, 202, 219, 0.7);
+  border-radius: 22px;
+  box-shadow: 0 14px 30px rgba(25, 55, 84, 0.08);
+  padding: 1rem;
+}
+
+.inspiration-card-top {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.inspiration-card h3 {
+  color: #12243a;
+  margin-bottom: 0.35rem;
+}
+
+.mood-pill,
+.timezone-pill {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+}
+
+.mood-pill {
+  background: #ffe8c9;
+  color: #7c4b0d;
+}
+
+.timezone-pill {
+  background: #e2eef8;
+  color: #19496d;
+}
+
+.location-line {
+  color: #4b627c;
+  margin-top: 0;
+}
+
+.continent-line {
+  color: #8a5c18;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin: 0.25rem 0 0;
+  text-transform: uppercase;
+}
+
+.trip-meta {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+}
+
+.trip-meta div {
+  border-top: 1px solid rgba(186, 200, 214, 0.7);
+  padding-top: 0.75rem;
+}
+
+.trip-meta dt {
+  color: #61758d;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.trip-meta dd {
+  margin: 0.25rem 0 0;
+}
+
+.copy-trip-button {
+  background: #17324d;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+}
+
+.copy-trip-button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.inspiration-empty {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px dashed #b7c6d5;
+  border-radius: 24px;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (max-width: 840px) {
+  .inspiration-header {
+    align-items: start;
+    flex-direction: column;
+  }
+}

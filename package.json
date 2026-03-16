@@ -7,6 +7,7 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "npm --prefix client run dev",
     "dev:server": "npm --prefix server run dev",
+    "seed": "npm --prefix server run seed",
     "build:client": "npm --prefix client run build",
     "lint": "eslint .",
     "format": "prettier --write ."

@@ -29,6 +29,29 @@
   max-width: 42rem;
 }
 
+.view-switcher {
+  display: inline-flex;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.view-switcher button {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(162, 181, 199, 0.75);
+  border-radius: 999px;
+  color: #17324d;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+}
+
+.view-switcher .active-view {
+  background: #17324d;
+  border-color: #17324d;
+  color: #fff;
+}
+
 .dashboard {
   display: grid;
   gap: 1.5rem;

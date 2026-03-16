@@ -1,0 +1,216 @@
+import PropTypes from "prop-types";
+import { useState } from "react";
+
+import "./InspirationBoard.css";
+
+const CONTINENT_LABELS = [
+  "All",
+  "Africa",
+  "Asia",
+  "Europe",
+  "North America",
+  "South America",
+  "Oceania",
+];
+
+const AFRICA_CODES = new Set([
+  "AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ",
+  "EG", "EH", "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LR",
+  "LS", "LY", "MA", "MG", "ML", "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RE",
+  "RW", "SC", "SD", "SL", "SN", "SO", "SS", "ST", "SZ", "TD", "TG", "TN", "TZ",
+  "UG", "YT", "ZA", "ZM", "ZW",
+]);
+
+const ASIA_CODES = new Set([
+  "AE", "AF", "AM", "AZ", "BD", "BH", "BN", "BT", "CN", "CY", "GE", "HK", "ID",
+  "IL", "IN", "IQ", "IR", "JO", "JP", "KG", "KH", "KP", "KR", "KW", "KZ", "LA",
+  "LB", "LK", "MM", "MN", "MO", "MV", "MY", "NP", "OM", "PH", "PK", "PS", "QA",
+  "SA", "SG", "SY", "TH", "TJ", "TL", "TM", "TR", "TW", "UZ", "VN", "YE",
+]);
+
+const EUROPE_CODES = new Set([
+  "AD", "AL", "AT", "BA", "BE", "BG", "BY", "CH", "CZ", "DE", "DK", "EE", "ES",
+  "FI", "FO", "FR", "GB", "GG", "GI", "GR", "HR", "HU", "IE", "IM", "IS", "IT",
+  "JE", "LI", "LT", "LU", "LV", "MC", "MD", "ME", "MK", "MT", "NL", "NO", "PL",
+  "PT", "RO", "RS", "RU", "SE", "SI", "SK", "SM", "UA", "VA",
+]);
+
+const NORTH_AMERICA_CODES = new Set([
+  "AG", "AI", "AW", "BB", "BL", "BM", "BQ", "BS", "BZ", "CA", "CR", "CU", "CW",
+  "DM", "DO", "GD", "GL", "GP", "GT", "HN", "HT", "JM", "KN", "KY", "LC", "MF",
+  "MQ", "MS", "MX", "NI", "PA", "PM", "PR", "SV", "SX", "TC", "TT", "US", "VC",
+  "VG", "VI",
+]);
+
+const SOUTH_AMERICA_CODES = new Set([
+  "AR", "BO", "BR", "CL", "CO", "EC", "FK", "GF", "GY", "PE", "PY", "SR", "UY", "VE",
+]);
+
+const OCEANIA_CODES = new Set([
+  "AS", "AU", "CK", "FJ", "FM", "GU", "KI", "MH", "MP", "NC", "NF", "NR", "NU",
+  "NZ", "PF", "PG", "PN", "PW", "SB", "TK", "TO", "TV", "UM", "VU", "WF", "WS",
+]);
+
+function buildLocationLabel(trip) {
+  const parts = [trip.city, trip.country, trip.countryCode].filter(Boolean);
+  return parts.join(", ");
+}
+
+function getMoodLabel(trip) {
+  return trip.notes || trip.note || "Fresh idea";
+}
+
+function getContinentLabel(trip) {
+  const countryCode = trip.countryCode?.toUpperCase();
+
+  if (AFRICA_CODES.has(countryCode)) {
+    return "Africa";
+  }
+
+  if (ASIA_CODES.has(countryCode)) {
+    return "Asia";
+  }
+
+  if (EUROPE_CODES.has(countryCode)) {
+    return "Europe";
+  }
+
+  if (NORTH_AMERICA_CODES.has(countryCode)) {
+    return "North America";
+  }
+
+  if (SOUTH_AMERICA_CODES.has(countryCode)) {
+    return "South America";
+  }
+
+  if (OCEANIA_CODES.has(countryCode)) {
+    return "Oceania";
+  }
+
+  return "Other";
+}
+
+function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
+  const [activeContinent, setActiveContinent] = useState("All");
+
+  if (trips.length === 0) {
+    return (
+      <section className="inspiration-board">
+        <div className="inspiration-empty">
+          <h2>No inspiration yet</h2>
+          <p>Add trips or import seeded data to populate this board.</p>
+        </div>
+      </section>
+    );
+  }
+
+  const filteredTrips =
+    activeContinent === "All"
+      ? trips
+      : trips.filter((trip) => getContinentLabel(trip) === activeContinent);
+
+  const featuredTrips = filteredTrips.slice(0, 12);
+
+  return (
+    <section className="inspiration-board">
+      <div className="inspiration-header">
+        <div>
+          <p className="eyebrow">Inspiration</p>
+          <h2>Destination ideas from your seeded trips</h2>
+        </div>
+        <p>
+          Use this view to browse destinations, moods, and timezones before you build
+          a final itinerary.
+        </p>
+      </div>
+
+      <div className="continent-filter">
+        {CONTINENT_LABELS.map((continent) => (
+          <button
+            className={activeContinent === continent ? "active-continent" : ""}
+            key={continent}
+            onClick={() => setActiveContinent(continent)}
+            type="button"
+          >
+            {continent}
+          </button>
+        ))}
+      </div>
+
+      {featuredTrips.length === 0 ? (
+        <div className="inspiration-empty">
+          <h2>No trips for this filter</h2>
+          <p>Try a different continent or import more seeded data.</p>
+        </div>
+      ) : null}
+
+      <div className="inspiration-grid">
+        {featuredTrips.map((trip) => (
+          <article className="inspiration-card" key={trip._id}>
+            <div className="inspiration-card-top">
+              <span className="mood-pill">{getMoodLabel(trip)}</span>
+              {trip.timezone ? <span className="timezone-pill">{trip.timezone}</span> : null}
+            </div>
+
+            <h3>{trip.destination}</h3>
+
+            {buildLocationLabel(trip) ? (
+              <p className="location-line">{buildLocationLabel(trip)}</p>
+            ) : null}
+
+            <p className="continent-line">{getContinentLabel(trip)}</p>
+
+            <dl className="trip-meta">
+              <div>
+                <dt>Dates</dt>
+                <dd>
+                  {trip.startDate} to {trip.endDate}
+                </dd>
+              </div>
+              {trip.countryCode ? (
+                <div>
+                  <dt>Code</dt>
+                  <dd>{trip.countryCode}</dd>
+                </div>
+              ) : null}
+            </dl>
+
+            <button
+              className="copy-trip-button"
+              disabled={isCopyingTripId === trip._id}
+              onClick={() => onCopyTripToPlanner(trip)}
+              type="button"
+            >
+              {isCopyingTripId === trip._id ? "Copying..." : "Copy Itinerary to Planner"}
+            </button>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+InspirationBoard.propTypes = {
+  isCopyingTripId: PropTypes.string,
+  onCopyTripToPlanner: PropTypes.func.isRequired,
+  trips: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      city: PropTypes.string,
+      country: PropTypes.string,
+      countryCode: PropTypes.string,
+      destination: PropTypes.string.isRequired,
+      endDate: PropTypes.string.isRequired,
+      note: PropTypes.string,
+      notes: PropTypes.string,
+      startDate: PropTypes.string.isRequired,
+      timezone: PropTypes.string,
+    })
+  ).isRequired,
+};
+
+InspirationBoard.defaultProps = {
+  isCopyingTripId: "",
+};
+
+export default InspirationBoard;

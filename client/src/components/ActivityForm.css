@@ -30,6 +30,16 @@
   padding: 0.8rem 1rem;
 }
 
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.activity-form .secondary-button {
+  background: #dfebf4;
+  color: #17324d;
+}
+
 .activity-form button:disabled,
 .activity-form input:disabled,
 .activity-form textarea:disabled {

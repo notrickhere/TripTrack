@@ -2,7 +2,13 @@ import PropTypes from "prop-types";
 
 import "./ActivityList.css";
 
-function ActivityList({ activities, isLoading, selectedTripId }) {
+function ActivityList({
+  activities,
+  isLoading,
+  onDeleteActivity,
+  onEditActivity,
+  selectedTripId,
+}) {
   if (!selectedTripId) {
     return <p className="empty-state">Select a trip to view its itinerary.</p>;
   }
@@ -27,6 +33,18 @@ function ActivityList({ activities, isLoading, selectedTripId }) {
             </span>
           </div>
           {activity.description ? <p>{activity.description}</p> : null}
+          <div className="card-actions">
+            <button onClick={() => onEditActivity(activity)} type="button">
+              Edit
+            </button>
+            <button
+              className="danger-button"
+              onClick={() => onDeleteActivity(activity._id)}
+              type="button"
+            >
+              Delete
+            </button>
+          </div>
         </li>
       ))}
     </ul>
@@ -44,6 +62,8 @@ ActivityList.propTypes = {
     })
   ).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  onDeleteActivity: PropTypes.func.isRequired,
+  onEditActivity: PropTypes.func.isRequired,
   selectedTripId: PropTypes.string.isRequired,
 };
 

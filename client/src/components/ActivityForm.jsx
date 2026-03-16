@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./ActivityForm.css";
 
@@ -10,8 +10,22 @@ const initialFormState = {
   time: "",
 };
 
-function ActivityForm({ disabled, onSubmit }) {
+function ActivityForm({ disabled, editingActivity, onCancelEdit, onSubmit }) {
   const [formValues, setFormValues] = useState(initialFormState);
+
+  useEffect(() => {
+    if (!editingActivity) {
+      setFormValues(initialFormState);
+      return;
+    }
+
+    setFormValues({
+      date: editingActivity.date,
+      description: editingActivity.description || "",
+      name: editingActivity.name,
+      time: editingActivity.time || "",
+    });
+  }, [editingActivity]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -67,16 +81,40 @@ function ActivityForm({ disabled, onSubmit }) {
           value={formValues.description}
         />
       </label>
-      <button disabled={disabled} type="submit">
-        Add Activity
-      </button>
+      <div className="form-actions">
+        <button disabled={disabled} type="submit">
+          {editingActivity ? "Save Activity Changes" : "Add Activity"}
+        </button>
+        {editingActivity ? (
+          <button
+            className="secondary-button"
+            disabled={disabled}
+            onClick={onCancelEdit}
+            type="button"
+          >
+            Cancel
+          </button>
+        ) : null}
+      </div>
     </form>
   );
 }
 
 ActivityForm.propTypes = {
   disabled: PropTypes.bool.isRequired,
+  editingActivity: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    time: PropTypes.string,
+  }),
+  onCancelEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+
+ActivityForm.defaultProps = {
+  editingActivity: null,
 };
 
 export default ActivityForm;

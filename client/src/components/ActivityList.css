@@ -27,3 +27,25 @@
 .activity-card p {
   margin-bottom: 0;
 }
+
+.card-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.card-actions button {
+  background: #fff;
+  border: 1px solid #d9b67d;
+  border-radius: 999px;
+  color: #5c3a11;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.5rem 0.9rem;
+}
+
+.card-actions .danger-button {
+  background: #fff1f1;
+  border-color: #efc2c2;
+  color: #9a2f2f;
+}

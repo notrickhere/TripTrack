@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./TripForm.css";
 
@@ -10,8 +10,22 @@ const initialFormState = {
   notes: "",
 };
 
-function TripForm({ onSubmit }) {
+function TripForm({ editingTrip, onCancelEdit, onSubmit }) {
   const [formValues, setFormValues] = useState(initialFormState);
+
+  useEffect(() => {
+    if (!editingTrip) {
+      setFormValues(initialFormState);
+      return;
+    }
+
+    setFormValues({
+      destination: editingTrip.destination,
+      endDate: editingTrip.endDate,
+      notes: editingTrip.notes || "",
+      startDate: editingTrip.startDate,
+    });
+  }, [editingTrip]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -64,13 +78,34 @@ function TripForm({ onSubmit }) {
           value={formValues.notes}
         />
       </label>
-      <button type="submit">Add Trip</button>
+      <div className="form-actions">
+        <button type="submit">
+          {editingTrip ? "Save Trip Changes" : "Add Trip"}
+        </button>
+        {editingTrip ? (
+          <button className="secondary-button" onClick={onCancelEdit} type="button">
+            Cancel
+          </button>
+        ) : null}
+      </div>
     </form>
   );
 }
 
 TripForm.propTypes = {
+  editingTrip: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    destination: PropTypes.string.isRequired,
+    endDate: PropTypes.string.isRequired,
+    notes: PropTypes.string,
+    startDate: PropTypes.string.isRequired,
+  }),
+  onCancelEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+
+TripForm.defaultProps = {
+  editingTrip: null,
 };
 
 export default TripForm;

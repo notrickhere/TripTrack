@@ -5,7 +5,7 @@ import { connectToDatabase } from "./config/db.js";
 
 dotenv.config();
 
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = Number(process.env.PORT) || 5001;
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://localhost:27017/triptrack";
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME || "triptrack";

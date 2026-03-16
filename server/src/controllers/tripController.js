@@ -58,6 +58,7 @@ export async function getTripById(request, response) {
 
 export async function createTrip(request, response) {
   const {
+    city = "",
     continent = "",
     country = "",
     destination,
@@ -66,9 +67,10 @@ export async function createTrip(request, response) {
     notes = "",
   } = request.body;
 
-  if (!destination || !continent || !country || !startDate || !endDate) {
+  if (!destination || !continent || !country || !city || !startDate || !endDate) {
     return response.status(400).json({
-      message: "Destination, continent, country, startDate, and endDate are required.",
+      message:
+        "Destination, continent, country, city, startDate, and endDate are required.",
     });
   }
 
@@ -87,6 +89,7 @@ export async function createTrip(request, response) {
   }
 
   const trip = {
+    city,
     continent,
     country,
     destination,
@@ -109,6 +112,7 @@ export async function updateTrip(request, response) {
   }
 
   const {
+    city = "",
     continent = "",
     country = "",
     destination,
@@ -117,9 +121,10 @@ export async function updateTrip(request, response) {
     notes = "",
   } = request.body;
 
-  if (!destination || !continent || !country || !startDate || !endDate) {
+  if (!destination || !continent || !country || !city || !startDate || !endDate) {
     return response.status(400).json({
-      message: "Destination, continent, country, startDate, and endDate are required.",
+      message:
+        "Destination, continent, country, city, startDate, and endDate are required.",
     });
   }
 
@@ -130,6 +135,7 @@ export async function updateTrip(request, response) {
   }
 
   const update = {
+    city,
     continent,
     country,
     destination,

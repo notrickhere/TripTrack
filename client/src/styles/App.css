@@ -92,6 +92,22 @@
   justify-content: space-between;
 }
 
+.danger-ghost-button {
+  background: #fff3f3;
+  border: 1px solid #efc2c2;
+  border-radius: 999px;
+  color: #972c2c;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 0.9rem;
+}
+
+.danger-ghost-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 @media (max-width: 840px) {
   .dashboard {
     grid-template-columns: 1fr;

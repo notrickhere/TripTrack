@@ -2,6 +2,13 @@ import PropTypes from "prop-types";
 
 import "./ActivityList.css";
 
+function toTitleCase(value = "") {
+  return value.replace(/\w\S*/g, (word) => {
+    const normalizedWord = word.toLowerCase();
+    return normalizedWord.charAt(0).toUpperCase() + normalizedWord.slice(1);
+  });
+}
+
 function ActivityList({
   activities,
   isLoading,
@@ -26,7 +33,7 @@ function ActivityList({
       {activities.map((activity) => (
         <li className="activity-card" key={activity._id}>
           <div className="activity-card-header">
-            <h3>{activity.name}</h3>
+            <h3>{toTitleCase(activity.name)}</h3>
             <span>
               {activity.date}
               {activity.time ? ` at ${activity.time}` : ""}

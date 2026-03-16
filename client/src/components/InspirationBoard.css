@@ -49,6 +49,25 @@
   color: #fff;
 }
 
+.inspiration-search {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.inspiration-search span {
+  color: #17324d;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.inspiration-search input {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(170, 186, 203, 0.8);
+  border-radius: 16px;
+  font: inherit;
+  padding: 0.85rem 1rem;
+}
+
 .inspiration-card {
   background:
     linear-gradient(180deg, rgba(255, 250, 242, 0.98), rgba(240, 247, 255, 0.98));
@@ -71,10 +90,13 @@
 
 .mood-pill,
 .timezone-pill {
+  align-items: center;
   border-radius: 999px;
   display: inline-flex;
   font-size: 0.78rem;
   font-weight: 700;
+  justify-content: center;
+  text-align: center;
   padding: 0.35rem 0.65rem;
 }
 
@@ -139,6 +161,47 @@
 .copy-trip-button:disabled {
   cursor: progress;
   opacity: 0.7;
+}
+
+.pagination-bar {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.pagination-bar button {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(170, 186, 203, 0.8);
+  border-radius: 999px;
+  color: #17324d;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 0.9rem;
+}
+
+.pagination-bar button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.page-number-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.page-number-list button {
+  min-width: 2.5rem;
+}
+
+.page-number-list .active-page-number {
+  background: #17324d;
+  border-color: #17324d;
+  color: #fff;
 }
 
 .inspiration-empty {

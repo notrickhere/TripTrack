@@ -13,6 +13,7 @@ const CONTINENT_OPTIONS = [
 ];
 
 const initialFormState = {
+  city: "",
   continent: "",
   country: "",
   destination: "",
@@ -31,6 +32,7 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
     }
 
     setFormValues({
+      city: editingTrip.city || "",
       continent: editingTrip.continent || "",
       country: editingTrip.country || "",
       destination: editingTrip.destination,
@@ -88,6 +90,15 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
         />
       </label>
       <label>
+        City
+        <input
+          name="city"
+          onChange={handleChange}
+          required
+          value={formValues.city}
+        />
+      </label>
+      <label>
         Start Date
         <input
           min={minStartDate || undefined}
@@ -138,6 +149,7 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
 TripForm.propTypes = {
   editingTrip: PropTypes.shape({
     _id: PropTypes.string.isRequired,
+    city: PropTypes.string,
     continent: PropTypes.string,
     country: PropTypes.string,
     destination: PropTypes.string.isRequired,

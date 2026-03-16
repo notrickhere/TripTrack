@@ -51,13 +51,20 @@ const OCEANIA_CODES = new Set([
   "NZ", "PF", "PG", "PN", "PW", "SB", "TK", "TO", "TV", "UM", "VU", "WF", "WS",
 ]);
 
+function toTitleCase(value = "") {
+  return value.replace(/\w\S*/g, (word) => {
+    const normalizedWord = word.toLowerCase();
+    return normalizedWord.charAt(0).toUpperCase() + normalizedWord.slice(1);
+  });
+}
+
 function buildLocationLabel(trip) {
   const parts = [trip.city, trip.country, trip.countryCode].filter(Boolean);
   return parts.join(", ");
 }
 
 function getMoodLabel(trip) {
-  return trip.notes || trip.note || "Fresh idea";
+  return toTitleCase(trip.notes || trip.note || "Fresh idea");
 }
 
 function getContinentLabel(trip) {
@@ -92,6 +99,9 @@ function getContinentLabel(trip) {
 
 function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
   const [activeContinent, setActiveContinent] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 12;
 
   if (trips.length === 0) {
     return (
@@ -109,7 +119,38 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
       ? trips
       : trips.filter((trip) => getContinentLabel(trip) === activeContinent);
 
-  const featuredTrips = filteredTrips.slice(0, 12);
+  const searchedTrips = filteredTrips.filter((trip) => {
+    const haystack = [
+      trip.destination,
+      trip.city,
+      trip.country,
+      trip.countryCode,
+      trip.timezone,
+      trip.notes,
+      trip.note,
+      getContinentLabel(trip),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return haystack.includes(searchTerm.trim().toLowerCase());
+  });
+
+  const totalPages = Math.max(1, Math.ceil(searchedTrips.length / pageSize));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const pageWindowSize = 10;
+  const pageWindowStart =
+    Math.floor((safeCurrentPage - 1) / pageWindowSize) * pageWindowSize + 1;
+  const pageWindowEnd = Math.min(totalPages, pageWindowStart + pageWindowSize - 1);
+  const visiblePageNumbers = Array.from(
+    { length: pageWindowEnd - pageWindowStart + 1 },
+    (_, index) => pageWindowStart + index
+  );
+  const featuredTrips = searchedTrips.slice(
+    (safeCurrentPage - 1) * pageSize,
+    safeCurrentPage * pageSize
+  );
 
   return (
     <section className="inspiration-board">
@@ -129,13 +170,29 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
           <button
             className={activeContinent === continent ? "active-continent" : ""}
             key={continent}
-            onClick={() => setActiveContinent(continent)}
+            onClick={() => {
+              setActiveContinent(continent);
+              setCurrentPage(1);
+            }}
             type="button"
           >
             {continent}
           </button>
         ))}
       </div>
+
+      <label className="inspiration-search">
+        <span>Search Destinations</span>
+        <input
+          onChange={(event) => {
+            setSearchTerm(event.target.value);
+            setCurrentPage(1);
+          }}
+          placeholder="Search by destination, city, country, mood, or timezone"
+          type="search"
+          value={searchTerm}
+        />
+      </label>
 
       {featuredTrips.length === 0 ? (
         <div className="inspiration-empty">
@@ -185,6 +242,35 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
             </button>
           </article>
         ))}
+      </div>
+
+      <div className="pagination-bar">
+        <button
+          disabled={safeCurrentPage === 1}
+          onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+          type="button"
+        >
+          Previous
+        </button>
+        <div className="page-number-list">
+          {visiblePageNumbers.map((pageNumber) => (
+            <button
+              className={safeCurrentPage === pageNumber ? "active-page-number" : ""}
+              key={pageNumber}
+              onClick={() => setCurrentPage(pageNumber)}
+              type="button"
+            >
+              {pageNumber}
+            </button>
+          ))}
+        </div>
+        <button
+          disabled={safeCurrentPage === totalPages}
+          onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+          type="button"
+        >
+          Next
+        </button>
       </div>
     </section>
   );

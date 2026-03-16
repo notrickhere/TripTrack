@@ -2,6 +2,13 @@ import PropTypes from "prop-types";
 
 import "./TripList.css";
 
+function toTitleCase(value = "") {
+  return value.replace(/\w\S*/g, (word) => {
+    const normalizedWord = word.toLowerCase();
+    return normalizedWord.charAt(0).toUpperCase() + normalizedWord.slice(1);
+  });
+}
+
 function TripList({
   isLoading,
   onDeleteTrip,
@@ -29,12 +36,14 @@ function TripList({
           >
             <span className="trip-card-title">{trip.destination}</span>
             <span className="trip-card-location">
-              {[trip.continent, trip.country].filter(Boolean).join(" · ")}
+              {[trip.continent, trip.country, trip.city].filter(Boolean).join(" · ")}
             </span>
             <span>
               {trip.startDate} to {trip.endDate}
             </span>
-            {trip.notes ? <span className="trip-card-notes">{trip.notes}</span> : null}
+            {trip.notes ? (
+              <span className="trip-card-notes">{toTitleCase(trip.notes)}</span>
+            ) : null}
           </button>
           <div className="card-actions">
             <button onClick={() => onEditTrip(trip)} type="button">
@@ -63,6 +72,7 @@ TripList.propTypes = {
   trips: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
+      city: PropTypes.string,
       continent: PropTypes.string,
       country: PropTypes.string,
       destination: PropTypes.string.isRequired,

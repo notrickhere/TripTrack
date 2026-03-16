@@ -245,6 +245,28 @@ function App() {
     }
   }
 
+  async function handleDeleteAllPlannerTrips() {
+    if (plannerTrips.length === 0) {
+      return;
+    }
+
+    const shouldDelete = window.confirm(
+      "Delete all planner trips and their activities? This will not remove inspiration trips."
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    setErrorMessage("");
+    await Promise.all(plannerTrips.map((trip) => deleteTrip(trip._id)));
+    setTrips((currentTrips) => currentTrips.filter((trip) => trip.seeded));
+    setSelectedTripId("");
+    setActivities([]);
+    setEditingTrip(null);
+    setEditingActivity(null);
+  }
+
   async function handleActivityDelete(activityId) {
     setErrorMessage("");
     await deleteActivity(activityId);
@@ -268,6 +290,7 @@ function App() {
       const sourceActivities = await getActivities(sourceTrip._id);
 
       const copiedTrip = await createTrip({
+        city: sourceTrip.city || "",
         continent:
           sourceTrip.continent || getContinentFromCountryCode(sourceTrip.countryCode),
         country: sourceTrip.country || "",
@@ -337,12 +360,22 @@ function App() {
         <main className="dashboard">
           <section className="panel">
             <div className="panel-header">
-              <h2>Trips</h2>
-              <p>
-                {editingTrip
-                  ? `Editing ${editingTrip.destination}`
-                  : "Create and manage destination plans."}
-              </p>
+              <div>
+                <h2>Trips</h2>
+                <p>
+                  {editingTrip
+                    ? `Editing ${editingTrip.destination}`
+                    : "Create and manage destination plans."}
+                </p>
+              </div>
+              <button
+                className="danger-ghost-button"
+                disabled={plannerTrips.length === 0}
+                onClick={handleDeleteAllPlannerTrips}
+                type="button"
+              >
+                Delete All
+              </button>
             </div>
             <TripForm
               editingTrip={editingTrip}

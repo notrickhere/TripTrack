@@ -94,14 +94,14 @@ The project uses MongoDB collections with a mix of shared seeded data and accoun
 ## 4. Design Mockups
 
 Design mockup files:
-![TripTrack Figma Login Page](./images/figma_login.png)
 - `images/figma_login.png`
-![TripTrack Figma Register Page](./images/figma_register.png)
+![TripTrack Figma Login Page](./images/figma_login.png)
 - `images/figma_register.png`
-![TripTrack Figma Inspiration Page](./images/figma_inspire.png)
+![TripTrack Figma Register Page](./images/figma_register.png)
 - `images/figma_inspire.png`
-![TripTrack Figma Planner Page](./images/figma_planner.png)
+![TripTrack Figma Inspiration Page](./images/figma_inspire.png)
 - `images/figma_planner.png`
+![TripTrack Figma Planner Page](./images/figma_planner.png)
 
 Current application screenshots:
 - `images/inspiraton.png`

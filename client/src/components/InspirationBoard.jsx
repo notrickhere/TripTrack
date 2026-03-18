@@ -179,7 +179,6 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
     <section className="inspiration-board">
       <div className="inspiration-header">
         <div>
-          <p className="eyebrow">Inspiration</p>
           <h2>Destination ideas!</h2>
         </div>
       </div>

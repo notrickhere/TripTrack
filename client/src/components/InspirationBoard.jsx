@@ -222,11 +222,6 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
       <div className="inspiration-grid">
         {featuredTrips.map((trip) => (
           <article className="inspiration-card" key={trip._id}>
-            <div className="inspiration-card-top">
-              <span className="mood-pill">{getMoodLabel(trip)}</span>
-              {trip.timezone ? <span className="timezone-pill">{trip.timezone}</span> : null}
-            </div>
-
             <h3>{trip.destination}</h3>
 
             {buildLocationLabel(trip) ? (
@@ -243,6 +238,8 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
                 </dd>
               </div>
             </dl>
+
+            <p className="mood-line">Mood: {getMoodLabel(trip)}</p>
 
             <div className="card-itinerary-preview">
               <p className="itinerary-heading">Sample Activities</p>

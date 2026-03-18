@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import ActivityForm from "./components/ActivityForm.jsx";
-import ActivityList from "./components/ActivityList.jsx";
 import AuthPanel from "./components/AuthPanel.jsx";
 import InspirationBoard from "./components/InspirationBoard.jsx";
+import PlannerOverview from "./components/PlannerOverview.jsx";
 import TripForm from "./components/TripForm.jsx";
-import TripList from "./components/TripList.jsx";
 import {
   createActivity,
   createTrip,
@@ -119,7 +118,18 @@ function getContinentFromCountryCode(countryCode = "") {
   return "";
 }
 
+function scrollToPanel(panelRef) {
+  window.requestAnimationFrame(() => {
+    panelRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+}
+
 function App() {
+  const tripFormPanelRef = useRef(null);
+  const itineraryPanelRef = useRef(null);
   const [activeView, setActiveView] = useState("planner");
   const [authErrorMessage, setAuthErrorMessage] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
@@ -127,6 +137,7 @@ function App() {
   const [selectedTripId, setSelectedTripId] = useState("");
   const [editingTrip, setEditingTrip] = useState(null);
   const [activities, setActivities] = useState([]);
+  const [activitiesByTripId, setActivitiesByTripId] = useState({});
   const [editingActivity, setEditingActivity] = useState(null);
   const [copyingTripId, setCopyingTripId] = useState("");
   const [isLoadingTrips, setIsLoadingTrips] = useState(true);
@@ -203,6 +214,27 @@ function App() {
     loadActivities();
   }, [selectedTripId]);
 
+  useEffect(() => {
+    async function loadPlannerActivities() {
+      try {
+        const activityEntries = await Promise.all(
+          plannerTrips.map(async (trip) => [trip._id, await getActivities(trip._id)])
+        );
+
+        setActivitiesByTripId(Object.fromEntries(activityEntries));
+      } catch (_error) {
+        setActivitiesByTripId({});
+      }
+    }
+
+    if (!plannerTrips.length) {
+      setActivitiesByTripId({});
+      return;
+    }
+
+    loadPlannerActivities();
+  }, [plannerTrips, currentUser]);
+
   async function handleTripCreate(formValues) {
     setErrorMessage("");
     if (!currentUser) {
@@ -250,6 +282,12 @@ function App() {
           activity._id === savedActivity._id ? savedActivity : activity
         )
       );
+      setActivitiesByTripId((currentActivities) => ({
+        ...currentActivities,
+        [selectedTripId]: (currentActivities[selectedTripId] || []).map((activity) =>
+          activity._id === savedActivity._id ? savedActivity : activity
+        ),
+      }));
       setEditingActivity(null);
       return;
     }
@@ -260,6 +298,10 @@ function App() {
     });
 
     setActivities((currentActivities) => [...currentActivities, newActivity]);
+    setActivitiesByTripId((currentActivities) => ({
+      ...currentActivities,
+      [selectedTripId]: [...(currentActivities[selectedTripId] || []), newActivity],
+    }));
   }
 
   async function handleTripDelete(tripId) {
@@ -268,6 +310,11 @@ function App() {
 
     const remainingTrips = trips.filter((trip) => trip._id !== tripId);
     setTrips(remainingTrips);
+    setActivitiesByTripId((currentActivities) => {
+      const nextActivities = { ...currentActivities };
+      delete nextActivities[tripId];
+      return nextActivities;
+    });
     setEditingTrip((currentTrip) =>
       currentTrip && currentTrip._id === tripId ? null : currentTrip
     );
@@ -306,6 +353,14 @@ function App() {
     await deleteActivity(activityId);
     setActivities((currentActivities) =>
       currentActivities.filter((activity) => activity._id !== activityId)
+    );
+    setActivitiesByTripId((currentActivities) =>
+      Object.fromEntries(
+        Object.entries(currentActivities).map(([tripId, tripActivities]) => [
+          tripId,
+          tripActivities.filter((activity) => activity._id !== activityId),
+        ])
+      )
     );
     setEditingActivity((currentActivity) =>
       currentActivity && currentActivity._id === activityId ? null : currentActivity
@@ -360,6 +415,10 @@ function App() {
       setTrips((currentTrips) => [copiedTrip, ...currentTrips]);
       setSelectedTripId(copiedTrip._id);
       setActivities(copiedActivities);
+      setActivitiesByTripId((currentActivities) => ({
+        ...currentActivities,
+        [copiedTrip._id]: copiedActivities,
+      }));
       setEditingTrip(null);
       setEditingActivity(null);
       setActiveView("planner");
@@ -399,57 +458,66 @@ function App() {
     setCurrentUser(null);
     setSelectedTripId("");
     setActivities([]);
+    setActivitiesByTripId({});
     setEditingTrip(null);
     setEditingActivity(null);
+  }
+
+  function handleTripEdit(trip) {
+    setActiveView("planner");
+    setSelectedTripId(trip._id);
+    setEditingTrip(trip);
+    scrollToPanel(tripFormPanelRef);
+  }
+
+  function handleActivityEdit(activity, tripId) {
+    setActiveView("planner");
+    setSelectedTripId(tripId);
+    setEditingActivity(activity);
+    scrollToPanel(itineraryPanelRef);
   }
 
   return (
     <div className="app-shell">
       <header className="hero">
-        {currentUser ? (
-          <div className="session-bar">
-            <button onClick={handleLogout} type="button">
-              Logout
-            </button>
-          </div>
-        ) : null}
         <p className="eyebrow">CS5610 Project 3</p>
         <h1>TripTrack</h1>
         <p className="hero-copy">
           Organize trips, dates, notes, and daily itinerary items in one place.
         </p>
-        <div className="view-switcher">
-          <button
-            className={activeView === "planner" ? "active-view" : ""}
-            onClick={() => setActiveView("planner")}
-            type="button"
-          >
-            Planner
-          </button>
-          <button
-            className={activeView === "inspiration" ? "active-view" : ""}
-            onClick={() => setActiveView("inspiration")}
-            type="button"
-          >
-            Inspiration
-          </button>
-        </div>
-        {currentUser ? (
-          <div className="session-bar">
-            
-            <button onClick={handleLogout} type="button">
-              Logout
+        <div className="hero-controls">
+          <div className="view-switcher">
+            <button
+              className={activeView === "planner" ? "active-view" : ""}
+              onClick={() => setActiveView("planner")}
+              type="button"
+            >
+              Planner
+            </button>
+            <button
+              className={activeView === "inspiration" ? "active-view" : ""}
+              onClick={() => setActiveView("inspiration")}
+              type="button"
+            >
+              Inspiration
             </button>
           </div>
-        ) : null}
+          {currentUser ? (
+            <div className="session-bar">
+              <button onClick={handleLogout} type="button">
+                Logout
+              </button>
+            </div>
+          ) : null}
+        </div>
       </header>
 
       {errorMessage ? <p className="status error">{errorMessage}</p> : null}
 
       {activeView === "planner" ? (
         currentUser ? (
-          <main className="dashboard">
-            <section className="panel">
+          <main className="planner-layout">
+            <section className="panel planner-panel planner-panel-form" ref={tripFormPanelRef}>
               <div className="panel-header">
                 <div>
                   <h2>Trips</h2>
@@ -474,17 +542,9 @@ function App() {
                 onCancelEdit={() => setEditingTrip(null)}
                 onSubmit={handleTripCreate}
               />
-              <TripList
-                isLoading={isLoadingTrips}
-                onDeleteTrip={handleTripDelete}
-                onEditTrip={setEditingTrip}
-                onSelectTrip={setSelectedTripId}
-                selectedTripId={selectedTripId}
-                trips={plannerTrips}
-              />
             </section>
 
-            <section className="panel">
+            <section className="panel planner-panel planner-panel-itinerary" ref={itineraryPanelRef}>
               <div className="panel-header">
                 <h2>Itinerary</h2>
                 <p>
@@ -499,12 +559,23 @@ function App() {
                 onCancelEdit={() => setEditingActivity(null)}
                 onSubmit={handleActivityCreate}
               />
-              <ActivityList
-                activities={activities}
-                isLoading={isLoadingActivities}
+            </section>
+
+            <section className="panel planner-panel planner-panel-overview">
+              <div className="panel-header">
+                <h2>Planned Trips</h2>
+                <p>View all planner trips with their nested activities in one place.</p>
+              </div>
+              <PlannerOverview
+                activitiesByTripId={activitiesByTripId}
+                isLoading={isLoadingTrips || isLoadingActivities}
                 onDeleteActivity={handleActivityDelete}
-                onEditActivity={setEditingActivity}
+                onDeleteTrip={handleTripDelete}
+                onEditActivity={handleActivityEdit}
+                onEditTrip={handleTripEdit}
+                onSelectTrip={setSelectedTripId}
                 selectedTripId={selectedTripId}
+                trips={plannerTrips}
               />
             </section>
           </main>

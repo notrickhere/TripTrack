@@ -1,0 +1,79 @@
+.auth-panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(151, 170, 190, 0.35);
+  border-radius: 24px;
+  box-shadow: 0 16px 45px rgba(25, 55, 84, 0.08);
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.auth-panel-copy h2 {
+  margin-bottom: 0.4rem;
+  margin-top: 0;
+}
+
+.auth-panel-copy p:last-child {
+  color: #5b6c83;
+  margin-bottom: 0;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.auth-tabs button {
+  background: #eef3f7;
+  border: 1px solid #cad6e2;
+  border-radius: 999px;
+  color: #17324d;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+}
+
+.auth-tabs .active-auth-tab {
+  background: #17324d;
+  border-color: #17324d;
+  color: #fff;
+}
+
+.auth-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.auth-form label {
+  color: #1c2434;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.auth-form input {
+  border: 1px solid #c6d0dc;
+  border-radius: 12px;
+  font: inherit;
+  padding: 0.75rem 0.9rem;
+}
+
+.auth-form button {
+  background: #0a5c8f;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+}
+
+.auth-error {
+  background: #fff1f1;
+  border: 1px solid #f3c4c4;
+  border-radius: 14px;
+  color: #8d2020;
+  margin: 0;
+  padding: 0.85rem 1rem;
+}

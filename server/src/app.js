@@ -3,6 +3,7 @@ import express from "express";
 import morgan from "morgan";
 
 import activityRoutes from "./routes/activityRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import healthRoutes from "./routes/healthRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 
@@ -30,6 +31,7 @@ app.use(
 app.use(morgan("dev"));
 app.use(express.json());
 
+app.use("/api/auth", authRoutes);
 app.use("/api/health", healthRoutes);
 app.use("/api/trips", tripRoutes);
 app.use("/api/activities", activityRoutes);

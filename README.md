@@ -22,11 +22,13 @@ TripTrack is designed for real travel planning workflows:
 - **Jordan, Casual Traveler:** Takes occasional trips and wants a simple place to store and update travel plans.
 
 ## Core Features
+- Browse shared inspiration trips without logging in.
 - Create, view, update, and delete trips.
 - Store trip details such as destination, travel dates, and notes.
 - Create, view, update, and delete itinerary activities for a specific trip.
 - Track activity details such as name, description, date, and time.
 - Select a trip and manage its itinerary from the same dashboard.
+- Require an account for planner CRUD while keeping inspiration public.
 
 ## User Stories
 ### Trip Management
@@ -91,6 +93,7 @@ Create a root `.env` file in `TripTrack/` based on `.env.example`:
 PORT=5001
 NODE_ENV=development
 CLIENT_ORIGIN=http://localhost:5173
+JWT_SECRET=replace_with_a_long_random_secret
 MONGO_PORT=27017
 MONGO_DB_NAME=triptrack
 MONGODB_URI=your_mongodb_connection_string
@@ -101,6 +104,7 @@ For local development with Docker and MongoDB Compass:
 ```env
 PORT=5001
 CLIENT_ORIGIN=http://localhost:5173
+JWT_SECRET=replace_with_a_long_random_secret
 MONGODB_URI=mongodb://localhost:27017/triptrack
 ```
 
@@ -195,6 +199,7 @@ NODE_ENV=production
 MONGO_DB_NAME=TripTrack
 MONGODB_URI=your_mongodb_atlas_connection_string
 CLIENT_ORIGIN=https://triptrack-front.onrender.com
+JWT_SECRET=replace_with_a_long_random_secret
 ```
 
 Render will provide `PORT` automatically for the backend web service.
@@ -237,6 +242,8 @@ TripTrack/
 
 ## Current Status
 The current version supports:
+- Browsing inspiration data without authentication
+- Registering and logging in to a personal planner
 - Creating, editing, and deleting trips
 - Creating, editing, and deleting activities
 - Persisting trips and activities to MongoDB locally
@@ -253,6 +260,11 @@ The deployed production flow has been verified by:
 - opening the frontend on Render
 - checking the backend health route on Render
 - creating trip and activity records and confirming they were written to MongoDB Atlas
+
+## Authentication Notes
+- The inspiration page is public and uses shared seeded data.
+- Planner CRUD requires a user account.
+- Copying a trip from inspiration creates a new planner-owned trip and activities instead of editing the original seeded data.
 
 ## Notes For Final Submission
 Before submitting, make sure this README includes:

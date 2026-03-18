@@ -29,9 +29,18 @@ function parseObjectId(id) {
   return new ObjectId(id);
 }
 
+function getUserId(request) {
+  return request.user?.userId || "";
+}
+
 export async function listTrips(request, response) {
+  const userId = getUserId(request);
+  const query = userId
+    ? { $or: [{ seeded: true }, { seeded: { $ne: true }, userId }] }
+    : { seeded: true };
+
   const trips = await getTripsCollection()
-    .find({})
+    .find(query)
     .sort({ startDate: 1, createdAt: -1 })
     .toArray();
 
@@ -49,7 +58,10 @@ export async function getTripById(request, response) {
     _id: tripId,
   });
 
-  if (!trip) {
+  if (
+    !trip ||
+    (!trip.seeded && (!request.user || trip.userId !== getUserId(request)))
+  ) {
     return response.status(404).json({ message: "Trip not found." });
   }
 
@@ -93,9 +105,11 @@ export async function createTrip(request, response) {
     continent,
     country,
     destination,
+    seeded: false,
     startDate,
     endDate,
     notes,
+    userId: getUserId(request),
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -146,7 +160,7 @@ export async function updateTrip(request, response) {
   };
 
   const result = await getTripsCollection().findOneAndUpdate(
-    { _id: tripId },
+    { _id: tripId, seeded: { $ne: true }, userId: getUserId(request) },
     { $set: update },
     { returnDocument: "after" }
   );
@@ -165,13 +179,20 @@ export async function deleteTrip(request, response) {
     return response.status(400).json({ message: "Invalid trip id." });
   }
 
-  const result = await getTripsCollection().deleteOne({ _id: tripId });
+  const result = await getTripsCollection().deleteOne({
+    _id: tripId,
+    seeded: { $ne: true },
+    userId: getUserId(request),
+  });
 
   if (!result.deletedCount) {
     return response.status(404).json({ message: "Trip not found." });
   }
 
-  await getActivitiesCollection().deleteMany({ tripId: tripId.toString() });
+  await getActivitiesCollection().deleteMany({
+    tripId: tripId.toString(),
+    userId: getUserId(request),
+  });
 
   return response.status(204).send();
 }

@@ -7,13 +7,14 @@ import {
   listTrips,
   updateTrip,
 } from "../controllers/tripController.js";
+import { attachOptionalUser, requireAuth } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", listTrips);
-router.get("/:id", getTripById);
-router.post("/", createTrip);
-router.put("/:id", updateTrip);
-router.delete("/:id", deleteTrip);
+router.get("/", attachOptionalUser, listTrips);
+router.get("/:id", attachOptionalUser, getTripById);
+router.post("/", requireAuth, createTrip);
+router.put("/:id", requireAuth, updateTrip);
+router.delete("/:id", requireAuth, deleteTrip);
 
 export default router;

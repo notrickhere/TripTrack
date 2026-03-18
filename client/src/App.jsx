@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import ActivityForm from "./components/ActivityForm.jsx";
 import ActivityList from "./components/ActivityList.jsx";
+import AuthPanel from "./components/AuthPanel.jsx";
 import InspirationBoard from "./components/InspirationBoard.jsx";
 import TripForm from "./components/TripForm.jsx";
 import TripList from "./components/TripList.jsx";
@@ -10,8 +11,13 @@ import {
   createTrip,
   deleteActivity,
   deleteTrip,
+  getCurrentToken,
+  getCurrentUser,
   getActivities,
   getTrips,
+  login,
+  register,
+  storeAuthToken,
   updateActivity,
   updateTrip,
 } from "./lib/api.js";
@@ -115,6 +121,8 @@ function getContinentFromCountryCode(countryCode = "") {
 
 function App() {
   const [activeView, setActiveView] = useState("planner");
+  const [authErrorMessage, setAuthErrorMessage] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
   const [trips, setTrips] = useState([]);
   const [selectedTripId, setSelectedTripId] = useState("");
   const [editingTrip, setEditingTrip] = useState(null);
@@ -132,6 +140,24 @@ function App() {
     : "";
 
   useEffect(() => {
+    async function hydrateSession() {
+      if (!getCurrentToken()) {
+        return;
+      }
+
+      try {
+        const response = await getCurrentUser();
+        setCurrentUser(response.user);
+      } catch (_error) {
+        storeAuthToken("");
+        setCurrentUser(null);
+      }
+    }
+
+    hydrateSession();
+  }, []);
+
+  useEffect(() => {
     async function loadTrips() {
       try {
         const tripData = await getTrips();
@@ -144,7 +170,7 @@ function App() {
     }
 
     loadTrips();
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     setSelectedTripId((currentTripId) => {
@@ -179,6 +205,10 @@ function App() {
 
   async function handleTripCreate(formValues) {
     setErrorMessage("");
+    if (!currentUser) {
+      setAuthErrorMessage("Login required to manage your planner.");
+      return;
+    }
 
     if (formValues.endDate < formValues.startDate) {
       setErrorMessage("A trip cannot end before it starts.");
@@ -208,6 +238,10 @@ function App() {
 
   async function handleActivityCreate(formValues) {
     setErrorMessage("");
+    if (!currentUser) {
+      setAuthErrorMessage("Login required to manage your planner.");
+      return;
+    }
 
     if (editingActivity) {
       const savedActivity = await updateActivity(editingActivity._id, formValues);
@@ -280,6 +314,14 @@ function App() {
 
   async function handleCopyTripToPlanner(sourceTrip) {
     setErrorMessage("");
+    setAuthErrorMessage("");
+
+    if (!currentUser) {
+      setAuthErrorMessage("Create an account or login before copying trips to your planner.");
+      setActiveView("planner");
+      return;
+    }
+
     setCopyingTripId(sourceTrip._id);
 
     try {
@@ -328,6 +370,39 @@ function App() {
     }
   }
 
+  async function handleLogin(credentials) {
+    setAuthErrorMessage("");
+
+    try {
+      const response = await login(credentials);
+      storeAuthToken(response.token);
+      setCurrentUser(response.user);
+    } catch (error) {
+      setAuthErrorMessage(error.message);
+    }
+  }
+
+  async function handleRegister(formValues) {
+    setAuthErrorMessage("");
+
+    try {
+      const response = await register(formValues);
+      storeAuthToken(response.token);
+      setCurrentUser(response.user);
+    } catch (error) {
+      setAuthErrorMessage(error.message);
+    }
+  }
+
+  function handleLogout() {
+    storeAuthToken("");
+    setCurrentUser(null);
+    setSelectedTripId("");
+    setActivities([]);
+    setEditingTrip(null);
+    setEditingActivity(null);
+  }
+
   return (
     <div className="app-shell">
       <header className="hero">
@@ -352,71 +427,89 @@ function App() {
             Inspiration
           </button>
         </div>
+        {currentUser ? (
+          <div className="session-bar">
+            <span>{currentUser.email}</span>
+            <button onClick={handleLogout} type="button">
+              Logout
+            </button>
+          </div>
+        ) : null}
       </header>
 
       {errorMessage ? <p className="status error">{errorMessage}</p> : null}
 
       {activeView === "planner" ? (
-        <main className="dashboard">
-          <section className="panel">
-            <div className="panel-header">
-              <div>
-                <h2>Trips</h2>
+        currentUser ? (
+          <main className="dashboard">
+            <section className="panel">
+              <div className="panel-header">
+                <div>
+                  <h2>Trips</h2>
+                  <p>
+                    {editingTrip
+                      ? `Editing ${editingTrip.destination}`
+                      : "Create and manage destination plans."}
+                  </p>
+                </div>
+                <button
+                  className="danger-ghost-button"
+                  disabled={plannerTrips.length === 0}
+                  onClick={handleDeleteAllPlannerTrips}
+                  type="button"
+                >
+                  Delete All
+                </button>
+              </div>
+              <TripForm
+                editingTrip={editingTrip}
+                minStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
+                onCancelEdit={() => setEditingTrip(null)}
+                onSubmit={handleTripCreate}
+              />
+              <TripList
+                isLoading={isLoadingTrips}
+                onDeleteTrip={handleTripDelete}
+                onEditTrip={setEditingTrip}
+                onSelectTrip={setSelectedTripId}
+                selectedTripId={selectedTripId}
+                trips={plannerTrips}
+              />
+            </section>
+
+            <section className="panel">
+              <div className="panel-header">
+                <h2>Itinerary</h2>
                 <p>
-                  {editingTrip
-                    ? `Editing ${editingTrip.destination}`
-                    : "Create and manage destination plans."}
+                  {editingActivity
+                    ? `Editing ${editingActivity.name}`
+                    : "Add activities to the currently selected trip."}
                 </p>
               </div>
-              <button
-                className="danger-ghost-button"
-                disabled={plannerTrips.length === 0}
-                onClick={handleDeleteAllPlannerTrips}
-                type="button"
-              >
-                Delete All
-              </button>
-            </div>
-            <TripForm
-              editingTrip={editingTrip}
-              minStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
-              onCancelEdit={() => setEditingTrip(null)}
-              onSubmit={handleTripCreate}
+              <ActivityForm
+                disabled={!selectedTripId}
+                editingActivity={editingActivity}
+                onCancelEdit={() => setEditingActivity(null)}
+                onSubmit={handleActivityCreate}
+              />
+              <ActivityList
+                activities={activities}
+                isLoading={isLoadingActivities}
+                onDeleteActivity={handleActivityDelete}
+                onEditActivity={setEditingActivity}
+                selectedTripId={selectedTripId}
+              />
+            </section>
+          </main>
+        ) : (
+          <main>
+            <AuthPanel
+              errorMessage={authErrorMessage}
+              onLogin={handleLogin}
+              onRegister={handleRegister}
             />
-            <TripList
-              isLoading={isLoadingTrips}
-              onDeleteTrip={handleTripDelete}
-              onEditTrip={setEditingTrip}
-              onSelectTrip={setSelectedTripId}
-              selectedTripId={selectedTripId}
-              trips={plannerTrips}
-            />
-          </section>
-
-          <section className="panel">
-            <div className="panel-header">
-              <h2>Itinerary</h2>
-              <p>
-                {editingActivity
-                  ? `Editing ${editingActivity.name}`
-                  : "Add activities to the currently selected trip."}
-              </p>
-            </div>
-            <ActivityForm
-              disabled={!selectedTripId}
-              editingActivity={editingActivity}
-              onCancelEdit={() => setEditingActivity(null)}
-              onSubmit={handleActivityCreate}
-            />
-            <ActivityList
-              activities={activities}
-              isLoading={isLoadingActivities}
-              onDeleteActivity={handleActivityDelete}
-              onEditActivity={setEditingActivity}
-              selectedTripId={selectedTripId}
-            />
-          </section>
-        </main>
+          </main>
+        )
       ) : (
         <main>
           <InspirationBoard

@@ -52,6 +52,23 @@
   color: #fff;
 }
 
+.session-bar {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.session-bar button {
+  background: #17324d;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.55rem 0.9rem;
+}
+
 .dashboard {
   display: grid;
   gap: 1.5rem;

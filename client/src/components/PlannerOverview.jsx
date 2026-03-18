@@ -13,6 +13,7 @@ function PlannerOverview({
   activitiesByTripId,
   isLoading,
   onDeleteActivity,
+  onDeleteAllActivities,
   onDeleteTrip,
   onEditActivity,
   onEditTrip,
@@ -62,7 +63,17 @@ function PlannerOverview({
           </div>
 
           <div className="planner-activity-section">
-            <p className="planner-activity-heading">Activities</p>
+            <div className="planner-activity-header">
+              <p className="planner-activity-heading">Activities</p>
+              <button
+                className="planner-activity-clear"
+                disabled={!activitiesByTripId[trip._id]?.length}
+                onClick={() => onDeleteAllActivities(trip._id)}
+                type="button"
+              >
+                Delete All Activities
+              </button>
+            </div>
             {activitiesByTripId[trip._id]?.length ? (
               <ul className="planner-activity-list">
                 {activitiesByTripId[trip._id].map((activity) => (
@@ -114,6 +125,7 @@ PlannerOverview.propTypes = {
   ).isRequired,
   isLoading: PropTypes.bool.isRequired,
   onDeleteActivity: PropTypes.func.isRequired,
+  onDeleteAllActivities: PropTypes.func.isRequired,
   onDeleteTrip: PropTypes.func.isRequired,
   onEditActivity: PropTypes.func.isRequired,
   onEditTrip: PropTypes.func.isRequired,

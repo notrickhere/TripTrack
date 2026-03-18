@@ -367,6 +367,39 @@ function App() {
     );
   }
 
+  async function handleDeleteAllActivities(tripId) {
+    const tripActivities = activitiesByTripId[tripId] || [];
+
+    if (tripActivities.length === 0) {
+      return;
+    }
+
+    const shouldDelete = window.confirm(
+      "Delete all activities for this trip?"
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    setErrorMessage("");
+    await Promise.all(tripActivities.map((activity) => deleteActivity(activity._id)));
+    setActivitiesByTripId((currentActivities) => ({
+      ...currentActivities,
+      [tripId]: [],
+    }));
+
+    if (selectedTripId === tripId) {
+      setActivities([]);
+    }
+
+    setEditingActivity((currentActivity) =>
+      currentActivity && tripActivities.some((activity) => activity._id === currentActivity._id)
+        ? null
+        : currentActivity
+    );
+  }
+
   async function handleCopyTripToPlanner(sourceTrip) {
     setErrorMessage("");
     setAuthErrorMessage("");
@@ -526,14 +559,6 @@ function App() {
                       : "Create and manage destination plans."}
                   </p>
                 </div>
-                <button
-                  className="danger-ghost-button"
-                  disabled={plannerTrips.length === 0}
-                  onClick={handleDeleteAllPlannerTrips}
-                  type="button"
-                >
-                  Delete All
-                </button>
               </div>
               <TripForm
                 editingTrip={editingTrip}
@@ -562,13 +587,24 @@ function App() {
 
             <section className="panel planner-panel planner-panel-overview">
               <div className="panel-header">
-                <h2>Planned Trips</h2>
-                <p>View all planner trips with their nested activities in one place.</p>
+                <div>
+                  <h2>Planned Trips</h2>
+                  <p>View all planner trips with their nested activities in one place.</p>
+                </div>
+                <button
+                  className="danger-ghost-button"
+                  disabled={plannerTrips.length === 0}
+                  onClick={handleDeleteAllPlannerTrips}
+                  type="button"
+                >
+                  Delete All Trips
+                </button>
               </div>
               <PlannerOverview
                 activitiesByTripId={activitiesByTripId}
                 isLoading={isLoadingTrips || isLoadingActivities}
                 onDeleteActivity={handleActivityDelete}
+                onDeleteAllActivities={handleDeleteAllActivities}
                 onDeleteTrip={handleTripDelete}
                 onEditActivity={handleActivityEdit}
                 onEditTrip={handleTripEdit}

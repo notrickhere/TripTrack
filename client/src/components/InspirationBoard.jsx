@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { getActivities } from "../lib/api.js";
 import "./InspirationBoard.css";
 
 const CONTINENT_LABELS = [
@@ -59,7 +60,7 @@ function toTitleCase(value = "") {
 }
 
 function buildLocationLabel(trip) {
-  const parts = [trip.city, trip.country, trip.countryCode].filter(Boolean);
+  const parts = [trip.city, trip.country].filter(Boolean);
   return parts.join(", ");
 }
 
@@ -99,6 +100,7 @@ function getContinentLabel(trip) {
 
 function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
   const [activeContinent, setActiveContinent] = useState("All");
+  const [activitiesByTripId, setActivitiesByTripId] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
@@ -152,12 +154,33 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
     safeCurrentPage * pageSize
   );
 
+  useEffect(() => {
+    async function loadVisibleTripActivities() {
+      try {
+        const activityEntries = await Promise.all(
+          featuredTrips.map(async (trip) => [trip._id, await getActivities(trip._id)])
+        );
+
+        setActivitiesByTripId(Object.fromEntries(activityEntries));
+      } catch (_error) {
+        setActivitiesByTripId({});
+      }
+    }
+
+    if (featuredTrips.length === 0) {
+      setActivitiesByTripId({});
+      return;
+    }
+
+    loadVisibleTripActivities();
+  }, [featuredTrips]);
+
   return (
     <section className="inspiration-board">
       <div className="inspiration-header">
         <div>
           <p className="eyebrow">Inspiration</p>
-          <h2>Destination ideas from your seeded trips</h2>
+          <h2>Destination ideas!</h2>
         </div>
         <p>
           Use this view to browse destinations, moods, and timezones before you build
@@ -224,13 +247,20 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
                   {trip.startDate} to {trip.endDate}
                 </dd>
               </div>
-              {trip.countryCode ? (
-                <div>
-                  <dt>Code</dt>
-                  <dd>{trip.countryCode}</dd>
-                </div>
-              ) : null}
             </dl>
+
+            <div className="card-itinerary-preview">
+              <p className="itinerary-heading">Sample Activities</p>
+              {activitiesByTripId[trip._id]?.length ? (
+                <ul>
+                  {activitiesByTripId[trip._id].slice(0, 3).map((activity) => (
+                    <li key={activity._id}>{toTitleCase(activity.name)}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="itinerary-empty">No activities linked to this trip yet.</p>
+              )}
+            </div>
 
             <button
               className="copy-trip-button"

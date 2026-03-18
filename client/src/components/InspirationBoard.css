@@ -163,6 +163,35 @@
   opacity: 0.7;
 }
 
+.card-itinerary-preview {
+  border-top: 1px solid rgba(186, 200, 214, 0.7);
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+}
+
+.card-itinerary-preview ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.card-itinerary-preview li {
+  color: #334d66;
+  margin-bottom: 0.25rem;
+}
+
+.itinerary-heading {
+  color: #17324d;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.itinerary-empty {
+  color: #62758d;
+  margin: 0.45rem 0 0;
+}
+
 .pagination-bar {
   align-items: center;
   display: flex;

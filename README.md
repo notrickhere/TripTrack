@@ -63,6 +63,10 @@ Example Markdown once the image is available:
 ## How To Build and Run
 These instructions match the current local development workflow.
 
+## Live Deployment
+- **Frontend:** [https://triptrack-front.onrender.com/](https://triptrack-front.onrender.com/)
+- **Backend API:** [https://triptrack-rxxr.onrender.com/api/health](https://triptrack-rxxr.onrender.com/api/health)
+
 ### 1. Clone the repository
 ```bash
 git clone <your-repo-url>
@@ -155,6 +159,12 @@ This script:
 
 For MongoDB Atlas later, use the same script with your Atlas `MONGODB_URI` in `.env` or in your deployment environment.
 
+If your Atlas database name is `TripTrack` instead of `triptrack`, use the exact same casing when seeding:
+
+```bash
+MONGODB_URI='your_atlas_connection_string' MONGO_DB_NAME=TripTrack npm run seed
+```
+
 ### 7. Open the app
 Once the app is running, open the frontend in your browser at:
 
@@ -182,9 +192,9 @@ Recommended backend environment variables:
 
 ```env
 NODE_ENV=production
-MONGO_DB_NAME=triptrack
+MONGO_DB_NAME=TripTrack
 MONGODB_URI=your_mongodb_atlas_connection_string
-CLIENT_ORIGIN=https://your-frontend-site.onrender.com
+CLIENT_ORIGIN=https://triptrack-front.onrender.com
 ```
 
 Render will provide `PORT` automatically for the backend web service.
@@ -198,7 +208,7 @@ Render will provide `PORT` automatically for the backend web service.
 Recommended frontend environment variables:
 
 ```env
-VITE_API_BASE_URL=https://your-backend-service.onrender.com/api
+VITE_API_BASE_URL=https://triptrack-rxxr.onrender.com/api
 ```
 
 Deploy the backend first so you can point the frontend `VITE_API_BASE_URL` at the correct Render API URL.
@@ -230,6 +240,8 @@ The current version supports:
 - Creating, editing, and deleting trips
 - Creating, editing, and deleting activities
 - Persisting trips and activities to MongoDB locally
+- Deploying the frontend on Render and the backend on Render
+- Persisting production data to MongoDB Atlas
 - Running the frontend and backend together with a single root command
 
 The current local test flow has been verified by:
@@ -237,9 +249,13 @@ The current local test flow has been verified by:
 - checking the backend health route on `localhost:5001/api/health`
 - creating trip and activity records and confirming they were written to MongoDB
 
+The deployed production flow has been verified by:
+- opening the frontend on Render
+- checking the backend health route on Render
+- creating trip and activity records and confirming they were written to MongoDB Atlas
+
 ## Notes For Final Submission
 Before submitting, make sure this README includes:
 - A real screenshot of the application
-- The deployed public URL
 - The demo video link
-- Any final deployment-specific setup steps for Render and MongoDB Atlas
+- Any final authentication or account setup notes if that feature is added

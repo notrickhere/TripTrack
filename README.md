@@ -309,7 +309,7 @@ MONGODB_URI='your_atlas_connection_string' MONGO_DB_NAME=TripTrack npm run seed
 
 ## Presentation Slides
 
-- `Add presentation slides link here`
+- `https://docs.google.com/presentation/d/15njlW3-ZRlj-9MsxhX3yPgRntphLQ3jXlKt-kL9OAYk/edit?usp=sharing`
 
 ## License
 

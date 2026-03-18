@@ -92,17 +92,22 @@ The project uses MongoDB collections with a mix of shared seeded data and accoun
 - As a user, I want my planner data to be tied to my account so other users cannot edit it.
 
 ## 4. Design Mockups
-Design mockups or screenshots should be included before submission.
 
 Design mockup files:
+![TripTrack Figma Login Page](./images/figma_login.png)
 - `images/figma_login.png`
+![TripTrack Figma Register Page](./images/figma_register.png)
 - `images/figma_register.png`
+![TripTrack Figma Inspiration Page](./images/figma_inspire.png)
 - `images/figma_inspire.png`
+![TripTrack Figma Planner Page](./images/figma_planner.png)
 - `images/figma_planner.png`
 
 Current application screenshots:
 - `images/inspiraton.png`
+![TripTrack Inspiration Page](./images/inspiraton.png)
 - `images/planner.png`
+![TripTrack Planner Page](./images/planner.png)
 
 Figma link:
 - https://www.figma.com/proto/87WJ5f5pPp3LbiLmzCsW9T/TripTrack?node-id=0-1&t=ESV9edh2wBW8DOob-1

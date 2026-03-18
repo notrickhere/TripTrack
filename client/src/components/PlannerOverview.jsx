@@ -12,6 +12,7 @@ function toTitleCase(value = "") {
 function PlannerOverview({
   activitiesByTripId,
   isLoading,
+  onAddActivity,
   onDeleteActivity,
   onDeleteAllActivities,
   onDeleteTrip,
@@ -65,14 +66,23 @@ function PlannerOverview({
           <div className="planner-activity-section">
             <div className="planner-activity-header">
               <p className="planner-activity-heading">Activities</p>
-              <button
-                className="planner-activity-clear"
-                disabled={!activitiesByTripId[trip._id]?.length}
-                onClick={() => onDeleteAllActivities(trip._id)}
-                type="button"
-              >
-                Delete All Activities
-              </button>
+              <div className="planner-activity-actions">
+                <button
+                  className="planner-activity-add"
+                  onClick={() => onAddActivity(trip._id)}
+                  type="button"
+                >
+                  Add Activity
+                </button>
+                <button
+                  className="planner-activity-clear"
+                  disabled={!activitiesByTripId[trip._id]?.length}
+                  onClick={() => onDeleteAllActivities(trip._id)}
+                  type="button"
+                >
+                  Delete All Activities
+                </button>
+              </div>
             </div>
             {activitiesByTripId[trip._id]?.length ? (
               <ul className="planner-activity-list">
@@ -124,6 +134,7 @@ PlannerOverview.propTypes = {
     )
   ).isRequired,
   isLoading: PropTypes.bool.isRequired,
+  onAddActivity: PropTypes.func.isRequired,
   onDeleteActivity: PropTypes.func.isRequired,
   onDeleteAllActivities: PropTypes.func.isRequired,
   onDeleteTrip: PropTypes.func.isRequired,

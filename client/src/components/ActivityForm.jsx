@@ -10,12 +10,15 @@ const initialFormState = {
   time: "",
 };
 
-function ActivityForm({ disabled, editingActivity, onCancelEdit, onSubmit }) {
+function ActivityForm({ defaultDate, disabled, editingActivity, onCancelEdit, onSubmit }) {
   const [formValues, setFormValues] = useState(initialFormState);
 
   useEffect(() => {
     if (!editingActivity) {
-      setFormValues(initialFormState);
+      setFormValues({
+        ...initialFormState,
+        date: defaultDate,
+      });
       return;
     }
 
@@ -25,7 +28,7 @@ function ActivityForm({ disabled, editingActivity, onCancelEdit, onSubmit }) {
       name: editingActivity.name,
       time: editingActivity.time || "",
     });
-  }, [editingActivity]);
+  }, [defaultDate, editingActivity]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -35,7 +38,10 @@ function ActivityForm({ disabled, editingActivity, onCancelEdit, onSubmit }) {
   async function handleSubmit(event) {
     event.preventDefault();
     await onSubmit(formValues);
-    setFormValues(initialFormState);
+    setFormValues({
+      ...initialFormState,
+      date: formValues.date || defaultDate,
+    });
   }
 
   return (
@@ -101,6 +107,7 @@ function ActivityForm({ disabled, editingActivity, onCancelEdit, onSubmit }) {
 }
 
 ActivityForm.propTypes = {
+  defaultDate: PropTypes.string,
   disabled: PropTypes.bool.isRequired,
   editingActivity: PropTypes.shape({
     _id: PropTypes.string.isRequired,
@@ -114,6 +121,7 @@ ActivityForm.propTypes = {
 };
 
 ActivityForm.defaultProps = {
+  defaultDate: "",
   editingActivity: null,
 };
 

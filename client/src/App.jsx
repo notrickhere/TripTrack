@@ -50,6 +50,17 @@ function getLatestTripEndDate(trips) {
   );
 }
 
+function getLatestActivityDate(activities) {
+  if (!activities.length) {
+    return "";
+  }
+
+  return activities.reduce(
+    (latestDate, activity) => (activity.date > latestDate ? activity.date : latestDate),
+    activities[0].date
+  );
+}
+
 function getContinentFromCountryCode(countryCode = "") {
   const code = countryCode.toUpperCase();
 
@@ -145,6 +156,10 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const plannerTrips = trips.filter((trip) => !trip.seeded);
   const inspirationTrips = trips.filter((trip) => trip.seeded);
+  const selectedTrip = plannerTrips.find((trip) => trip._id === selectedTripId) || null;
+  const selectedTripActivities = activitiesByTripId[selectedTripId] || [];
+  const defaultActivityDate =
+    getLatestActivityDate(selectedTripActivities) || selectedTrip?.startDate || "";
   const latestPlannerEndDate = getLatestTripEndDate(plannerTrips);
   const nextAllowedPlannerStartDate = latestPlannerEndDate
     ? addDays(latestPlannerEndDate, 1)
@@ -510,6 +525,13 @@ function App() {
     scrollToPanel(itineraryPanelRef);
   }
 
+  function handleAddActivity(tripId) {
+    setActiveView("planner");
+    setSelectedTripId(tripId);
+    setEditingActivity(null);
+    scrollToPanel(itineraryPanelRef);
+  }
+
   return (
     <div className="app-shell">
       <header className="hero">
@@ -578,6 +600,7 @@ function App() {
                 </p>
               </div>
               <ActivityForm
+                defaultDate={defaultActivityDate}
                 disabled={!selectedTripId}
                 editingActivity={editingActivity}
                 onCancelEdit={() => setEditingActivity(null)}
@@ -603,6 +626,7 @@ function App() {
               <PlannerOverview
                 activitiesByTripId={activitiesByTripId}
                 isLoading={isLoadingTrips || isLoadingActivities}
+                onAddActivity={handleAddActivity}
                 onDeleteActivity={handleActivityDelete}
                 onDeleteAllActivities={handleDeleteAllActivities}
                 onDeleteTrip={handleTripDelete}

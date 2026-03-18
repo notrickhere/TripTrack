@@ -94,13 +94,18 @@ The project uses MongoDB collections with a mix of shared seeded data and accoun
 ## 4. Design Mockups
 Design mockups or screenshots should be included before submission.
 
-Suggested files:
-- `images/triptrack-auth.png`
-- `images/triptrack-inspiration.png`
-- `images/triptrack-planner.png`
+Design mockup files:
+- `images/figma_login.png`
+- `images/figma_register.png`
+- `images/figma_inspire.png`
+- `images/figma_planner.png`
+
+Current application screenshots:
+- `images/inspiraton.png`
+- `images/planner.png`
 
 Figma link:
-- `Add Figma link here if available`
+- https://www.figma.com/proto/87WJ5f5pPp3LbiLmzCsW9T/TripTrack?node-id=0-1&t=ESV9edh2wBW8DOob-1
 
 ## 5. Work Distribution
 - Ricky:

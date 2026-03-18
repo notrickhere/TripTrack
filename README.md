@@ -287,19 +287,21 @@ MONGODB_URI='your_atlas_connection_string' MONGO_DB_NAME=TripTrack npm run seed
 
 ## Design Mockups / Figma
 
-- `Add Figma/design mockup link here if available`
+- `images/figma_login.png`
+- `images/figma_register.png`
+- `images/figma_inspire.png`
+- `images/figma_planner.png`
+- https://www.figma.com/proto/87WJ5f5pPp3LbiLmzCsW9T/TripTrack?node-id=0-1&t=ESV9edh2wBW8DOob-1
 
 ## Screenshots
 
-`Add project screenshots here before submission.`
+### Inspiration
 
-Example:
+![TripTrack Inspiration Page](./images/inspiraton.png)
 
-```md
-![TripTrack Inspiration Page](./images/triptrack-inspiration.png)
-![TripTrack Planner Page](./images/triptrack-planner.png)
-![TripTrack Auth Page](./images/triptrack-auth.png)
-```
+### Planner
+
+![TripTrack Planner Page](./images/planner.png)
 
 ## Public Narrated Video
 

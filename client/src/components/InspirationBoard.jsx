@@ -182,10 +182,6 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
           <p className="eyebrow">Inspiration</p>
           <h2>Destination ideas!</h2>
         </div>
-        <p>
-          Use this view to browse destinations, moods, and timezones before you build
-          a final itinerary.
-        </p>
       </div>
 
       <div className="continent-filter">

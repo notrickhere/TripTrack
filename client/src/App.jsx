@@ -480,7 +480,6 @@ function App() {
   return (
     <div className="app-shell">
       <header className="hero">
-        <p className="eyebrow">CS5610 Project 3</p>
         <h1>TripTrack</h1>
         <p className="hero-copy">
           Organize trips, dates, notes, and daily itinerary items in one place.

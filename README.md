@@ -86,6 +86,7 @@ Create a root `.env` file in `TripTrack/` based on `.env.example`:
 ```env
 PORT=5001
 NODE_ENV=development
+CLIENT_ORIGIN=http://localhost:5173
 MONGO_PORT=27017
 MONGO_DB_NAME=triptrack
 MONGODB_URI=your_mongodb_connection_string
@@ -95,6 +96,7 @@ For local development with Docker and MongoDB Compass:
 
 ```env
 PORT=5001
+CLIENT_ORIGIN=http://localhost:5173
 MONGODB_URI=mongodb://localhost:27017/triptrack
 ```
 
@@ -165,6 +167,41 @@ The backend API runs at:
 ```text
 http://localhost:5001/api
 ```
+
+## Render Deployment
+Deploy the backend and frontend as separate Render services.
+
+### Backend Render service
+- Service Type: `Web Service`
+- Runtime: `Node`
+- Root Directory: `server`
+- Build Command: `npm install`
+- Start Command: `npm start`
+
+Recommended backend environment variables:
+
+```env
+NODE_ENV=production
+MONGO_DB_NAME=triptrack
+MONGODB_URI=your_mongodb_atlas_connection_string
+CLIENT_ORIGIN=https://your-frontend-site.onrender.com
+```
+
+Render will provide `PORT` automatically for the backend web service.
+
+### Frontend Render service
+- Service Type: `Static Site`
+- Root Directory: `client`
+- Build Command: `npm install && npm run build`
+- Publish Directory: `dist`
+
+Recommended frontend environment variables:
+
+```env
+VITE_API_BASE_URL=https://your-backend-service.onrender.com/api
+```
+
+Deploy the backend first so you can point the frontend `VITE_API_BASE_URL` at the correct Render API URL.
 
 ## Current Project Structure
 ```text

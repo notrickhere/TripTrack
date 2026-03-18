@@ -7,10 +7,24 @@ import healthRoutes from "./routes/healthRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 
 const app = express();
+const defaultAllowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+const configuredOrigins = process.env.CLIENT_ORIGIN
+  ? process.env.CLIENT_ORIGIN.split(",").map((origin) => origin.trim())
+  : defaultAllowedOrigins;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin(origin, callback) {
+      if (!origin || configuredOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Origin not allowed by CORS."));
+    },
   })
 );
 app.use(morgan("dev"));

@@ -53,7 +53,6 @@ export function getCurrentToken() {
 export function register(payload) {
   return request("/auth/register", {
     body: JSON.stringify(payload),
-    headers: {},
     method: "POST",
   });
 }
@@ -61,7 +60,6 @@ export function register(payload) {
 export function login(payload) {
   return request("/auth/login", {
     body: JSON.stringify(payload),
-    headers: {},
     method: "POST",
   });
 }

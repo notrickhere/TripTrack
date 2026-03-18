@@ -406,6 +406,13 @@ function App() {
   return (
     <div className="app-shell">
       <header className="hero">
+        {currentUser ? (
+          <div className="session-bar">
+            <button onClick={handleLogout} type="button">
+              Logout
+            </button>
+          </div>
+        ) : null}
         <p className="eyebrow">CS5610 Project 3</p>
         <h1>TripTrack</h1>
         <p className="hero-copy">
@@ -429,7 +436,7 @@ function App() {
         </div>
         {currentUser ? (
           <div className="session-bar">
-            <span>{currentUser.email}</span>
+            
             <button onClick={handleLogout} type="button">
               Logout
             </button>
@@ -519,6 +526,10 @@ function App() {
           />
         </main>
       )}
+      <footer className="site-footer">
+        <p>MIT License</p>
+        <p>Ricky Lee and Tarun Badarvada</p>
+      </footer>
     </div>
   );
 }

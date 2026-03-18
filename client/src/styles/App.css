@@ -6,6 +6,7 @@
 
 .hero {
   margin-bottom: 2rem;
+  position: relative;
 }
 
 .eyebrow {
@@ -56,7 +57,9 @@
   align-items: center;
   display: flex;
   gap: 0.8rem;
-  margin-top: 1rem;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .session-bar button {
@@ -125,8 +128,31 @@
   opacity: 0.55;
 }
 
+.site-footer {
+  border-top: 1px solid rgba(151, 170, 190, 0.35);
+  color: #5a6d84;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
 @media (max-width: 840px) {
   .dashboard {
     grid-template-columns: 1fr;
+  }
+
+  .session-bar {
+    margin-bottom: 1rem;
+    position: static;
+  }
+
+  .site-footer {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

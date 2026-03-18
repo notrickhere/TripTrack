@@ -8,6 +8,9 @@ build/
 coverage/
 
 .DS_Store
+package-lock 2.json
+client/package-lock 2.json
+server/package-lock 2.json
 
 prop.md
 rub.md

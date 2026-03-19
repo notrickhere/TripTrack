@@ -5,6 +5,7 @@ import AuthPanel from "./components/AuthPanel.jsx";
 import InspirationBoard from "./components/InspirationBoard.jsx";
 import PlannerOverview from "./components/PlannerOverview.jsx";
 import TripForm from "./components/TripForm.jsx";
+import TripStatistics from "./components/TripStatistics.jsx";
 import {
   createActivity,
   createTrip,
@@ -312,6 +313,28 @@ function App() {
     }));
   }
 
+  useEffect(() => {
+    if (activeView === "statistics") {
+      async function loadAllActivities() {
+        try {
+          // Load all activities for statistics by getting activities from all trips
+          const allTripActivities = await Promise.all(
+            trips.map(async (trip) => await getActivities(trip._id))
+          );
+          // Flatten the array of arrays into a single array
+          const flattenedActivities = allTripActivities.flat();
+          setActivities(flattenedActivities);
+        } catch (error) {
+          setErrorMessage(error.message);
+        }
+      }
+
+      if (trips.length > 0) {
+        loadAllActivities();
+      }
+    }
+  }, [activeView, trips]);
+
   async function handleTripDelete(tripId) {
     setErrorMessage("");
     await deleteTrip(tripId);
@@ -548,6 +571,13 @@ function App() {
             >
               Inspiration
             </button>
+            <button
+              className={activeView === "statistics" ? "active-view" : ""}
+              onClick={() => setActiveView("statistics")}
+              type="button"
+            >
+              Statistics
+            </button>
           </div>
           {currentUser ? (
             <div className="session-bar">
@@ -640,6 +670,10 @@ function App() {
             />
           </main>
         )
+      ) : activeView === "statistics" ? (
+        <main>
+          <TripStatistics trips={trips} activities={activities} />
+        </main>
       ) : (
         <main>
           <InspirationBoard

@@ -10,17 +10,6 @@ function getActivitiesCollection() {
   return getDatabase().collection("activities");
 }
 
-async function getLatestPlannerTripEndDate(userId) {
-  const latestTrip = await getTripsCollection().findOne(
-    { seeded: { $ne: true }, userId },
-    {
-      sort: { endDate: -1 },
-    }
-  );
-
-  return latestTrip?.endDate || "";
-}
-
 function parseObjectId(id) {
   if (!ObjectId.isValid(id)) {
     return null;
@@ -89,14 +78,6 @@ export async function createTrip(request, response) {
   if (endDate < startDate) {
     return response.status(400).json({
       message: "A trip cannot end before it starts.",
-    });
-  }
-
-  const latestPlannerEndDate = await getLatestPlannerTripEndDate(getUserId(request));
-
-  if (latestPlannerEndDate && startDate <= latestPlannerEndDate) {
-    return response.status(400).json({
-      message: `New trips must start after ${latestPlannerEndDate}.`,
     });
   }
 

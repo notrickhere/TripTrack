@@ -22,12 +22,15 @@ const initialFormState = {
   notes: "",
 };
 
-function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
+function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
   const [formValues, setFormValues] = useState(initialFormState);
 
   useEffect(() => {
     if (!editingTrip) {
-      setFormValues(initialFormState);
+      setFormValues({
+        ...initialFormState,
+        startDate: suggestedStartDate,
+      });
       return;
     }
 
@@ -40,7 +43,7 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
       notes: editingTrip.notes || "",
       startDate: editingTrip.startDate,
     });
-  }, [editingTrip]);
+  }, [editingTrip, suggestedStartDate]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -50,7 +53,10 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
   async function handleSubmit(event) {
     event.preventDefault();
     await onSubmit(formValues);
-    setFormValues(initialFormState);
+    setFormValues({
+      ...initialFormState,
+      startDate: suggestedStartDate,
+    });
   }
 
   return (
@@ -101,7 +107,6 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
       <label>
         Start Date
         <input
-          min={minStartDate || undefined}
           name="startDate"
           onChange={handleChange}
           required
@@ -112,7 +117,7 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
       <label>
         End Date
         <input
-          min={formValues.startDate || minStartDate || undefined}
+          min={formValues.startDate || undefined}
           name="endDate"
           onChange={handleChange}
           required
@@ -120,8 +125,8 @@ function TripForm({ editingTrip, minStartDate, onCancelEdit, onSubmit }) {
           value={formValues.endDate}
         />
       </label>
-      {!editingTrip && minStartDate ? (
-        <p className="form-hint">Next trip can start on or after {minStartDate}.</p>
+      {!editingTrip && suggestedStartDate ? (
+        <p className="form-hint">Suggested next trip start date: {suggestedStartDate}.</p>
       ) : null}
       <label>
         Notes
@@ -157,14 +162,14 @@ TripForm.propTypes = {
     notes: PropTypes.string,
     startDate: PropTypes.string.isRequired,
   }),
-  minStartDate: PropTypes.string,
+  suggestedStartDate: PropTypes.string,
   onCancelEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 
 TripForm.defaultProps = {
   editingTrip: null,
-  minStartDate: "",
+  suggestedStartDate: "",
 };
 
 export default TripForm;

@@ -271,13 +271,6 @@ function App() {
       return;
     }
 
-    if (nextAllowedPlannerStartDate && formValues.startDate < nextAllowedPlannerStartDate) {
-      setErrorMessage(
-        `New trips must start on or after ${nextAllowedPlannerStartDate}.`
-      );
-      return;
-    }
-
     const newTrip = await createTrip(formValues);
     setTrips((currentTrips) => [newTrip, ...currentTrips]);
     setSelectedTripId(newTrip._id);
@@ -584,7 +577,7 @@ function App() {
               </div>
               <TripForm
                 editingTrip={editingTrip}
-                minStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
+                suggestedStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
                 onCancelEdit={() => setEditingTrip(null)}
                 onSubmit={handleTripCreate}
               />

@@ -1,0 +1,282 @@
+.simple-timeline {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.timeline-header h2 {
+  color: #2c5aa0;
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.filter-select {
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.9rem;
+  min-width: 120px;
+}
+
+.timeline-summary {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.timeline-container {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timeline-line {
+  position: relative;
+}
+
+.timeline-trip {
+  position: relative;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timeline-trip:hover {
+  transform: translateX(5px);
+}
+
+.timeline-trip:last-child {
+  margin-bottom: 0;
+}
+
+/* Timeline connectors */
+.timeline-connector {
+  position: absolute;
+  left: 15px;
+  top: -2rem;
+  width: 2px;
+  height: 2rem;
+  background: #e9ecef;
+}
+
+/* Trip markers */
+.trip-marker {
+  position: absolute;
+  left: 0;
+  top: 1rem;
+  z-index: 2;
+}
+
+.marker-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 0 0 2px #2c5aa0;
+  transition: all 0.3s ease;
+}
+
+.marker-dot.upcoming {
+  background: #28a745;
+  box-shadow: 0 0 0 2px #28a745;
+}
+
+.marker-dot.current {
+  background: #ffc107;
+  box-shadow: 0 0 0 2px #ffc107;
+  animation: pulse 2s infinite;
+}
+
+.marker-dot.completed {
+  background: #6c757d;
+  box-shadow: 0 0 0 2px #6c757d;
+}
+
+@keyframes pulse {
+  0% { 
+    transform: scale(1); 
+    box-shadow: 0 0 0 2px #ffc107, 0 0 0 6px rgba(255, 193, 7, 0);
+  }
+  70% { 
+    transform: scale(1); 
+    box-shadow: 0 0 0 2px #ffc107, 0 0 0 6px rgba(255, 193, 7, 0.3);
+  }
+  100% { 
+    transform: scale(1); 
+    box-shadow: 0 0 0 2px #ffc107, 0 0 0 6px rgba(255, 193, 7, 0);
+  }
+}
+
+/* Trip cards */
+.trip-card {
+  margin-left: 50px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.timeline-trip:hover .trip-card {
+  border-color: #2c5aa0;
+  box-shadow: 0 2px 8px rgba(44, 90, 160, 0.1);
+}
+
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.trip-header h3 {
+  margin: 0;
+  color: #2c5aa0;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-badge.upcoming {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.current {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.completed {
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+.trip-dates {
+  font-size: 1rem;
+  color: #495057;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.trip-details {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 0.75rem;
+}
+
+.duration {
+  font-weight: 600;
+  color: #495057;
+}
+
+.separator {
+  color: #adb5bd;
+}
+
+.continent,
+.country {
+  color: #6c757d;
+}
+
+.trip-notes {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-style: italic;
+  line-height: 1.4;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #2c5aa0;
+}
+
+/* Empty states */
+.timeline-empty,
+.no-trips {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+.timeline-empty h3 {
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .simple-timeline {
+    padding: 1rem;
+  }
+
+  .timeline-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .trip-card {
+    margin-left: 40px;
+    padding: 1rem;
+  }
+
+  .trip-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .trip-details {
+    flex-wrap: wrap;
+  }
+
+  .marker-dot {
+    width: 20px;
+    height: 20px;
+  }
+
+  .timeline-connector {
+    left: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-card {
+    margin-left: 30px;
+  }
+
+  .timeline-connector {
+    left: 7px;
+  }
+
+  .marker-dot {
+    width: 16px;
+    height: 16px;
+  }
+}

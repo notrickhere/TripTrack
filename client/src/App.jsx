@@ -6,7 +6,7 @@ import InspirationBoard from "./components/InspirationBoard.jsx";
 import PlannerOverview from "./components/PlannerOverview.jsx";
 import TripForm from "./components/TripForm.jsx";
 import TripStatistics from "./components/TripStatistics.jsx";
-import TripTimeline from "./components/TripTimeline.jsx";
+import SimpleTripTimeline from "./components/SimpleTripTimeline.jsx";
 import {
   createActivity,
   createTrip,
@@ -941,9 +941,8 @@ function App() {
         )
       ) : activeView === "timeline" ? (
         <main>
-          <TripTimeline 
-            trips={trips} 
-            activities={activities} 
+          <SimpleTripTimeline 
+            trips={trips.filter(trip => !trip.seeded)} // Only show your actual trips, not inspiration
             onTripSelect={(trip) => {
               setActiveView("planner");
               setSelectedTripId(trip._id);

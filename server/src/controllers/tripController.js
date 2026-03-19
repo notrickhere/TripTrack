@@ -10,9 +10,9 @@ function getActivitiesCollection() {
   return getDatabase().collection("activities");
 }
 
-async function getLatestPlannerTripEndDate() {
+async function getLatestPlannerTripEndDate(userId) {
   const latestTrip = await getTripsCollection().findOne(
-    { seeded: { $ne: true } },
+    { seeded: { $ne: true }, userId },
     {
       sort: { endDate: -1 },
     }
@@ -92,7 +92,7 @@ export async function createTrip(request, response) {
     });
   }
 
-  const latestPlannerEndDate = await getLatestPlannerTripEndDate();
+  const latestPlannerEndDate = await getLatestPlannerTripEndDate(getUserId(request));
 
   if (latestPlannerEndDate && startDate <= latestPlannerEndDate) {
     return response.status(400).json({

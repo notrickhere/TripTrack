@@ -6,6 +6,7 @@ import InspirationBoard from "./components/InspirationBoard.jsx";
 import PlannerOverview from "./components/PlannerOverview.jsx";
 import TripForm from "./components/TripForm.jsx";
 import TripStatistics from "./components/TripStatistics.jsx";
+import TripTimeline from "./components/TripTimeline.jsx";
 import {
   createActivity,
   createTrip,
@@ -37,7 +38,10 @@ function getTripLengthInDays(startDateString, endDateString) {
   const startDate = new Date(`${startDateString}T00:00:00`);
   const endDate = new Date(`${endDateString}T00:00:00`);
   const differenceInMilliseconds = endDate.getTime() - startDate.getTime();
-  return Math.max(0, Math.round(differenceInMilliseconds / (1000 * 60 * 60 * 24)));
+  return Math.max(
+    0,
+    Math.round(differenceInMilliseconds / (1000 * 60 * 60 * 24))
+  );
 }
 
 function getLatestTripEndDate(trips) {
@@ -46,7 +50,8 @@ function getLatestTripEndDate(trips) {
   }
 
   return trips.reduce(
-    (latestEndDate, trip) => (trip.endDate > latestEndDate ? trip.endDate : latestEndDate),
+    (latestEndDate, trip) =>
+      trip.endDate > latestEndDate ? trip.endDate : latestEndDate,
     trips[0].endDate
   );
 }
@@ -57,7 +62,8 @@ function getLatestActivityDate(activities) {
   }
 
   return activities.reduce(
-    (latestDate, activity) => (activity.date > latestDate ? activity.date : latestDate),
+    (latestDate, activity) =>
+      activity.date > latestDate ? activity.date : latestDate,
     activities[0].date
   );
 }
@@ -67,11 +73,63 @@ function getContinentFromCountryCode(countryCode = "") {
 
   if (
     [
-      "AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ",
-      "EG", "EH", "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LR",
-      "LS", "LY", "MA", "MG", "ML", "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RE",
-      "RW", "SC", "SD", "SL", "SN", "SO", "SS", "ST", "SZ", "TD", "TG", "TN", "TZ",
-      "UG", "YT", "ZA", "ZM", "ZW",
+      "AO",
+      "BF",
+      "BI",
+      "BJ",
+      "BW",
+      "CD",
+      "CF",
+      "CG",
+      "CI",
+      "CM",
+      "CV",
+      "DJ",
+      "DZ",
+      "EG",
+      "EH",
+      "ER",
+      "ET",
+      "GA",
+      "GH",
+      "GM",
+      "GN",
+      "GQ",
+      "GW",
+      "KE",
+      "KM",
+      "LR",
+      "LS",
+      "LY",
+      "MA",
+      "MG",
+      "ML",
+      "MR",
+      "MU",
+      "MW",
+      "MZ",
+      "NA",
+      "NE",
+      "NG",
+      "RE",
+      "RW",
+      "SC",
+      "SD",
+      "SL",
+      "SN",
+      "SO",
+      "SS",
+      "ST",
+      "SZ",
+      "TD",
+      "TG",
+      "TN",
+      "TZ",
+      "UG",
+      "YT",
+      "ZA",
+      "ZM",
+      "ZW",
     ].includes(code)
   ) {
     return "Africa";
@@ -79,10 +137,57 @@ function getContinentFromCountryCode(countryCode = "") {
 
   if (
     [
-      "AE", "AF", "AM", "AZ", "BD", "BH", "BN", "BT", "CN", "CY", "GE", "HK", "ID",
-      "IL", "IN", "IQ", "IR", "JO", "JP", "KG", "KH", "KP", "KR", "KW", "KZ", "LA",
-      "LB", "LK", "MM", "MN", "MO", "MV", "MY", "NP", "OM", "PH", "PK", "PS", "QA",
-      "SA", "SG", "SY", "TH", "TJ", "TL", "TM", "TR", "TW", "UZ", "VN", "YE",
+      "AE",
+      "AF",
+      "AM",
+      "AZ",
+      "BD",
+      "BH",
+      "BN",
+      "BT",
+      "CN",
+      "CY",
+      "GE",
+      "HK",
+      "ID",
+      "IL",
+      "IN",
+      "IQ",
+      "IR",
+      "JO",
+      "JP",
+      "KG",
+      "KH",
+      "KP",
+      "KR",
+      "KW",
+      "KZ",
+      "LA",
+      "LB",
+      "LK",
+      "MM",
+      "MN",
+      "MO",
+      "MV",
+      "MY",
+      "NP",
+      "OM",
+      "PH",
+      "PK",
+      "PS",
+      "QA",
+      "SA",
+      "SG",
+      "SY",
+      "TH",
+      "TJ",
+      "TL",
+      "TM",
+      "TR",
+      "TW",
+      "UZ",
+      "VN",
+      "YE",
     ].includes(code)
   ) {
     return "Asia";
@@ -90,10 +195,55 @@ function getContinentFromCountryCode(countryCode = "") {
 
   if (
     [
-      "AD", "AL", "AT", "BA", "BE", "BG", "BY", "CH", "CZ", "DE", "DK", "EE", "ES",
-      "FI", "FO", "FR", "GB", "GG", "GI", "GR", "HR", "HU", "IE", "IM", "IS", "IT",
-      "JE", "LI", "LT", "LU", "LV", "MC", "MD", "ME", "MK", "MT", "NL", "NO", "PL",
-      "PT", "RO", "RS", "RU", "SE", "SI", "SK", "SM", "UA", "VA",
+      "AD",
+      "AL",
+      "AT",
+      "BA",
+      "BE",
+      "BG",
+      "BY",
+      "CH",
+      "CZ",
+      "DE",
+      "DK",
+      "EE",
+      "ES",
+      "FI",
+      "FO",
+      "FR",
+      "GB",
+      "GG",
+      "GI",
+      "GR",
+      "HR",
+      "HU",
+      "IE",
+      "IM",
+      "IS",
+      "IT",
+      "JE",
+      "LI",
+      "LT",
+      "LU",
+      "LV",
+      "MC",
+      "MD",
+      "ME",
+      "MK",
+      "MT",
+      "NL",
+      "NO",
+      "PL",
+      "PT",
+      "RO",
+      "RS",
+      "RU",
+      "SE",
+      "SI",
+      "SK",
+      "SM",
+      "UA",
+      "VA",
     ].includes(code)
   ) {
     return "Europe";
@@ -101,27 +251,101 @@ function getContinentFromCountryCode(countryCode = "") {
 
   if (
     [
-      "AG", "AI", "AW", "BB", "BL", "BM", "BQ", "BS", "BZ", "CA", "CR", "CU", "CW",
-      "DM", "DO", "GD", "GL", "GP", "GT", "HN", "HT", "JM", "KN", "KY", "LC", "MF",
-      "MQ", "MS", "MX", "NI", "PA", "PM", "PR", "SV", "SX", "TC", "TT", "US", "VC",
-      "VG", "VI",
+      "AG",
+      "AI",
+      "AW",
+      "BB",
+      "BL",
+      "BM",
+      "BQ",
+      "BS",
+      "BZ",
+      "CA",
+      "CR",
+      "CU",
+      "CW",
+      "DM",
+      "DO",
+      "GD",
+      "GL",
+      "GP",
+      "GT",
+      "HN",
+      "HT",
+      "JM",
+      "KN",
+      "KY",
+      "LC",
+      "MF",
+      "MQ",
+      "MS",
+      "MX",
+      "NI",
+      "PA",
+      "PM",
+      "PR",
+      "SV",
+      "SX",
+      "TC",
+      "TT",
+      "US",
+      "VC",
+      "VG",
+      "VI",
     ].includes(code)
   ) {
     return "North America";
   }
 
   if (
-    ["AR", "BO", "BR", "CL", "CO", "EC", "FK", "GF", "GY", "PE", "PY", "SR", "UY", "VE"].includes(
-      code
-    )
+    [
+      "AR",
+      "BO",
+      "BR",
+      "CL",
+      "CO",
+      "EC",
+      "FK",
+      "GF",
+      "GY",
+      "PE",
+      "PY",
+      "SR",
+      "UY",
+      "VE",
+    ].includes(code)
   ) {
     return "South America";
   }
 
   if (
     [
-      "AS", "AU", "CK", "FJ", "FM", "GU", "KI", "MH", "MP", "NC", "NF", "NR", "NU",
-      "NZ", "PF", "PG", "PN", "PW", "SB", "TK", "TO", "TV", "UM", "VU", "WF", "WS",
+      "AS",
+      "AU",
+      "CK",
+      "FJ",
+      "FM",
+      "GU",
+      "KI",
+      "MH",
+      "MP",
+      "NC",
+      "NF",
+      "NR",
+      "NU",
+      "NZ",
+      "PF",
+      "PG",
+      "PN",
+      "PW",
+      "SB",
+      "TK",
+      "TO",
+      "TV",
+      "UM",
+      "VU",
+      "WF",
+      "WS",
     ].includes(code)
   ) {
     return "Oceania";
@@ -157,10 +381,13 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const plannerTrips = trips.filter((trip) => !trip.seeded);
   const inspirationTrips = trips.filter((trip) => trip.seeded);
-  const selectedTrip = plannerTrips.find((trip) => trip._id === selectedTripId) || null;
+  const selectedTrip =
+    plannerTrips.find((trip) => trip._id === selectedTripId) || null;
   const selectedTripActivities = activitiesByTripId[selectedTripId] || [];
   const defaultActivityDate =
-    getLatestActivityDate(selectedTripActivities) || selectedTrip?.startDate || "";
+    getLatestActivityDate(selectedTripActivities) ||
+    selectedTrip?.startDate ||
+    "";
   const latestPlannerEndDate = getLatestTripEndDate(plannerTrips);
   const nextAllowedPlannerStartDate = latestPlannerEndDate
     ? addDays(latestPlannerEndDate, 1)
@@ -201,7 +428,10 @@ function App() {
 
   useEffect(() => {
     setSelectedTripId((currentTripId) => {
-      if (currentTripId && plannerTrips.some((trip) => trip._id === currentTripId)) {
+      if (
+        currentTripId &&
+        plannerTrips.some((trip) => trip._id === currentTripId)
+      ) {
         return currentTripId;
       }
 
@@ -234,7 +464,10 @@ function App() {
     async function loadPlannerActivities() {
       try {
         const activityEntries = await Promise.all(
-          plannerTrips.map(async (trip) => [trip._id, await getActivities(trip._id)])
+          plannerTrips.map(async (trip) => [
+            trip._id,
+            await getActivities(trip._id),
+          ])
         );
 
         setActivitiesByTripId(Object.fromEntries(activityEntries));
@@ -266,7 +499,9 @@ function App() {
     if (editingTrip) {
       const savedTrip = await updateTrip(editingTrip._id, formValues);
       setTrips((currentTrips) =>
-        currentTrips.map((trip) => (trip._id === savedTrip._id ? savedTrip : trip))
+        currentTrips.map((trip) =>
+          trip._id === savedTrip._id ? savedTrip : trip
+        )
       );
       setEditingTrip(null);
       return;
@@ -285,7 +520,10 @@ function App() {
     }
 
     if (editingActivity) {
-      const savedActivity = await updateActivity(editingActivity._id, formValues);
+      const savedActivity = await updateActivity(
+        editingActivity._id,
+        formValues
+      );
       setActivities((currentActivities) =>
         currentActivities.map((activity) =>
           activity._id === savedActivity._id ? savedActivity : activity
@@ -293,8 +531,9 @@ function App() {
       );
       setActivitiesByTripId((currentActivities) => ({
         ...currentActivities,
-        [selectedTripId]: (currentActivities[selectedTripId] || []).map((activity) =>
-          activity._id === savedActivity._id ? savedActivity : activity
+        [selectedTripId]: (currentActivities[selectedTripId] || []).map(
+          (activity) =>
+            activity._id === savedActivity._id ? savedActivity : activity
         ),
       }));
       setEditingActivity(null);
@@ -309,7 +548,10 @@ function App() {
     setActivities((currentActivities) => [...currentActivities, newActivity]);
     setActivitiesByTripId((currentActivities) => ({
       ...currentActivities,
-      [selectedTripId]: [...(currentActivities[selectedTripId] || []), newActivity],
+      [selectedTripId]: [
+        ...(currentActivities[selectedTripId] || []),
+        newActivity,
+      ],
     }));
   }
 
@@ -394,7 +636,9 @@ function App() {
       )
     );
     setEditingActivity((currentActivity) =>
-      currentActivity && currentActivity._id === activityId ? null : currentActivity
+      currentActivity && currentActivity._id === activityId
+        ? null
+        : currentActivity
     );
   }
 
@@ -405,16 +649,16 @@ function App() {
       return;
     }
 
-    const shouldDelete = window.confirm(
-      "Delete all activities for this trip?"
-    );
+    const shouldDelete = window.confirm("Delete all activities for this trip?");
 
     if (!shouldDelete) {
       return;
     }
 
     setErrorMessage("");
-    await Promise.all(tripActivities.map((activity) => deleteActivity(activity._id)));
+    await Promise.all(
+      tripActivities.map((activity) => deleteActivity(activity._id))
+    );
     setActivitiesByTripId((currentActivities) => ({
       ...currentActivities,
       [tripId]: [],
@@ -425,7 +669,8 @@ function App() {
     }
 
     setEditingActivity((currentActivity) =>
-      currentActivity && tripActivities.some((activity) => activity._id === currentActivity._id)
+      currentActivity &&
+      tripActivities.some((activity) => activity._id === currentActivity._id)
         ? null
         : currentActivity
     );
@@ -436,7 +681,9 @@ function App() {
     setAuthErrorMessage("");
 
     if (!currentUser) {
-      setAuthErrorMessage("Create an account or login before copying trips to your planner.");
+      setAuthErrorMessage(
+        "Create an account or login before copying trips to your planner."
+      );
       setActiveView("planner");
       return;
     }
@@ -446,14 +693,18 @@ function App() {
     try {
       const today = formatDate(new Date());
       const plannerStartDate = nextAllowedPlannerStartDate || today;
-      const tripLength = getTripLengthInDays(sourceTrip.startDate, sourceTrip.endDate);
+      const tripLength = getTripLengthInDays(
+        sourceTrip.startDate,
+        sourceTrip.endDate
+      );
       const copiedEndDate = addDays(plannerStartDate, Math.min(tripLength, 30));
       const sourceActivities = await getActivities(sourceTrip._id);
 
       const copiedTrip = await createTrip({
         city: sourceTrip.city || "",
         continent:
-          sourceTrip.continent || getContinentFromCountryCode(sourceTrip.countryCode),
+          sourceTrip.continent ||
+          getContinentFromCountryCode(sourceTrip.countryCode),
         country: sourceTrip.country || "",
         destination: sourceTrip.destination,
         endDate: copiedEndDate,
@@ -578,6 +829,13 @@ function App() {
             >
               Statistics
             </button>
+            <button
+              className={activeView === "timeline" ? "active-view" : ""}
+              onClick={() => setActiveView("timeline")}
+              type="button"
+            >
+              Timeline
+            </button>
           </div>
           {currentUser ? (
             <div className="session-bar">
@@ -594,7 +852,10 @@ function App() {
       {activeView === "planner" ? (
         currentUser ? (
           <main className="planner-layout">
-            <section className="panel planner-panel planner-panel-form" ref={tripFormPanelRef}>
+            <section
+              className="panel planner-panel planner-panel-form"
+              ref={tripFormPanelRef}
+            >
               <div className="panel-header">
                 <div>
                   <h2>Trips</h2>
@@ -607,13 +868,18 @@ function App() {
               </div>
               <TripForm
                 editingTrip={editingTrip}
-                suggestedStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
+                suggestedStartDate={
+                  editingTrip ? "" : nextAllowedPlannerStartDate
+                }
                 onCancelEdit={() => setEditingTrip(null)}
                 onSubmit={handleTripCreate}
               />
             </section>
 
-            <section className="panel planner-panel planner-panel-itinerary" ref={itineraryPanelRef}>
+            <section
+              className="panel planner-panel planner-panel-itinerary"
+              ref={itineraryPanelRef}
+            >
               <div className="panel-header">
                 <h2>Itinerary</h2>
                 <p>
@@ -635,7 +901,10 @@ function App() {
               <div className="panel-header">
                 <div>
                   <h2>Planned Trips</h2>
-                  <p>View all planner trips with their nested activities in one place.</p>
+                  <p>
+                    View all planner trips with their nested activities in one
+                    place.
+                  </p>
                 </div>
                 <button
                   className="danger-ghost-button"
@@ -670,6 +939,17 @@ function App() {
             />
           </main>
         )
+      ) : activeView === "timeline" ? (
+        <main>
+          <TripTimeline 
+            trips={trips} 
+            activities={activities} 
+            onTripSelect={(trip) => {
+              setActiveView("planner");
+              setSelectedTripId(trip._id);
+            }}
+          />
+        </main>
       ) : activeView === "statistics" ? (
         <main>
           <TripStatistics trips={trips} activities={activities} />

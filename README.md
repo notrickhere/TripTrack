@@ -305,7 +305,7 @@ MONGODB_URI='your_atlas_connection_string' MONGO_DB_NAME=TripTrack npm run seed
 
 ## Public Narrated Video
 
-- `Add public demo video link here`
+- `https://northeastern-my.sharepoint.com/:v:/r/personal/lee_rick_northeastern_edu/Documents/Videos/Clipchamp/TripTrack/TripTrack.mp4?csf=1&web=1&e=Z4cmBS&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D`
 
 ## Presentation Slides
 

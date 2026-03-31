@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 
 import "./ActivityList.css";
 
+// Redundant
 function toTitleCase(value = "") {
   return value.replace(/\w\S*/g, (word) => {
     const normalizedWord = word.toLowerCase();

@@ -15,41 +15,259 @@ const CONTINENT_LABELS = [
 ];
 
 const AFRICA_CODES = new Set([
-  "AO", "BF", "BI", "BJ", "BW", "CD", "CF", "CG", "CI", "CM", "CV", "DJ", "DZ",
-  "EG", "EH", "ER", "ET", "GA", "GH", "GM", "GN", "GQ", "GW", "KE", "KM", "LR",
-  "LS", "LY", "MA", "MG", "ML", "MR", "MU", "MW", "MZ", "NA", "NE", "NG", "RE",
-  "RW", "SC", "SD", "SL", "SN", "SO", "SS", "ST", "SZ", "TD", "TG", "TN", "TZ",
-  "UG", "YT", "ZA", "ZM", "ZW",
+  "AO",
+  "BF",
+  "BI",
+  "BJ",
+  "BW",
+  "CD",
+  "CF",
+  "CG",
+  "CI",
+  "CM",
+  "CV",
+  "DJ",
+  "DZ",
+  "EG",
+  "EH",
+  "ER",
+  "ET",
+  "GA",
+  "GH",
+  "GM",
+  "GN",
+  "GQ",
+  "GW",
+  "KE",
+  "KM",
+  "LR",
+  "LS",
+  "LY",
+  "MA",
+  "MG",
+  "ML",
+  "MR",
+  "MU",
+  "MW",
+  "MZ",
+  "NA",
+  "NE",
+  "NG",
+  "RE",
+  "RW",
+  "SC",
+  "SD",
+  "SL",
+  "SN",
+  "SO",
+  "SS",
+  "ST",
+  "SZ",
+  "TD",
+  "TG",
+  "TN",
+  "TZ",
+  "UG",
+  "YT",
+  "ZA",
+  "ZM",
+  "ZW",
 ]);
 
 const ASIA_CODES = new Set([
-  "AE", "AF", "AM", "AZ", "BD", "BH", "BN", "BT", "CN", "CY", "GE", "HK", "ID",
-  "IL", "IN", "IQ", "IR", "JO", "JP", "KG", "KH", "KP", "KR", "KW", "KZ", "LA",
-  "LB", "LK", "MM", "MN", "MO", "MV", "MY", "NP", "OM", "PH", "PK", "PS", "QA",
-  "SA", "SG", "SY", "TH", "TJ", "TL", "TM", "TR", "TW", "UZ", "VN", "YE",
+  "AE",
+  "AF",
+  "AM",
+  "AZ",
+  "BD",
+  "BH",
+  "BN",
+  "BT",
+  "CN",
+  "CY",
+  "GE",
+  "HK",
+  "ID",
+  "IL",
+  "IN",
+  "IQ",
+  "IR",
+  "JO",
+  "JP",
+  "KG",
+  "KH",
+  "KP",
+  "KR",
+  "KW",
+  "KZ",
+  "LA",
+  "LB",
+  "LK",
+  "MM",
+  "MN",
+  "MO",
+  "MV",
+  "MY",
+  "NP",
+  "OM",
+  "PH",
+  "PK",
+  "PS",
+  "QA",
+  "SA",
+  "SG",
+  "SY",
+  "TH",
+  "TJ",
+  "TL",
+  "TM",
+  "TR",
+  "TW",
+  "UZ",
+  "VN",
+  "YE",
 ]);
 
 const EUROPE_CODES = new Set([
-  "AD", "AL", "AT", "BA", "BE", "BG", "BY", "CH", "CZ", "DE", "DK", "EE", "ES",
-  "FI", "FO", "FR", "GB", "GG", "GI", "GR", "HR", "HU", "IE", "IM", "IS", "IT",
-  "JE", "LI", "LT", "LU", "LV", "MC", "MD", "ME", "MK", "MT", "NL", "NO", "PL",
-  "PT", "RO", "RS", "RU", "SE", "SI", "SK", "SM", "UA", "VA",
+  "AD",
+  "AL",
+  "AT",
+  "BA",
+  "BE",
+  "BG",
+  "BY",
+  "CH",
+  "CZ",
+  "DE",
+  "DK",
+  "EE",
+  "ES",
+  "FI",
+  "FO",
+  "FR",
+  "GB",
+  "GG",
+  "GI",
+  "GR",
+  "HR",
+  "HU",
+  "IE",
+  "IM",
+  "IS",
+  "IT",
+  "JE",
+  "LI",
+  "LT",
+  "LU",
+  "LV",
+  "MC",
+  "MD",
+  "ME",
+  "MK",
+  "MT",
+  "NL",
+  "NO",
+  "PL",
+  "PT",
+  "RO",
+  "RS",
+  "RU",
+  "SE",
+  "SI",
+  "SK",
+  "SM",
+  "UA",
+  "VA",
 ]);
 
 const NORTH_AMERICA_CODES = new Set([
-  "AG", "AI", "AW", "BB", "BL", "BM", "BQ", "BS", "BZ", "CA", "CR", "CU", "CW",
-  "DM", "DO", "GD", "GL", "GP", "GT", "HN", "HT", "JM", "KN", "KY", "LC", "MF",
-  "MQ", "MS", "MX", "NI", "PA", "PM", "PR", "SV", "SX", "TC", "TT", "US", "VC",
-  "VG", "VI",
+  "AG",
+  "AI",
+  "AW",
+  "BB",
+  "BL",
+  "BM",
+  "BQ",
+  "BS",
+  "BZ",
+  "CA",
+  "CR",
+  "CU",
+  "CW",
+  "DM",
+  "DO",
+  "GD",
+  "GL",
+  "GP",
+  "GT",
+  "HN",
+  "HT",
+  "JM",
+  "KN",
+  "KY",
+  "LC",
+  "MF",
+  "MQ",
+  "MS",
+  "MX",
+  "NI",
+  "PA",
+  "PM",
+  "PR",
+  "SV",
+  "SX",
+  "TC",
+  "TT",
+  "US",
+  "VC",
+  "VG",
+  "VI",
 ]);
 
 const SOUTH_AMERICA_CODES = new Set([
-  "AR", "BO", "BR", "CL", "CO", "EC", "FK", "GF", "GY", "PE", "PY", "SR", "UY", "VE",
+  "AR",
+  "BO",
+  "BR",
+  "CL",
+  "CO",
+  "EC",
+  "FK",
+  "GF",
+  "GY",
+  "PE",
+  "PY",
+  "SR",
+  "UY",
+  "VE",
 ]);
 
 const OCEANIA_CODES = new Set([
-  "AS", "AU", "CK", "FJ", "FM", "GU", "KI", "MH", "MP", "NC", "NF", "NR", "NU",
-  "NZ", "PF", "PG", "PN", "PW", "SB", "TK", "TO", "TV", "UM", "VU", "WF", "WS",
+  "AS",
+  "AU",
+  "CK",
+  "FJ",
+  "FM",
+  "GU",
+  "KI",
+  "MH",
+  "MP",
+  "NC",
+  "NF",
+  "NR",
+  "NU",
+  "NZ",
+  "PF",
+  "PG",
+  "PN",
+  "PW",
+  "SB",
+  "TK",
+  "TO",
+  "TV",
+  "UM",
+  "VU",
+  "WF",
+  "WS",
 ]);
 
 function toTitleCase(value = "") {
@@ -144,21 +362,27 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
   const pageWindowSize = 10;
   const pageWindowStart =
     Math.floor((safeCurrentPage - 1) / pageWindowSize) * pageWindowSize + 1;
-  const pageWindowEnd = Math.min(totalPages, pageWindowStart + pageWindowSize - 1);
+  const pageWindowEnd = Math.min(
+    totalPages,
+    pageWindowStart + pageWindowSize - 1,
+  );
   const visiblePageNumbers = Array.from(
     { length: pageWindowEnd - pageWindowStart + 1 },
-    (_, index) => pageWindowStart + index
+    (_, index) => pageWindowStart + index,
   );
   const featuredTrips = searchedTrips.slice(
     (safeCurrentPage - 1) * pageSize,
-    safeCurrentPage * pageSize
+    safeCurrentPage * pageSize,
   );
 
   useEffect(() => {
     async function loadVisibleTripActivities() {
       try {
         const activityEntries = await Promise.all(
-          featuredTrips.map(async (trip) => [trip._id, await getActivities(trip._id)])
+          featuredTrips.map(async (trip) => [
+            trip._id,
+            await getActivities(trip._id),
+          ]),
         );
 
         setActivitiesByTripId(Object.fromEntries(activityEntries));
@@ -250,7 +474,9 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
                   ))}
                 </ul>
               ) : (
-                <p className="itinerary-empty">No activities linked to this trip yet.</p>
+                <p className="itinerary-empty">
+                  No activities linked to this trip yet.
+                </p>
               )}
             </div>
 
@@ -260,7 +486,9 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
               onClick={() => onCopyTripToPlanner(trip)}
               type="button"
             >
-              {isCopyingTripId === trip._id ? "Copying..." : "Copy Itinerary to Planner"}
+              {isCopyingTripId === trip._id
+                ? "Copying..."
+                : "Copy Itinerary to Planner"}
             </button>
           </article>
         ))}
@@ -277,7 +505,9 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
         <div className="page-number-list">
           {visiblePageNumbers.map((pageNumber) => (
             <button
-              className={safeCurrentPage === pageNumber ? "active-page-number" : ""}
+              className={
+                safeCurrentPage === pageNumber ? "active-page-number" : ""
+              }
               key={pageNumber}
               onClick={() => setCurrentPage(pageNumber)}
               type="button"
@@ -288,7 +518,9 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
         </div>
         <button
           disabled={safeCurrentPage === totalPages}
-          onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+          onClick={() =>
+            setCurrentPage((page) => Math.min(totalPages, page + 1))
+          }
           type="button"
         >
           Next
@@ -313,7 +545,7 @@ InspirationBoard.propTypes = {
       notes: PropTypes.string,
       startDate: PropTypes.string.isRequired,
       timezone: PropTypes.string,
-    })
+    }),
   ).isRequired,
 };
 

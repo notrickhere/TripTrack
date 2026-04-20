@@ -47,8 +47,8 @@ function AuthPanel({ errorMessage, onLogin, onRegister }) {
         <p className="eyebrow">Planner Access</p>
         <h2>Sign in to manage your planner</h2>
         <p>
-          You can browse the inspiration board without an account, but planner trips and
-          itinerary edits are private to each user.
+          You can browse the inspiration board without an account, but planner
+          trips and itinerary edits are private to each user.
         </p>
       </div>
 

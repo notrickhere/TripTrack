@@ -54,14 +54,14 @@ function TripStatistics({ trips, activities }) {
     const plannerTrips = filteredTrips.filter((trip) => !trip.seeded);
     const inspirationTrips = filteredTrips.filter((trip) => trip.seeded);
     const tripActivities = activities.filter((activity) =>
-      filteredTrips.some((trip) => trip._id === activity.tripId)
+      filteredTrips.some((trip) => trip._id === activity.tripId),
     );
 
     // Basic metrics
     const totalTrips = plannerTrips.length;
     const totalDays = plannerTrips.reduce(
       (sum, trip) => sum + getDaysBetween(trip.startDate, trip.endDate),
-      0
+      0,
     );
     const avgTripLength =
       totalTrips > 0 ? Math.round(totalDays / totalTrips) : 0;
@@ -100,7 +100,7 @@ function TripStatistics({ trips, activities }) {
         else acc.long += 1;
         return acc;
       },
-      { short: 0, medium: 0, long: 0 }
+      { short: 0, medium: 0, long: 0 },
     );
 
     // Upcoming trips
@@ -131,18 +131,18 @@ function TripStatistics({ trips, activities }) {
         uniqueCountries: Object.keys(countryCounts).length,
         mostVisitedContinent:
           Object.keys(continentCounts).sort(
-            (a, b) => continentCounts[b] - continentCounts[a]
+            (a, b) => continentCounts[b] - continentCounts[a],
           )[0] || "None",
         mostVisitedCountry:
           Object.keys(countryCounts).sort(
-            (a, b) => countryCounts[b] - countryCounts[a]
+            (a, b) => countryCounts[b] - countryCounts[a],
           )[0] || "None",
       },
       temporal: {
         monthlyTrips,
         favoriteMonth:
           Object.keys(monthlyTrips).sort(
-            (a, b) => monthlyTrips[b] - monthlyTrips[a]
+            (a, b) => monthlyTrips[b] - monthlyTrips[a],
           )[0] || "None",
         durationCategories,
         upcomingTrips: upcomingTrips.slice(0, 3),
@@ -312,7 +312,7 @@ function DetailedStats({ statistics }) {
                     <span className="count-number">{count}</span>
                   </div>
                 </div>
-              )
+              ),
             )}
           </div>
 
@@ -408,7 +408,7 @@ TripStatistics.propTypes = {
       continent: PropTypes.string,
       country: PropTypes.string,
       seeded: PropTypes.bool,
-    })
+    }),
   ).isRequired,
   activities: PropTypes.arrayOf(
     PropTypes.shape({
@@ -416,7 +416,7 @@ TripStatistics.propTypes = {
       tripId: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
 };
 

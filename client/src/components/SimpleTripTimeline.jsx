@@ -39,7 +39,7 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
         break;
       case "completed":
         filtered = filtered.filter(
-          (trip) => new Date(trip.endDate) < new Date()
+          (trip) => new Date(trip.endDate) < new Date(),
         );
         break;
       case "current":
@@ -54,7 +54,7 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
     }
 
     return filtered.sort(
-      (a, b) => new Date(a.startDate) - new Date(b.startDate)
+      (a, b) => new Date(a.startDate) - new Date(b.startDate),
     );
   }, [trips, selectedFilter]);
 
@@ -99,7 +99,7 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
         <span>
           {filteredTrips.reduce(
             (sum, trip) => sum + getDaysBetween(trip.startDate, trip.endDate),
-            0
+            0,
           )}{" "}
           total days
         </span>
@@ -193,7 +193,7 @@ SimpleTripTimeline.propTypes = {
       country: PropTypes.string,
       notes: PropTypes.string,
       seeded: PropTypes.bool,
-    })
+    }),
   ).isRequired,
   onTripSelect: PropTypes.func,
 };

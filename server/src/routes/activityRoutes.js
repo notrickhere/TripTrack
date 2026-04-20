@@ -6,7 +6,10 @@ import {
   listActivities,
   updateActivity,
 } from "../controllers/activityController.js";
-import { attachOptionalUser, requireAuth } from "../middleware/authMiddleware.js";
+import {
+  attachOptionalUser,
+  requireAuth,
+} from "../middleware/authMiddleware.js";
 
 const router = Router();
 

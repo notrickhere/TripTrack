@@ -42,13 +42,21 @@ export default [
       quotes: ["error", "double"],
       semi: ["error", "always"],
       "no-console": 0,
+      "no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          varsIgnorePattern: "^[A-Z]",
+        },
+      ],
 
       // Prettier integration - this runs Prettier through ESLint
       "prettier/prettier": [
         "error",
         {
           endOfLine: "lf",
-          trailingComma: "es5",
+          trailingComma: "all",
           singleQuote: false,
         },
       ],

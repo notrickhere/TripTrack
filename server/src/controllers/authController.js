@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
+import passport from "passport";
 
 import { getDatabase } from "../config/db.js";
-import { signAuthToken } from "../middleware/authMiddleware.js";
 
 function getUsersCollection() {
   return getDatabase().collection("users");
@@ -25,10 +25,14 @@ export async function registerUser(request, response) {
   }
 
   const normalizedEmail = email.trim().toLowerCase();
-  const existingUser = await getUsersCollection().findOne({ email: normalizedEmail });
+  const existingUser = await getUsersCollection().findOne({
+    email: normalizedEmail,
+  });
 
   if (existingUser) {
-    return response.status(409).json({ message: "An account already exists for that email." });
+    return response
+      .status(409)
+      .json({ message: "An account already exists for that email." });
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
@@ -43,45 +47,68 @@ export async function registerUser(request, response) {
   const createdUser = { ...user, _id: result.insertedId };
   const authUser = sanitizeUser(createdUser);
 
-  return response.status(201).json({
-    token: signAuthToken({ email: authUser.email, userId: authUser._id.toString() }),
-    user: authUser,
+  request.logIn(createdUser, (error) => {
+    if (error) {
+      response
+        .status(500)
+        .json({ message: "Registration succeeded, but sign-in failed." });
+      return;
+    }
+
+    response.status(201).json({
+      user: authUser,
+    });
   });
 }
 
-export async function loginUser(request, response) {
-  const { email = "", password = "" } = request.body;
+export function loginUser(request, response, next) {
+  passport.authenticate("local", (error, user, info) => {
+    if (error) {
+      next(error);
+      return;
+    }
 
-  if (!email || !password) {
-    return response.status(400).json({ message: "Email and password are required." });
-  }
+    if (!user) {
+      response
+        .status(401)
+        .json({ message: info?.message || "Invalid email or password." });
+      return;
+    }
 
-  const normalizedEmail = email.trim().toLowerCase();
-  const user = await getUsersCollection().findOne({ email: normalizedEmail });
+    request.logIn(user, (loginError) => {
+      if (loginError) {
+        next(loginError);
+        return;
+      }
 
-  if (!user) {
-    return response.status(401).json({ message: "Invalid email or password." });
-  }
-
-  const isMatch = await bcrypt.compare(password, user.passwordHash);
-
-  if (!isMatch) {
-    return response.status(401).json({ message: "Invalid email or password." });
-  }
-
-  const authUser = sanitizeUser(user);
-
-  return response.json({
-    token: signAuthToken({ email: authUser.email, userId: authUser._id.toString() }),
-    user: authUser,
-  });
+      response.json({
+        user: sanitizeUser(user),
+      });
+    });
+  })(request, response, next);
 }
 
 export function getCurrentUser(request, response) {
   return response.json({
-    user: {
-      _id: request.user.userId,
-      email: request.user.email,
-    },
+    user: sanitizeUser(request.user),
+  });
+}
+
+export function logoutUser(request, response, next) {
+  request.logout((error) => {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    request.session.destroy((sessionError) => {
+      if (sessionError) {
+        next(sessionError);
+        return;
+      }
+
+      response.clearCookie("triptrack.sid");
+      response.status(204).send();
+    });
   });
 }

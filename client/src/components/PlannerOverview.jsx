@@ -27,14 +27,22 @@ function PlannerOverview({
   }
 
   if (trips.length === 0) {
-    return <p className="empty-state">No planner trips yet. Add one or copy from inspiration.</p>;
+    return (
+      <p className="empty-state">
+        No planner trips yet. Add one or copy from inspiration.
+      </p>
+    );
   }
 
   return (
     <div className="planner-overview">
       {trips.map((trip) => (
         <article
-          className={trip._id === selectedTripId ? "planner-trip-card active" : "planner-trip-card"}
+          className={
+            trip._id === selectedTripId
+              ? "planner-trip-card active"
+              : "planner-trip-card"
+          }
           key={trip._id}
         >
           <button
@@ -44,13 +52,17 @@ function PlannerOverview({
           >
             <span className="planner-trip-title">{trip.destination}</span>
             <span className="planner-trip-location">
-              {[trip.continent, trip.country, trip.city].filter(Boolean).join(" · ")}
+              {[trip.continent, trip.country, trip.city]
+                .filter(Boolean)
+                .join(" · ")}
             </span>
             <span>
               {trip.startDate} to {trip.endDate}
             </span>
             {trip.notes ? (
-              <span className="planner-trip-notes">{toTitleCase(trip.notes)}</span>
+              <span className="planner-trip-notes">
+                {toTitleCase(trip.notes)}
+              </span>
             ) : null}
           </button>
 
@@ -58,7 +70,11 @@ function PlannerOverview({
             <button onClick={() => onEditTrip(trip)} type="button">
               Edit Trip
             </button>
-            <button className="danger-button" onClick={() => onDeleteTrip(trip._id)} type="button">
+            <button
+              className="danger-button"
+              onClick={() => onDeleteTrip(trip._id)}
+              type="button"
+            >
               Delete Trip
             </button>
           </div>
@@ -94,10 +110,15 @@ function PlannerOverview({
                         {activity.date}
                         {activity.time ? ` at ${activity.time}` : ""}
                       </span>
-                      {activity.description ? <p>{activity.description}</p> : null}
+                      {activity.description ? (
+                        <p>{activity.description}</p>
+                      ) : null}
                     </div>
                     <div className="planner-card-actions">
-                      <button onClick={() => onEditActivity(activity, trip._id)} type="button">
+                      <button
+                        onClick={() => onEditActivity(activity, trip._id)}
+                        type="button"
+                      >
                         Edit
                       </button>
                       <button
@@ -112,7 +133,9 @@ function PlannerOverview({
                 ))}
               </ul>
             ) : (
-              <p className="planner-activity-empty">No activities yet for this trip.</p>
+              <p className="planner-activity-empty">
+                No activities yet for this trip.
+              </p>
             )}
           </div>
         </article>
@@ -130,8 +153,8 @@ PlannerOverview.propTypes = {
         description: PropTypes.string,
         name: PropTypes.string.isRequired,
         time: PropTypes.string,
-      })
-    )
+      }),
+    ),
   ).isRequired,
   isLoading: PropTypes.bool.isRequired,
   onAddActivity: PropTypes.func.isRequired,
@@ -152,7 +175,7 @@ PlannerOverview.propTypes = {
       endDate: PropTypes.string.isRequired,
       notes: PropTypes.string,
       startDate: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
 };
 

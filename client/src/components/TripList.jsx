@@ -30,13 +30,17 @@ function TripList({
       {trips.map((trip) => (
         <li className="trip-list-item" key={trip._id}>
           <button
-            className={trip._id === selectedTripId ? "trip-card active" : "trip-card"}
+            className={
+              trip._id === selectedTripId ? "trip-card active" : "trip-card"
+            }
             onClick={() => onSelectTrip(trip._id)}
             type="button"
           >
             <span className="trip-card-title">{trip.destination}</span>
             <span className="trip-card-location">
-              {[trip.continent, trip.country, trip.city].filter(Boolean).join(" · ")}
+              {[trip.continent, trip.country, trip.city]
+                .filter(Boolean)
+                .join(" · ")}
             </span>
             <span>
               {trip.startDate} to {trip.endDate}
@@ -79,7 +83,7 @@ TripList.propTypes = {
       endDate: PropTypes.string.isRequired,
       notes: PropTypes.string,
       startDate: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
 };
 

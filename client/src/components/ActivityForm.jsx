@@ -10,7 +10,13 @@ const initialFormState = {
   time: "",
 };
 
-function ActivityForm({ defaultDate, disabled, editingActivity, onCancelEdit, onSubmit }) {
+function ActivityForm({
+  defaultDate,
+  disabled,
+  editingActivity,
+  onCancelEdit,
+  onSubmit,
+}) {
   const [formValues, setFormValues] = useState(initialFormState);
 
   useEffect(() => {

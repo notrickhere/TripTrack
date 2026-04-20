@@ -119,7 +119,9 @@ function createActivityDate(startDateString, endDateString) {
   const endDate = new Date(`${endDateString}T00:00:00.000Z`);
   const dayRange = Math.max(
     0,
-    Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+    Math.round(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+    ),
   );
   const offset = getRandomInt(dayRange + 1);
   const activityDate = new Date(startDate);
@@ -145,7 +147,11 @@ function normalizeActivity(row, tripId, trip) {
 async function seedDatabase() {
   const { reset } = parseArgs(process.argv.slice(2));
   const tripsCsvPath = path.join(projectRoot, "seeding_data", "seed_trips.csv");
-  const activitiesCsvPath = path.join(projectRoot, "seeding_data", "seed_activities.csv");
+  const activitiesCsvPath = path.join(
+    projectRoot,
+    "seeding_data",
+    "seed_activities.csv",
+  );
 
   const tripRows = await readCsv(tripsCsvPath);
   const activityRows = await readCsv(activitiesCsvPath);
@@ -188,7 +194,7 @@ async function seedDatabase() {
     await activitiesCollection.insertMany(activities);
 
     console.log(
-      `Seed complete: inserted ${insertedTrips.length} trips and ${activities.length} activities into ${MONGO_DB_NAME}.`
+      `Seed complete: inserted ${insertedTrips.length} trips and ${activities.length} activities into ${MONGO_DB_NAME}.`,
     );
     console.log(`Database target: ${MONGODB_URI}`);
   } finally {

@@ -69,8 +69,11 @@
 }
 
 .inspiration-card {
-  background:
-    linear-gradient(180deg, rgba(255, 250, 242, 0.98), rgba(240, 247, 255, 0.98));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 250, 242, 0.98),
+    rgba(240, 247, 255, 0.98)
+  );
   border: 1px solid rgba(187, 202, 219, 0.7);
   border-radius: 22px;
   box-shadow: 0 14px 30px rgba(25, 55, 84, 0.08);

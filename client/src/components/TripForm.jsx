@@ -126,7 +126,9 @@ function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
         />
       </label>
       {!editingTrip && suggestedStartDate ? (
-        <p className="form-hint">Suggested next trip start date: {suggestedStartDate}.</p>
+        <p className="form-hint">
+          Suggested next trip start date: {suggestedStartDate}.
+        </p>
       ) : null}
       <label>
         Notes
@@ -142,7 +144,11 @@ function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
           {editingTrip ? "Save Trip Changes" : "Add Trip"}
         </button>
         {editingTrip ? (
-          <button className="secondary-button" onClick={onCancelEdit} type="button">
+          <button
+            className="secondary-button"
+            onClick={onCancelEdit}
+            type="button"
+          >
             Cancel
           </button>
         ) : null}

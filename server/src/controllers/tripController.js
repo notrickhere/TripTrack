@@ -19,7 +19,7 @@ function parseObjectId(id) {
 }
 
 function getUserId(request) {
-  return request.user?.userId || "";
+  return request.user?._id?.toString() || "";
 }
 
 export async function listTrips(request, response) {
@@ -68,7 +68,14 @@ export async function createTrip(request, response) {
     notes = "",
   } = request.body;
 
-  if (!destination || !continent || !country || !city || !startDate || !endDate) {
+  if (
+    !destination ||
+    !continent ||
+    !country ||
+    !city ||
+    !startDate ||
+    !endDate
+  ) {
     return response.status(400).json({
       message:
         "Destination, continent, country, city, startDate, and endDate are required.",
@@ -116,7 +123,14 @@ export async function updateTrip(request, response) {
     notes = "",
   } = request.body;
 
-  if (!destination || !continent || !country || !city || !startDate || !endDate) {
+  if (
+    !destination ||
+    !continent ||
+    !country ||
+    !city ||
+    !startDate ||
+    !endDate
+  ) {
     return response.status(400).json({
       message:
         "Destination, continent, country, city, startDate, and endDate are required.",
@@ -143,7 +157,7 @@ export async function updateTrip(request, response) {
   const result = await getTripsCollection().findOneAndUpdate(
     { _id: tripId, seeded: { $ne: true }, userId: getUserId(request) },
     { $set: update },
-    { returnDocument: "after" }
+    { returnDocument: "after" },
   );
 
   if (!result) {

@@ -4,7 +4,7 @@ TripTrack is a travel planning web app that helps users browse shared trip inspi
 
 Users can freely explore seeded inspiration data, then create an account to copy trips into their own planner and manage private travel plans.
 
-## Team
+## Author
 
 - Ricky Lee
 - Tarun Badarvada
@@ -15,8 +15,8 @@ Users can freely explore seeded inspiration data, then create an account to copy
 
 ## Project Links
 
-- Frontend Deployment: https://triptrack-front.onrender.com/
-- Backend Deployment: https://triptrack-rxxr.onrender.com/api/health
+- Public Deployment: https://triptrack-rxxr.onrender.com/
+- Health Check: https://triptrack-rxxr.onrender.com/api/health
 - GitHub: https://github.com/notrickhere/TripTrack
 
 ## Project Objective
@@ -123,8 +123,7 @@ Option A: Atlas / hosted MongoDB (recommended for deployment)
 ```env
 PORT=5001
 NODE_ENV=production
-CLIENT_ORIGIN=https://triptrack-front.onrender.com
-JWT_SECRET=replace_with_a_long_random_secret
+SESSION_SECRET=replace_with_a_long_random_secret
 MONGO_DB_NAME=TripTrack
 MONGODB_URI=your_mongodb_atlas_connection_string
 ```
@@ -134,8 +133,7 @@ Option B: Local MongoDB (Docker)
 ```env
 PORT=5001
 NODE_ENV=development
-CLIENT_ORIGIN=http://localhost:5173
-JWT_SECRET=replace_with_a_long_random_secret
+SESSION_SECRET=replace_with_a_long_random_secret
 MONGO_PORT=27017
 MONGO_DB_NAME=triptrack
 MONGODB_URI=mongodb://localhost:27017/triptrack
@@ -144,13 +142,13 @@ MONGODB_URI=mongodb://localhost:27017/triptrack
 Frontend local env example in `client/.env.example`:
 
 ```env
-VITE_API_BASE_URL=http://localhost:5001/api
+VITE_API_BASE_URL=/api
 ```
 
-Frontend production env on Render:
+Frontend production env:
 
 ```env
-VITE_API_BASE_URL=https://triptrack-rxxr.onrender.com/api
+VITE_API_BASE_URL=/api
 ```
 
 ### Running Locally (Docker MongoDB)
@@ -165,7 +163,7 @@ npm run dev
 This starts:
 
 - MongoDB in Docker
-- the React frontend with Vite
+- the React frontend with Vite using a local `/api` proxy
 - the Express backend with Nodemon
 
 ### Running Locally (Atlas)
@@ -185,7 +183,7 @@ Backend Render service:
 npm start
 ```
 
-Frontend is deployed as a Render Static Site built from:
+Frontend build:
 
 ```bash
 npm install && npm run build
@@ -196,14 +194,25 @@ Open in browser:
 - `http://localhost:5173/`
 - `http://localhost:5001/api/health`
 
+## Instructions to Build
+
+Build the client bundle from the project root:
+
+```bash
+npm install
+npm run build
+```
+
+For production deployment, the Express server serves the built React files from `client/dist`, so the frontend and backend run from the same public server and use the same origin.
+
 ## Render Deployment
 
 ### Backend
 
 - Service Type: `Web Service`
 - Runtime: `Node`
-- Root Directory: `server`
-- Build Command: `npm install`
+- Root Directory: project root
+- Build Command: `npm install && npm --prefix server install && npm --prefix client install && npm --prefix client run build`
 - Start Command: `npm start`
 
 Backend environment variables:
@@ -212,27 +221,14 @@ Backend environment variables:
 NODE_ENV=production
 MONGO_DB_NAME=TripTrack
 MONGODB_URI=your_mongodb_atlas_connection_string
-CLIENT_ORIGIN=https://triptrack-front.onrender.com
-JWT_SECRET=replace_with_a_long_random_secret
-```
-
-### Frontend
-
-- Service Type: `Static Site`
-- Root Directory: `client`
-- Build Command: `npm install && npm run build`
-- Publish Directory: `dist`
-
-Frontend environment variables:
-
-```env
-VITE_API_BASE_URL=https://triptrack-rxxr.onrender.com/api
+SESSION_SECRET=replace_with_a_long_random_secret
 ```
 
 ## Authentication Behavior
 
 - Inspiration is public and uses shared seeded data
 - Planner access requires a user account
+- Authentication uses Passport local sessions stored in MongoDB
 - Planner trips and activities are private to the logged-in user
 - Copying an inspiration trip creates a new planner-owned trip and activities instead of editing seeded data
 
@@ -276,7 +272,7 @@ MONGODB_URI='your_atlas_connection_string' MONGO_DB_NAME=TripTrack npm run seed
 - Backend: Node.js and Express API with auth routes, trip routes, activity routes, and protected planner CRUD
 - Database: MongoDB locally through Docker and MongoDB Atlas in production
 - State Management: Fetch API requests between React and the Express backend
-- Deployment: Frontend deployed on Render Static Site, backend deployed on Render Web Service, database hosted on MongoDB Atlas
+- Deployment: Express serves the built React app and API from one Render Web Service, with MongoDB Atlas as the production database
 
 ## GenAI Tool Usage
 

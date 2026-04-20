@@ -19,7 +19,7 @@ function parseObjectId(id) {
 }
 
 function getUserId(request) {
-  return request.user?.userId || "";
+  return request.user?._id?.toString() || "";
 }
 
 export async function listActivities(request, response) {
@@ -27,21 +27,29 @@ export async function listActivities(request, response) {
     return response.json([]);
   }
 
-  const trip = await getTripsCollection().findOne({
-    _id: new ObjectId(request.query.tripId),
-  }).catch(() => null);
+  const trip = await getTripsCollection()
+    .findOne({
+      _id: new ObjectId(request.query.tripId),
+    })
+    .catch(() => null);
 
   if (!trip) {
     return response.json([]);
   }
 
   if (!trip.seeded && (!request.user || trip.userId !== getUserId(request))) {
-    return response.status(403).json({ message: "You do not have access to that itinerary." });
+    return response
+      .status(403)
+      .json({ message: "You do not have access to that itinerary." });
   }
 
   const query = trip.seeded
     ? { seeded: true, tripId: request.query.tripId }
-    : { seeded: { $ne: true }, tripId: request.query.tripId, userId: getUserId(request) };
+    : {
+        seeded: { $ne: true },
+        tripId: request.query.tripId,
+        userId: getUserId(request),
+      };
 
   const activities = await getActivitiesCollection()
     .find(query)
@@ -60,11 +68,13 @@ export async function createActivity(request, response) {
     });
   }
 
-  const trip = await getTripsCollection().findOne({
-    _id: new ObjectId(tripId),
-    seeded: { $ne: true },
-    userId: getUserId(request),
-  }).catch(() => null);
+  const trip = await getTripsCollection()
+    .findOne({
+      _id: new ObjectId(tripId),
+      seeded: { $ne: true },
+      userId: getUserId(request),
+    })
+    .catch(() => null);
 
   if (!trip) {
     return response.status(404).json({ message: "Planner trip not found." });
@@ -106,7 +116,7 @@ export async function updateActivity(request, response) {
   const result = await getActivitiesCollection().findOneAndUpdate(
     { _id: activityId, seeded: { $ne: true }, userId: getUserId(request) },
     { $set: update },
-    { returnDocument: "after" }
+    { returnDocument: "after" },
   );
 
   if (!result) {

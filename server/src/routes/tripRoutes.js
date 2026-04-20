@@ -7,7 +7,10 @@ import {
   listTrips,
   updateTrip,
 } from "../controllers/tripController.js";
-import { attachOptionalUser, requireAuth } from "../middleware/authMiddleware.js";
+import {
+  attachOptionalUser,
+  requireAuth,
+} from "../middleware/authMiddleware.js";
 
 const router = Router();
 

@@ -12,13 +12,12 @@ import {
   createTrip,
   deleteActivity,
   deleteTrip,
-  getCurrentToken,
   getCurrentUser,
   getActivities,
   getTrips,
   login,
+  logout,
   register,
-  storeAuthToken,
   updateActivity,
   updateTrip,
 } from "./lib/api.js";
@@ -40,7 +39,7 @@ function getTripLengthInDays(startDateString, endDateString) {
   const differenceInMilliseconds = endDate.getTime() - startDate.getTime();
   return Math.max(
     0,
-    Math.round(differenceInMilliseconds / (1000 * 60 * 60 * 24))
+    Math.round(differenceInMilliseconds / (1000 * 60 * 60 * 24)),
   );
 }
 
@@ -52,7 +51,7 @@ function getLatestTripEndDate(trips) {
   return trips.reduce(
     (latestEndDate, trip) =>
       trip.endDate > latestEndDate ? trip.endDate : latestEndDate,
-    trips[0].endDate
+    trips[0].endDate,
   );
 }
 
@@ -64,7 +63,7 @@ function getLatestActivityDate(activities) {
   return activities.reduce(
     (latestDate, activity) =>
       activity.date > latestDate ? activity.date : latestDate,
-    activities[0].date
+    activities[0].date,
   );
 }
 
@@ -372,7 +371,6 @@ function App() {
   const [trips, setTrips] = useState([]);
   const [selectedTripId, setSelectedTripId] = useState("");
   const [editingTrip, setEditingTrip] = useState(null);
-  const [activities, setActivities] = useState([]);
   const [activitiesByTripId, setActivitiesByTripId] = useState({});
   const [editingActivity, setEditingActivity] = useState(null);
   const [copyingTripId, setCopyingTripId] = useState("");
@@ -381,6 +379,8 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
   const plannerTrips = trips.filter((trip) => !trip.seeded);
   const inspirationTrips = trips.filter((trip) => trip.seeded);
+  const plannerTripIdsKey = plannerTrips.map((trip) => trip._id).join("|");
+  const statisticsActivities = Object.values(activitiesByTripId).flat();
   const selectedTrip =
     plannerTrips.find((trip) => trip._id === selectedTripId) || null;
   const selectedTripActivities = activitiesByTripId[selectedTripId] || [];
@@ -395,15 +395,10 @@ function App() {
 
   useEffect(() => {
     async function hydrateSession() {
-      if (!getCurrentToken()) {
-        return;
-      }
-
       try {
         const response = await getCurrentUser();
         setCurrentUser(response.user);
       } catch (_error) {
-        storeAuthToken("");
         setCurrentUser(null);
       }
     }
@@ -441,7 +436,6 @@ function App() {
 
   useEffect(() => {
     if (!selectedTripId) {
-      setActivities([]);
       return;
     }
 
@@ -449,7 +443,10 @@ function App() {
       try {
         setIsLoadingActivities(true);
         const activityData = await getActivities(selectedTripId);
-        setActivities(activityData);
+        setActivitiesByTripId((currentActivities) => ({
+          ...currentActivities,
+          [selectedTripId]: activityData,
+        }));
       } catch (error) {
         setErrorMessage(error.message);
       } finally {
@@ -467,22 +464,26 @@ function App() {
           plannerTrips.map(async (trip) => [
             trip._id,
             await getActivities(trip._id),
-          ])
+          ]),
         );
 
         setActivitiesByTripId(Object.fromEntries(activityEntries));
       } catch (_error) {
-        setActivitiesByTripId({});
+        setActivitiesByTripId((currentActivities) =>
+          Object.keys(currentActivities).length ? {} : currentActivities,
+        );
       }
     }
 
     if (!plannerTrips.length) {
-      setActivitiesByTripId({});
+      setActivitiesByTripId((currentActivities) =>
+        Object.keys(currentActivities).length ? {} : currentActivities,
+      );
       return;
     }
 
     loadPlannerActivities();
-  }, [plannerTrips, currentUser]);
+  }, [plannerTripIdsKey, currentUser]);
 
   async function handleTripCreate(formValues) {
     setErrorMessage("");
@@ -500,8 +501,8 @@ function App() {
       const savedTrip = await updateTrip(editingTrip._id, formValues);
       setTrips((currentTrips) =>
         currentTrips.map((trip) =>
-          trip._id === savedTrip._id ? savedTrip : trip
-        )
+          trip._id === savedTrip._id ? savedTrip : trip,
+        ),
       );
       setEditingTrip(null);
       return;
@@ -522,18 +523,13 @@ function App() {
     if (editingActivity) {
       const savedActivity = await updateActivity(
         editingActivity._id,
-        formValues
-      );
-      setActivities((currentActivities) =>
-        currentActivities.map((activity) =>
-          activity._id === savedActivity._id ? savedActivity : activity
-        )
+        formValues,
       );
       setActivitiesByTripId((currentActivities) => ({
         ...currentActivities,
         [selectedTripId]: (currentActivities[selectedTripId] || []).map(
           (activity) =>
-            activity._id === savedActivity._id ? savedActivity : activity
+            activity._id === savedActivity._id ? savedActivity : activity,
         ),
       }));
       setEditingActivity(null);
@@ -545,7 +541,6 @@ function App() {
       tripId: selectedTripId,
     });
 
-    setActivities((currentActivities) => [...currentActivities, newActivity]);
     setActivitiesByTripId((currentActivities) => ({
       ...currentActivities,
       [selectedTripId]: [
@@ -554,28 +549,6 @@ function App() {
       ],
     }));
   }
-
-  useEffect(() => {
-    if (activeView === "statistics") {
-      async function loadAllActivities() {
-        try {
-          // Load all activities for statistics by getting activities from all trips
-          const allTripActivities = await Promise.all(
-            trips.map(async (trip) => await getActivities(trip._id))
-          );
-          // Flatten the array of arrays into a single array
-          const flattenedActivities = allTripActivities.flat();
-          setActivities(flattenedActivities);
-        } catch (error) {
-          setErrorMessage(error.message);
-        }
-      }
-
-      if (trips.length > 0) {
-        loadAllActivities();
-      }
-    }
-  }, [activeView, trips]);
 
   async function handleTripDelete(tripId) {
     setErrorMessage("");
@@ -589,12 +562,11 @@ function App() {
       return nextActivities;
     });
     setEditingTrip((currentTrip) =>
-      currentTrip && currentTrip._id === tripId ? null : currentTrip
+      currentTrip && currentTrip._id === tripId ? null : currentTrip,
     );
 
     if (selectedTripId === tripId) {
       setSelectedTripId(remainingTrips.find((trip) => !trip.seeded)?._id || "");
-      setActivities([]);
       setEditingActivity(null);
     }
   }
@@ -605,7 +577,7 @@ function App() {
     }
 
     const shouldDelete = window.confirm(
-      "Delete all planner trips and their activities? This will not remove inspiration trips."
+      "Delete all planner trips and their activities? This will not remove inspiration trips.",
     );
 
     if (!shouldDelete) {
@@ -616,7 +588,6 @@ function App() {
     await Promise.all(plannerTrips.map((trip) => deleteTrip(trip._id)));
     setTrips((currentTrips) => currentTrips.filter((trip) => trip.seeded));
     setSelectedTripId("");
-    setActivities([]);
     setEditingTrip(null);
     setEditingActivity(null);
   }
@@ -624,21 +595,18 @@ function App() {
   async function handleActivityDelete(activityId) {
     setErrorMessage("");
     await deleteActivity(activityId);
-    setActivities((currentActivities) =>
-      currentActivities.filter((activity) => activity._id !== activityId)
-    );
     setActivitiesByTripId((currentActivities) =>
       Object.fromEntries(
         Object.entries(currentActivities).map(([tripId, tripActivities]) => [
           tripId,
           tripActivities.filter((activity) => activity._id !== activityId),
-        ])
-      )
+        ]),
+      ),
     );
     setEditingActivity((currentActivity) =>
       currentActivity && currentActivity._id === activityId
         ? null
-        : currentActivity
+        : currentActivity,
     );
   }
 
@@ -657,7 +625,7 @@ function App() {
 
     setErrorMessage("");
     await Promise.all(
-      tripActivities.map((activity) => deleteActivity(activity._id))
+      tripActivities.map((activity) => deleteActivity(activity._id)),
     );
     setActivitiesByTripId((currentActivities) => ({
       ...currentActivities,
@@ -665,14 +633,17 @@ function App() {
     }));
 
     if (selectedTripId === tripId) {
-      setActivities([]);
+      setActivitiesByTripId((currentActivities) => ({
+        ...currentActivities,
+        [tripId]: [],
+      }));
     }
 
     setEditingActivity((currentActivity) =>
       currentActivity &&
       tripActivities.some((activity) => activity._id === currentActivity._id)
         ? null
-        : currentActivity
+        : currentActivity,
     );
   }
 
@@ -682,7 +653,7 @@ function App() {
 
     if (!currentUser) {
       setAuthErrorMessage(
-        "Create an account or login before copying trips to your planner."
+        "Create an account or login before copying trips to your planner.",
       );
       setActiveView("planner");
       return;
@@ -695,7 +666,7 @@ function App() {
       const plannerStartDate = nextAllowedPlannerStartDate || today;
       const tripLength = getTripLengthInDays(
         sourceTrip.startDate,
-        sourceTrip.endDate
+        sourceTrip.endDate,
       );
       const copiedEndDate = addDays(plannerStartDate, Math.min(tripLength, 30));
       const sourceActivities = await getActivities(sourceTrip._id);
@@ -723,13 +694,12 @@ function App() {
             name: activity.name,
             time: activity.time || "",
             tripId: copiedTrip._id,
-          })
-        )
+          }),
+        ),
       );
 
       setTrips((currentTrips) => [copiedTrip, ...currentTrips]);
       setSelectedTripId(copiedTrip._id);
-      setActivities(copiedActivities);
       setActivitiesByTripId((currentActivities) => ({
         ...currentActivities,
         [copiedTrip._id]: copiedActivities,
@@ -749,7 +719,6 @@ function App() {
 
     try {
       const response = await login(credentials);
-      storeAuthToken(response.token);
       setCurrentUser(response.user);
     } catch (error) {
       setAuthErrorMessage(error.message);
@@ -761,18 +730,21 @@ function App() {
 
     try {
       const response = await register(formValues);
-      storeAuthToken(response.token);
       setCurrentUser(response.user);
     } catch (error) {
       setAuthErrorMessage(error.message);
     }
   }
 
-  function handleLogout() {
-    storeAuthToken("");
+  async function handleLogout() {
+    try {
+      await logout();
+    } catch (_error) {
+      // Clear the client session state even if the server session already expired.
+    }
+
     setCurrentUser(null);
     setSelectedTripId("");
-    setActivities([]);
     setActivitiesByTripId({});
     setEditingTrip(null);
     setEditingActivity(null);
@@ -941,8 +913,8 @@ function App() {
         )
       ) : activeView === "timeline" ? (
         <main>
-          <SimpleTripTimeline 
-            trips={trips.filter(trip => !trip.seeded)} // Only show your actual trips, not inspiration
+          <SimpleTripTimeline
+            trips={trips.filter((trip) => !trip.seeded)} // Only show your actual trips, not inspiration
             onTripSelect={(trip) => {
               setActiveView("planner");
               setSelectedTripId(trip._id);
@@ -951,7 +923,10 @@ function App() {
         </main>
       ) : activeView === "statistics" ? (
         <main>
-          <TripStatistics trips={trips} activities={activities} />
+          <TripStatistics
+            trips={plannerTrips}
+            activities={statisticsActivities}
+          />
         </main>
       ) : (
         <main>

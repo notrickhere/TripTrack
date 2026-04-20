@@ -66,7 +66,7 @@ ActivityList.propTypes = {
       description: PropTypes.string,
       name: PropTypes.string.isRequired,
       time: PropTypes.string,
-    })
+    }),
   ).isRequired,
   isLoading: PropTypes.bool.isRequired,
   onDeleteActivity: PropTypes.func.isRequired,

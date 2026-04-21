@@ -82,6 +82,18 @@ button {
     border-color 180ms ease;
 }
 
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  box-shadow:
+    0 0 0 3px var(--hover-ring),
+    0 0 0 5px color-mix(in srgb, var(--accent-strong) 24%, transparent);
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
 button:hover:not(:disabled) {
   box-shadow:
     0 0 0 3px var(--hover-ring),

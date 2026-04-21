@@ -15,11 +15,66 @@
   margin: 0;
 }
 
+.calendar-title-row {
+  align-items: center;
+  display: flex;
+  gap: 0.6rem;
+}
+
 .calendar-header p,
 .calendar-detail-card p {
   color: #576b84;
   margin-bottom: 0;
   margin-top: 0.35rem;
+}
+
+.calendar-info-wrap {
+  position: relative;
+}
+
+.calendar-info-button {
+  align-items: center;
+  background: #eff7fd;
+  border: 1px solid rgba(122, 168, 199, 0.75);
+  border-radius: 999px;
+  color: #0a5c8f;
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-weight: 700;
+  height: 1.8rem;
+  justify-content: center;
+  padding: 0;
+  width: 1.8rem;
+}
+
+.calendar-info-tooltip {
+  background: rgba(236, 244, 251, 0.98);
+  border: 1px solid rgba(170, 195, 216, 0.85);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(23, 50, 77, 0.14);
+  color: #36516b;
+  font-size: 0.88rem;
+  left: 0;
+  line-height: 1.45;
+  max-width: 21rem;
+  opacity: 0;
+  padding: 0.75rem 0.9rem;
+  pointer-events: none;
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  transform: translateY(-4px);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+  visibility: hidden;
+  z-index: 10;
+}
+
+.calendar-info-wrap:hover .calendar-info-tooltip,
+.calendar-info-wrap:focus-within .calendar-info-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
 }
 
 .calendar-controls {

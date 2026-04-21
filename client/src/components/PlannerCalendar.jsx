@@ -187,7 +187,6 @@ function PlannerCalendar({
   }
 
   function handleDayMouseUp(dateKey) {
-    setIsDragging(false);
     setSelectedDateKey(dateKey);
   }
 
@@ -230,7 +229,23 @@ function PlannerCalendar({
     <section className="planner-calendar">
       <div className="calendar-header">
         <div>
-          <h2>Planner Calendar</h2>
+          <div className="calendar-title-row">
+            <h2>Planner Calendar</h2>
+            <div className="calendar-info-wrap">
+              <button
+                aria-label="Calendar usage information"
+                className="calendar-info-button"
+                type="button"
+              >
+                i
+              </button>
+              <div className="calendar-info-tooltip">
+                Single click a date to preview it below. Double click one date
+                or drag across multiple dates to open the planner with those
+                dates selected.
+              </div>
+            </div>
+          </div>
           <p>See trip spans and daily activities on a month-by-month schedule.</p>
         </div>
         <div className="calendar-controls">

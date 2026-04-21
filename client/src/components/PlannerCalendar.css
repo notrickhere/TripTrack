@@ -88,7 +88,8 @@
 .calendar-controls button,
 .calendar-controls select,
 .calendar-detail-list button {
-  background: var(--surface-3);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-3) 84%, var(--card-overlay-1)), var(--surface-5));
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--accent);
@@ -130,7 +131,12 @@
 }
 
 .calendar-day {
-  background: var(--surface-1);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-5) 82%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-1) 94%, var(--card-overlay-2)) 100%
+    );
   border: 1px solid var(--border-soft);
   border-radius: 20px;
   cursor: pointer;
@@ -157,18 +163,28 @@
 }
 
 .calendar-day.today {
-  border-color: var(--accent-strong);
-  box-shadow: 0 0 0 2px rgba(10, 92, 143, 0.14);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent-secondary) 24%, transparent);
 }
 
 .calendar-day.in-selected-range {
-  background: linear-gradient(180deg, #fdfdfd 0%, #f3f9ff 100%);
-  border-color: #9fc0d8;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-3) 85%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-2) 82%, var(--info-soft)) 100%
+    );
+  border-color: color-mix(in srgb, var(--accent-secondary) 42%, var(--border-strong));
 }
 
 .calendar-day.selected {
-  background: linear-gradient(180deg, #fdfdfd 0%, #eef6fc 100%);
-  border-color: #7aa8c7;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-3) 78%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-2) 76%, var(--card-overlay-2)) 100%
+    );
+  border-color: color-mix(in srgb, var(--accent-focus) 60%, var(--accent-secondary));
 }
 
 .calendar-day-top {
@@ -220,10 +236,15 @@
 }
 
 .calendar-detail-panel {
-  background: var(--surface-1);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-5) 84%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-1) 94%, var(--card-overlay-2)) 100%
+    );
   border: 1px solid var(--border-soft);
   border-radius: 24px;
-  box-shadow: 0 16px 45px rgba(25, 55, 84, 0.08);
+  box-shadow: var(--card-shadow);
   padding: 1.25rem;
 }
 
@@ -236,7 +257,7 @@
 }
 
 .calendar-detail-header span {
-  background: var(--accent-strong);
+  background: linear-gradient(135deg, var(--accent-strong) 0%, var(--accent-secondary) 100%);
   border-radius: 999px;
   color: var(--surface-3);
   font-size: 0.78rem;
@@ -251,7 +272,12 @@
 }
 
 .calendar-detail-card {
-  background: var(--surface-3);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--surface-3) 86%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-2) 94%, var(--card-overlay-2)) 100%
+    );
   border: 1px solid var(--border-soft);
   border-radius: 18px;
   padding: 1rem;

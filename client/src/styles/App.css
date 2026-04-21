@@ -143,6 +143,15 @@
   padding: 0.85rem 1rem;
 }
 
+.status.success {
+  background: color-mix(in srgb, var(--accent-strong) 12%, var(--surface-3));
+  border: 1px solid color-mix(in srgb, var(--accent-strong) 28%, transparent);
+  border-radius: 14px;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+}
+
 .panel-header {
   align-items: baseline;
   display: flex;

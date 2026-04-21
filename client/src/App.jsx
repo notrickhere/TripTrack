@@ -422,6 +422,7 @@ function App() {
   const [isLoadingTrips, setIsLoadingTrips] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const [plannerOverviewHeight, setPlannerOverviewHeight] = useState(0);
   const plannerTrips = trips.filter((trip) => !trip.seeded);
@@ -652,6 +653,7 @@ function App() {
 
   async function handleTripCreate(formValues) {
     setErrorMessage("");
+    setStatusMessage("");
     if (!currentUser) {
       showActionError(
         setAuthErrorMessage,
@@ -679,6 +681,7 @@ function App() {
           ),
         );
         setEditingTrip(null);
+        setStatusMessage(`Updated trip ${savedTrip.destination}.`);
         return;
       }
 
@@ -686,6 +689,7 @@ function App() {
       setTrips((currentTrips) => [newTrip, ...currentTrips]);
       setSelectedTripId(newTrip._id);
       setCalendarSelection({ endDate: "", startDate: "" });
+      setStatusMessage(`Created trip ${newTrip.destination}.`);
     } catch (error) {
       showActionError(setErrorMessage, "save the trip", error.message);
     }
@@ -738,6 +742,9 @@ function App() {
 
   async function handleTripDelete(tripId) {
     setErrorMessage("");
+    setStatusMessage("");
+    const deletedTrip =
+      trips.find((trip) => trip._id === tripId) || null;
     await deleteTrip(tripId);
 
     const remainingTrips = trips.filter((trip) => trip._id !== tripId);
@@ -754,6 +761,10 @@ function App() {
     if (selectedTripId === tripId) {
       setSelectedTripId(remainingTrips.find((trip) => !trip.seeded)?._id || "");
       setEditingActivity(null);
+    }
+
+    if (deletedTrip) {
+      setStatusMessage(`Deleted trip ${deletedTrip.destination}.`);
     }
   }
 
@@ -920,9 +931,10 @@ function App() {
           Organize trips, dates, notes, and daily itinerary items in one place.
         </p>
         <div className="hero-controls">
-          <div className="view-switcher">
+          <nav aria-label="Primary" className="view-switcher">
             {!currentUser ? (
               <button
+                aria-current={activeView === "home" ? "page" : undefined}
                 className={activeView === "home" ? "active-view" : ""}
                 onClick={() => setActiveView("home")}
                 type="button"
@@ -932,6 +944,7 @@ function App() {
             ) : null}
             {!currentUser ? (
               <button
+                aria-current={activeView === "login" ? "page" : undefined}
                 className={activeView === "login" ? "active-view" : ""}
                 onClick={() => setActiveView("login")}
                 type="button"
@@ -941,6 +954,7 @@ function App() {
             ) : null}
             {!currentUser ? (
               <button
+                aria-current={activeView === "register" ? "page" : undefined}
                 className={activeView === "register" ? "active-view" : ""}
                 onClick={() => setActiveView("register")}
                 type="button"
@@ -949,6 +963,7 @@ function App() {
               </button>
             ) : null}
             <button
+              aria-current={activeView === "inspiration" ? "page" : undefined}
               className={activeView === "inspiration" ? "active-view" : ""}
               onClick={() => setActiveView("inspiration")}
               type="button"
@@ -958,6 +973,7 @@ function App() {
             {currentUser ? (
               <>
                 <button
+                  aria-current={activeView === "calendar" ? "page" : undefined}
                   className={activeView === "calendar" ? "active-view" : ""}
                   onClick={() => setActiveView("calendar")}
                   type="button"
@@ -965,6 +981,7 @@ function App() {
                   Calendar
                 </button>
                 <button
+                  aria-current={activeView === "planner" ? "page" : undefined}
                   className={activeView === "planner" ? "active-view" : ""}
                   onClick={() => setActiveView("planner")}
                   type="button"
@@ -972,6 +989,9 @@ function App() {
                   Planner
                 </button>
                 <button
+                  aria-current={
+                    activeView === "statistics" ? "page" : undefined
+                  }
                   className={activeView === "statistics" ? "active-view" : ""}
                   onClick={() => setActiveView("statistics")}
                   type="button"
@@ -979,6 +999,7 @@ function App() {
                   Statistics
                 </button>
                 <button
+                  aria-current={activeView === "timeline" ? "page" : undefined}
                   className={activeView === "timeline" ? "active-view" : ""}
                   onClick={() => setActiveView("timeline")}
                   type="button"
@@ -987,7 +1008,7 @@ function App() {
                 </button>
               </>
             ) : null}
-          </div>
+          </nav>
           <div className="top-actions">
             <button
               aria-keyshortcuts="Shift+/"
@@ -1020,6 +1041,11 @@ function App() {
       </header>
 
       {errorMessage ? <p className="status error">{errorMessage}</p> : null}
+      {statusMessage ? (
+        <p aria-live="polite" className="status success" role="status">
+          {statusMessage}
+        </p>
+      ) : null}
 
       {activeView === "home" ? (
         <main>

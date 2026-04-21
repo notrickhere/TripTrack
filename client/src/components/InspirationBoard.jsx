@@ -424,9 +424,11 @@ function InspirationBoard({
         </div>
       </div>
 
-      <div className="continent-filter">
+      <div aria-label="Filter destinations by continent" className="continent-filter" role="group">
         {CONTINENT_LABELS.map((continent) => (
           <button
+            aria-label={`Show ${continent} destinations`}
+            aria-pressed={activeContinent === continent}
             className={activeContinent === continent ? "active-continent" : ""}
             key={continent}
             onClick={() => {
@@ -497,6 +499,7 @@ function InspirationBoard({
 
             {currentUser ? (
               <button
+                aria-label={`Copy ${trip.destination} itinerary to planner`}
                 className="copy-trip-button"
                 disabled={isCopyingTripId === trip._id}
                 onClick={() => onCopyTripToPlanner(trip)}
@@ -511,8 +514,9 @@ function InspirationBoard({
         ))}
       </div>
 
-      <div className="pagination-bar">
+      <nav aria-label="Inspiration pagination" className="pagination-bar">
         <button
+          aria-label="Go to previous inspiration page"
           disabled={safeCurrentPage === 1}
           onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
           type="button"
@@ -522,6 +526,8 @@ function InspirationBoard({
         <div className="page-number-list">
           {visiblePageNumbers.map((pageNumber) => (
             <button
+              aria-current={safeCurrentPage === pageNumber ? "page" : undefined}
+              aria-label={`Go to page ${pageNumber}`}
               className={
                 safeCurrentPage === pageNumber ? "active-page-number" : ""
               }
@@ -534,6 +540,7 @@ function InspirationBoard({
           ))}
         </div>
         <button
+          aria-label="Go to next inspiration page"
           disabled={safeCurrentPage === totalPages}
           onClick={() =>
             setCurrentPage((page) => Math.min(totalPages, page + 1))
@@ -542,7 +549,7 @@ function InspirationBoard({
         >
           Next
         </button>
-      </div>
+      </nav>
     </section>
   );
 }

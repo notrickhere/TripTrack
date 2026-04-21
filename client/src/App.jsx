@@ -384,10 +384,27 @@ function showActionError(setter, actionLabel, message) {
   window.alert(errorMessage);
 }
 
+function isTypingTarget(element) {
+  if (!element) {
+    return false;
+  }
+
+  const tagName = element.tagName;
+
+  return (
+    element.isContentEditable ||
+    tagName === "INPUT" ||
+    tagName === "TEXTAREA" ||
+    tagName === "SELECT"
+  );
+}
+
 function App() {
   const tripFormPanelRef = useRef(null);
   const itineraryPanelRef = useRef(null);
   const plannerStackRef = useRef(null);
+  const lastFocusedElementRef = useRef(null);
+  const shortcutsCloseButtonRef = useRef(null);
   const [activeView, setActiveView] = useState("home");
   const [theme, setTheme] = useState(getInitialTheme);
   const [authErrorMessage, setAuthErrorMessage] = useState("");
@@ -405,6 +422,7 @@ function App() {
   const [isLoadingTrips, setIsLoadingTrips] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
   const [plannerOverviewHeight, setPlannerOverviewHeight] = useState(0);
   const plannerTrips = trips.filter((trip) => !trip.seeded);
   const inspirationTrips = trips.filter((trip) => trip.seeded);
@@ -422,6 +440,18 @@ function App() {
     ? addDays(latestPlannerEndDate, 1)
     : "";
 
+  function openShortcuts() {
+    lastFocusedElementRef.current = document.activeElement;
+    setIsShortcutsOpen(true);
+  }
+
+  function closeShortcuts() {
+    setIsShortcutsOpen(false);
+    window.requestAnimationFrame(() => {
+      lastFocusedElementRef.current?.focus?.();
+    });
+  }
+
   function handleCalendarRangeSelect(startDate, endDate) {
     setCalendarSelection({ endDate, startDate });
     setEditingTrip(null);
@@ -433,6 +463,47 @@ function App() {
     document.body.dataset.theme = theme;
     window.localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (!isShortcutsOpen) {
+      return;
+    }
+
+    shortcutsCloseButtonRef.current?.focus();
+  }, [isShortcutsOpen]);
+
+  useEffect(() => {
+    function handleGlobalKeyDown(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      if (event.key === "Escape" && isShortcutsOpen) {
+        event.preventDefault();
+        closeShortcuts();
+        return;
+      }
+
+      const isHelpShortcut =
+        event.key === "?" || (event.key === "/" && event.shiftKey);
+
+      if (!isHelpShortcut || isTypingTarget(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (isShortcutsOpen) {
+        closeShortcuts();
+        return;
+      }
+
+      openShortcuts();
+    }
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [isShortcutsOpen]);
 
   useEffect(() => {
     function syncPlannerOverviewHeight() {
@@ -919,6 +990,14 @@ function App() {
           </div>
           <div className="top-actions">
             <button
+              aria-keyshortcuts="Shift+/"
+              className="shortcut-help-button"
+              onClick={openShortcuts}
+              type="button"
+            >
+              Keyboard Help
+            </button>
+            <button
               className="theme-toggle"
               onClick={() =>
                 setTheme((currentTheme) =>
@@ -1083,6 +1162,89 @@ function App() {
           />
         </main>
       )}
+      {isShortcutsOpen ? (
+        <div
+          className="shortcuts-backdrop"
+          onClick={closeShortcuts}
+        >
+          <section
+            aria-describedby="keyboard-shortcuts-description"
+            aria-labelledby="keyboard-shortcuts-title"
+            aria-modal="true"
+            className="shortcuts-dialog panel"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className="shortcuts-dialog-header">
+              <div>
+                <p className="eyebrow">Accessibility</p>
+                <h2 id="keyboard-shortcuts-title">Keyboard shortcuts</h2>
+              </div>
+              <button
+                aria-label="Close keyboard shortcuts"
+                className="shortcuts-close-button"
+                onClick={closeShortcuts}
+                ref={shortcutsCloseButtonRef}
+                type="button"
+              >
+                Close
+              </button>
+            </div>
+            <p id="keyboard-shortcuts-description">
+              TripTrack supports full keyboard navigation across forms, planner
+              actions, and the calendar.
+            </p>
+            <div className="shortcuts-grid">
+              <div className="shortcuts-card">
+                <h3>Global</h3>
+                <dl className="shortcuts-list">
+                  <div>
+                    <dt>Tab / Shift+Tab</dt>
+                    <dd>Move between buttons, fields, tabs, and actions.</dd>
+                  </div>
+                  <div>
+                    <dt>Enter / Space</dt>
+                    <dd>Activate the focused button or calendar day.</dd>
+                  </div>
+                  <div>
+                    <dt>Escape</dt>
+                    <dd>Close this shortcuts dialog.</dd>
+                  </div>
+                  <div>
+                    <dt>?</dt>
+                    <dd>Open or close keyboard shortcuts from anywhere.</dd>
+                  </div>
+                </dl>
+              </div>
+              <div className="shortcuts-card">
+                <h3>Calendar</h3>
+                <dl className="shortcuts-list">
+                  <div>
+                    <dt>Arrow keys</dt>
+                    <dd>Move one day at a time in the calendar grid.</dd>
+                  </div>
+                  <div>
+                    <dt>Shift + Arrow keys</dt>
+                    <dd>Expand or shrink a date range selection.</dd>
+                  </div>
+                  <div>
+                    <dt>Home / End</dt>
+                    <dd>Jump to the start or end of the current week.</dd>
+                  </div>
+                  <div>
+                    <dt>Page Up / Page Down</dt>
+                    <dd>Jump backward or forward by one month.</dd>
+                  </div>
+                  <div>
+                    <dt>Shift + Enter</dt>
+                    <dd>Open the planner using the selected date range.</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </section>
+        </div>
+      ) : null}
       <footer className="site-footer">
         <p>MIT License</p>
         <p>Ricky Lee and Tarun Badarvada</p>

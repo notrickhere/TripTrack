@@ -8,17 +8,25 @@
 }
 
 .planner-trip-card {
-  background: var(--surface-2);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-3) 82%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-2) 94%, var(--card-overlay-2)) 100%
+    );
   border: 1px solid var(--border-card);
   border-radius: 20px;
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--accent) 9%, transparent);
   min-width: 0;
   padding: 1rem;
   width: 100%;
 }
 
 .planner-trip-card.active {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 0 2px rgba(23, 50, 77, 0.16);
+  border-color: var(--accent-secondary);
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--accent-focus) 18%, transparent),
+    0 16px 34px color-mix(in srgb, var(--accent-secondary) 14%, transparent);
 }
 
 .planner-trip-select {
@@ -56,7 +64,8 @@
 }
 
 .planner-card-actions button {
-  background: var(--surface-4);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-4) 80%, var(--card-overlay-2)), var(--surface-3));
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--accent);
@@ -110,7 +119,8 @@
 }
 
 .planner-activity-add {
-  background: var(--surface-4);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-4) 78%, var(--card-overlay-1)), var(--surface-3));
   border: 1px solid var(--border-strong);
   color: var(--accent);
 }
@@ -142,7 +152,12 @@
 
 .planner-activity-item {
   align-content: start;
-  background: var(--surface-3);
+  background:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--surface-3) 86%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-2) 94%, var(--card-overlay-2)) 100%
+    );
   border: 1px solid var(--border-soft);
   border-radius: 16px;
   display: grid;

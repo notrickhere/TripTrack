@@ -71,7 +71,7 @@ function TripForm({
   return (
     <form className="trip-form" onSubmit={handleSubmit}>
       <label>
-        Location
+        Trip Name
         <input
           name="destination"
           onChange={handleChange}

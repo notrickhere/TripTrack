@@ -70,6 +70,7 @@ function PlannerCalendar({
   const [selectedDateKey, setSelectedDateKey] = useState(todayKey);
   const [dragStartDateKey, setDragStartDateKey] = useState("");
   const [dragEndDateKey, setDragEndDateKey] = useState("");
+  const [didDragRange, setDidDragRange] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const calendarDays = useMemo(
@@ -124,16 +125,30 @@ function PlannerCalendar({
       );
       setIsDragging(false);
       setSelectedDateKey(startDateKey);
-      onDateRangeSelect?.(startDateKey, endDateKey);
+      setDragStartDateKey("");
+      setDragEndDateKey("");
+
+      if (didDragRange && startDateKey !== endDateKey) {
+        onDateRangeSelect?.(startDateKey, endDateKey);
+      }
+
+      setDidDragRange(false);
     }
 
     window.addEventListener("mouseup", handleMouseUp);
     return () => window.removeEventListener("mouseup", handleMouseUp);
-  }, [dragEndDateKey, dragStartDateKey, isDragging, onDateRangeSelect]);
+  }, [
+    didDragRange,
+    dragEndDateKey,
+    dragStartDateKey,
+    isDragging,
+    onDateRangeSelect,
+  ]);
 
   function handleDayMouseDown(dateKey) {
     setDragStartDateKey(dateKey);
     setDragEndDateKey(dateKey);
+    setDidDragRange(false);
     setIsDragging(true);
     setSelectedDateKey(dateKey);
   }
@@ -144,16 +159,23 @@ function PlannerCalendar({
     }
 
     setDragEndDateKey(dateKey);
+    if (dateKey !== dragStartDateKey) {
+      setDidDragRange(true);
+    }
   }
 
   function handleDayMouseUp(dateKey) {
-    const startDateKey = dragStartDateKey || dateKey;
-    const [rangeStart, rangeEnd] = sortDateKeys(startDateKey, dateKey);
-    setDragStartDateKey(rangeStart);
-    setDragEndDateKey(rangeEnd);
     setIsDragging(false);
-    setSelectedDateKey(rangeStart);
-    onDateRangeSelect?.(rangeStart, rangeEnd);
+    setSelectedDateKey(dateKey);
+  }
+
+  function handleDayDoubleClick(dateKey) {
+    setSelectedDateKey(dateKey);
+    setDragStartDateKey("");
+    setDragEndDateKey("");
+    setDidDragRange(false);
+    setIsDragging(false);
+    onDateRangeSelect?.(dateKey, dateKey);
   }
 
   return (
@@ -236,6 +258,7 @@ function PlannerCalendar({
                 .filter(Boolean)
                 .join(" ")}
               key={dateKey}
+              onDoubleClick={() => handleDayDoubleClick(dateKey)}
               onMouseDown={() => handleDayMouseDown(dateKey)}
               onMouseEnter={() => handleDayMouseEnter(dateKey)}
               onMouseUp={() => handleDayMouseUp(dateKey)}

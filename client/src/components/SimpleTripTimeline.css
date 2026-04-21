@@ -13,6 +13,18 @@
   gap: 1rem;
 }
 
+.timeline-controls {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.timeline-filter-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .timeline-header h2 {
   color: var(--accent-strong);
   margin: 0;
@@ -50,14 +62,36 @@
 }
 
 .timeline-trip {
+  background: transparent;
+  border: none;
+  display: block;
+  font: inherit;
+  padding: 0;
   position: relative;
   margin-bottom: 2rem;
   cursor: pointer;
+  text-align: left;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 .timeline-trip:hover {
   transform: translateX(5px);
+}
+
+.timeline-trip:focus-visible {
+  outline: none;
+}
+
+.timeline-trip:focus-visible .trip-card {
+  border-color: var(--accent-strong);
+  box-shadow:
+    0 0 0 3px var(--hover-ring),
+    0 14px 30px rgba(23, 50, 77, 0.14);
+}
+
+.timeline-trip:focus-visible .marker-dot {
+  transform: scale(1.05);
 }
 
 .timeline-trip:last-child {
@@ -245,6 +279,11 @@
   .timeline-header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .timeline-controls {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .trip-card {

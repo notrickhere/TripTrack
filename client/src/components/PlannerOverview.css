@@ -1,18 +1,22 @@
 .planner-overview {
   display: grid;
   gap: 1rem;
+  min-width: 0;
+  padding: 0.4rem;
 }
 
 .planner-trip-card {
   background: #f5f9fc;
   border: 1px solid rgba(175, 191, 207, 0.75);
   border-radius: 20px;
+  min-width: 0;
   padding: 1rem;
+  width: 100%;
 }
 
 .planner-trip-card.active {
   border-color: #17324d;
-  box-shadow: 0 0 0 2px rgba(23, 50, 77, 0.12);
+  box-shadow: inset 0 0 0 2px rgba(23, 50, 77, 0.16);
 }
 
 .planner-trip-select {
@@ -128,10 +132,10 @@
   list-style: none;
   margin: 0.9rem 0 0;
   overflow-x: auto;
-  padding: 0;
+  padding: 0 0 0.35rem;
   scroll-snap-type: x proximity;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(122, 168, 199, 0.8) rgba(233, 240, 246, 0.8);
+  scrollbar-width: auto;
+  scrollbar-color: rgba(23, 50, 77, 0.92) rgba(214, 226, 236, 0.95);
 }
 
 .planner-activity-item {
@@ -161,16 +165,24 @@
   margin-bottom: 0;
 }
 
+.planner-activity-scroll-hint {
+  color: #5f7288;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin: 0.85rem 0 0;
+}
+
 .planner-activity-list::-webkit-scrollbar {
-  height: 10px;
+  height: 14px;
 }
 
 .planner-activity-list::-webkit-scrollbar-track {
-  background: rgba(233, 240, 246, 0.8);
+  background: rgba(214, 226, 236, 0.95);
   border-radius: 999px;
 }
 
 .planner-activity-list::-webkit-scrollbar-thumb {
-  background: rgba(122, 168, 199, 0.85);
+  background: rgba(23, 50, 77, 0.92);
   border-radius: 999px;
+  border: 2px solid rgba(214, 226, 236, 0.95);
 }

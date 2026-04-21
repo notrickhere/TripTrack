@@ -101,6 +101,7 @@
 
 .planner-panel-overview {
   grid-area: overview;
+  overflow: hidden;
 }
 
 .panel-header h2 {

@@ -93,37 +93,42 @@ function PlannerOverview({
               </div>
             </div>
             {activitiesByTripId[trip._id]?.length ? (
-              <ul className="planner-activity-list">
-                {activitiesByTripId[trip._id].map((activity) => (
-                  <li className="planner-activity-item" key={activity._id}>
-                    <div className="planner-activity-copy">
-                      <strong>{toTitleCase(activity.name)}</strong>
-                      <span>
-                        {formatDisplayDate(activity.date)}
-                        {activity.time ? ` at ${activity.time}` : ""}
-                      </span>
-                      {activity.description ? (
-                        <p>{activity.description}</p>
-                      ) : null}
-                    </div>
-                    <div className="planner-card-actions">
-                      <button
-                        onClick={() => onEditActivity(activity, trip._id)}
-                        type="button"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="danger-button"
-                        onClick={() => onDeleteActivity(activity._id)}
-                        type="button"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <>
+                <p className="planner-activity-scroll-hint">
+                  Scroll sideways to see all activity cards.
+                </p>
+                <ul className="planner-activity-list">
+                  {activitiesByTripId[trip._id].map((activity) => (
+                    <li className="planner-activity-item" key={activity._id}>
+                      <div className="planner-activity-copy">
+                        <strong>{toTitleCase(activity.name)}</strong>
+                        <span>
+                          {formatDisplayDate(activity.date)}
+                          {activity.time ? ` at ${activity.time}` : ""}
+                        </span>
+                        {activity.description ? (
+                          <p>{activity.description}</p>
+                        ) : null}
+                      </div>
+                      <div className="planner-card-actions">
+                        <button
+                          onClick={() => onEditActivity(activity, trip._id)}
+                          type="button"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="danger-button"
+                          onClick={() => onDeleteActivity(activity._id)}
+                          type="button"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </>
             ) : (
               <p className="planner-activity-empty">
                 No activities yet for this trip.

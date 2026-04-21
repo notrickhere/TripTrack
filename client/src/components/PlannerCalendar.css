@@ -23,12 +23,14 @@
 }
 
 .calendar-controls {
-  align-items: center;
+  align-items: flex-end;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
 }
 
 .calendar-controls button,
+.calendar-controls select,
 .calendar-detail-list button {
   background: #fff;
   border: 1px solid rgba(162, 181, 199, 0.75);
@@ -37,6 +39,24 @@
   cursor: pointer;
   font: inherit;
   padding: 0.55rem 0.9rem;
+}
+
+.calendar-select-group {
+  align-items: center;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.calendar-select-group span {
+  color: #5a6d84;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.calendar-controls select {
+  appearance: none;
+  min-width: 9.5rem;
 }
 
 .calendar-grid-header,

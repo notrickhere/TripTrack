@@ -30,6 +30,21 @@ function formatMonthLabel(date) {
   });
 }
 
+const MONTH_OPTIONS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 function buildCalendarDays(monthDate) {
   const monthStart = getMonthStart(monthDate);
   const calendarStart = new Date(monthStart);
@@ -77,6 +92,21 @@ function PlannerCalendar({
     () => buildCalendarDays(currentMonth),
     [currentMonth],
   );
+
+  const yearOptions = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const tripYears = trips.flatMap((trip) => [
+      new Date(`${trip.startDate}T00:00:00`).getFullYear(),
+      new Date(`${trip.endDate}T00:00:00`).getFullYear(),
+    ]);
+    const minYear = Math.min(currentYear - 15, ...tripYears);
+    const maxYear = Math.max(currentYear + 15, ...tripYears);
+
+    return Array.from(
+      { length: maxYear - minYear + 1 },
+      (_, index) => minYear + index,
+    );
+  }, [trips]);
 
   const activities = useMemo(
     () => Object.values(activitiesByTripId).flat(),
@@ -178,6 +208,32 @@ function PlannerCalendar({
     onDateRangeSelect?.(dateKey, dateKey);
   }
 
+  function handleMonthChange(event) {
+    setCurrentMonth(
+      new Date(
+        currentMonth.getFullYear(),
+        Number(event.target.value),
+        1,
+      ),
+    );
+  }
+
+  function handleYearChange(event) {
+    setCurrentMonth(
+      new Date(
+        Number(event.target.value),
+        currentMonth.getMonth(),
+        1,
+      ),
+    );
+  }
+
+  function jumpToToday() {
+    const today = new Date();
+    setCurrentMonth(getMonthStart(today));
+    setSelectedDateKey(todayKey);
+  }
+
   return (
     <section className="planner-calendar">
       <div className="calendar-header">
@@ -186,34 +242,34 @@ function PlannerCalendar({
           <p>See trip spans and daily activities on a month-by-month schedule.</p>
         </div>
         <div className="calendar-controls">
-          <button
-            onClick={() =>
-              setCurrentMonth(
-                new Date(
-                  currentMonth.getFullYear(),
-                  currentMonth.getMonth() - 1,
-                  1,
-                ),
-              )
-            }
-            type="button"
-          >
-            Previous
-          </button>
-          <strong>{formatMonthLabel(currentMonth)}</strong>
-          <button
-            onClick={() =>
-              setCurrentMonth(
-                new Date(
-                  currentMonth.getFullYear(),
-                  currentMonth.getMonth() + 1,
-                  1,
-                ),
-              )
-            }
-            type="button"
-          >
-            Next
+          <label className="calendar-select-group">
+            <span>Month</span>
+            <select
+              onChange={handleMonthChange}
+              value={currentMonth.getMonth()}
+            >
+              {MONTH_OPTIONS.map((month, index) => (
+                <option key={month} value={index}>
+                  {month}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="calendar-select-group">
+            <span>Year</span>
+            <select
+              onChange={handleYearChange}
+              value={currentMonth.getFullYear()}
+            >
+              {yearOptions.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button onClick={jumpToToday} type="button">
+            Today
           </button>
         </div>
       </div>

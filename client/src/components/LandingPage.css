@@ -18,7 +18,7 @@
 .landing-kicker {
   color: var(--accent-strong);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
   letter-spacing: 0.12em;
   margin: 0;
   text-transform: uppercase;
@@ -26,7 +26,8 @@
 
 .landing-copy h2 {
   font-size: clamp(2rem, 4vw, 3.35rem);
-  line-height: 1;
+  font-weight: var(--font-weight-display);
+  line-height: var(--line-height-tight);
   margin: 0;
   max-width: 12ch;
 }
@@ -34,7 +35,8 @@
 .landing-description {
   color: var(--text-secondary);
   font-size: 1.05rem;
-  line-height: 1.65;
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-relaxed);
   margin: 0;
   max-width: 42rem;
 }
@@ -81,7 +83,7 @@
 .landing-highlight-label {
   color: var(--text-muted);
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
   letter-spacing: 0.08em;
   margin: 0 0 1rem;
   text-transform: uppercase;
@@ -96,7 +98,8 @@
 
 .landing-feature-list li {
   color: var(--text-secondary);
-  line-height: 1.5;
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
 }
 
 .landing-grid {
@@ -106,13 +109,18 @@
 }
 
 .landing-info-card h3 {
+  color: var(--accent);
+  font-size: 1.08rem;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: -0.02em;
   margin-bottom: 0.55rem;
   margin-top: 0;
 }
 
 .landing-info-card p {
   color: var(--text-secondary);
-  line-height: 1.6;
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   margin: 0;
 }
 

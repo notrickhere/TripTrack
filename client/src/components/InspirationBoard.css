@@ -11,11 +11,17 @@
 }
 
 .inspiration-header h2 {
+  color: var(--accent);
+  font-size: clamp(1.45rem, 2.5vw, 1.9rem);
+  font-weight: var(--font-weight-display);
+  letter-spacing: -0.03em;
   margin: 0.25rem 0 0;
 }
 
 .inspiration-header p:last-child {
   color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   margin: 0;
   max-width: 30rem;
 }
@@ -58,7 +64,8 @@
 .inspiration-search span {
   color: var(--accent);
   font-size: 0.92rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: 0.04em;
 }
 
 .inspiration-search input {
@@ -85,17 +92,22 @@
 
 .inspiration-card h3 {
   color: var(--text-primary);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: -0.02em;
   margin-bottom: 0.35rem;
 }
 
 .location-line {
   color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   margin-top: 0;
 }
 
 .mood-line {
   color: var(--accent-strong);
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   margin: 0.85rem 0 0;
 }
 
@@ -121,11 +133,13 @@
 .trip-meta dt {
   color: var(--text-muted);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
   text-transform: uppercase;
 }
 
 .trip-meta dd {
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   margin: 0.25rem 0 0;
 }
 
@@ -161,19 +175,23 @@
 
 .card-itinerary-preview li {
   color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   margin-bottom: 0.25rem;
 }
 
 .itinerary-heading {
   color: var(--accent);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: 0.08em;
   margin: 0;
   text-transform: uppercase;
 }
 
 .itinerary-empty {
   color: var(--text-muted);
+  font-weight: var(--font-weight-light);
   margin: 0.45rem 0 0;
 }
 

@@ -28,6 +28,14 @@
   --danger-soft: #fff1f1;
   --danger-border: #efc2c2;
   --danger-text: #972c2c;
+  --font-weight-light: 360;
+  --font-weight-body: 420;
+  --font-weight-medium: 560;
+  --font-weight-strong: 680;
+  --font-weight-display: 760;
+  --line-height-tight: 1.12;
+  --line-height-body: 1.68;
+  --line-height-relaxed: 1.78;
   --input-border: #c6d0dc;
   --input-bg: #ffffff;
   --hover-ring: rgba(122, 168, 199, 0.18);
@@ -38,8 +46,8 @@
   color: var(--text-primary);
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
   background: var(--app-background);
-  line-height: 1.5;
-  font-weight: 400;
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-body);
 }
 
 body[data-theme="dark"] {
@@ -72,6 +80,14 @@ body[data-theme="dark"] {
   --danger-soft: rgba(89, 37, 44, 0.72);
   --danger-border: rgba(188, 110, 121, 0.45);
   --danger-text: #ffb5bf;
+  --font-weight-light: 350;
+  --font-weight-body: 410;
+  --font-weight-medium: 560;
+  --font-weight-strong: 680;
+  --font-weight-display: 760;
+  --line-height-tight: 1.14;
+  --line-height-body: 1.7;
+  --line-height-relaxed: 1.8;
   --input-border: #50657d;
   --input-bg: #111c29;
   --hover-ring: rgba(114, 184, 240, 0.22);
@@ -88,11 +104,29 @@ body[data-theme="dark"] {
 body {
   background: var(--app-background);
   color: var(--text-primary);
+  font-weight: var(--font-weight-body);
+  line-height: var(--line-height-body);
   margin: 0;
   min-height: 100vh;
   transition:
     background 220ms ease,
     color 220ms ease;
+}
+
+p,
+li,
+dd,
+textarea,
+input,
+select {
+  line-height: var(--line-height-body);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.02em;
 }
 
 button,

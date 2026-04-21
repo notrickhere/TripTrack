@@ -12,6 +12,9 @@
 
 .calendar-header h2,
 .calendar-detail-header h3 {
+  color: var(--accent);
+  font-weight: var(--font-weight-display);
+  letter-spacing: -0.03em;
   margin: 0;
 }
 
@@ -24,6 +27,8 @@
 .calendar-header p,
 .calendar-detail-card p {
   color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   margin-bottom: 0;
   margin-top: 0.35rem;
 }
@@ -55,7 +60,8 @@
   color: var(--text-primary);
   font-size: 0.88rem;
   left: 0;
-  line-height: 1.45;
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   max-width: 30rem;
   min-width: 24rem;
   opacity: 0;
@@ -107,7 +113,8 @@
 .calendar-select-group span {
   color: var(--text-muted);
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -126,7 +133,8 @@
 .calendar-grid-header {
   color: var(--text-muted);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -196,7 +204,7 @@
 
 .calendar-day-number {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
 }
 
 .calendar-activity-count {
@@ -204,7 +212,7 @@
   border-radius: 999px;
   color: var(--accent-strong);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
   padding: 0.2rem 0.45rem;
 }
 
@@ -219,7 +227,7 @@
   border-radius: 999px;
   display: inline-flex;
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   justify-content: center;
   padding: 0.28rem 0.55rem;
   text-align: center;
@@ -284,6 +292,10 @@
 }
 
 .calendar-detail-card h4 {
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: -0.02em;
   margin-bottom: 0.8rem;
   margin-top: 0;
 }
@@ -318,6 +330,7 @@
 
 .calendar-detail-list strong {
   color: var(--accent);
+  font-weight: var(--font-weight-strong);
 }
 
 .calendar-detail-list span,

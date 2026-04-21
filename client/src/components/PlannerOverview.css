@@ -43,17 +43,19 @@
 
 .planner-trip-title {
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
 }
 
 .planner-trip-location {
   color: var(--text-secondary);
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
 }
 
 .planner-trip-notes {
   color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
 }
 
 .planner-card-actions {
@@ -103,7 +105,8 @@
 .planner-activity-heading {
   color: var(--accent);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-strong);
+  letter-spacing: 0.08em;
   margin: 0;
   text-transform: uppercase;
 }
@@ -174,18 +177,21 @@
 .planner-activity-copy span,
 .planner-activity-copy p {
   color: var(--text-secondary);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
   margin: 0;
 }
 
 .planner-activity-empty {
   color: var(--text-muted);
+  font-weight: var(--font-weight-light);
   margin-bottom: 0;
 }
 
 .planner-activity-scroll-hint {
   color: var(--text-muted);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
   margin: 0.85rem 0 0;
 }
 

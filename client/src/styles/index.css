@@ -44,3 +44,25 @@ button:hover:not(:disabled) {
 button:active:not(:disabled) {
   transform: translateY(0);
 }
+
+input,
+select,
+textarea {
+  transition:
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+input:hover:not(:disabled),
+select:hover:not(:disabled),
+textarea:hover:not(:disabled),
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(122, 168, 199, 0.95);
+  box-shadow:
+    0 0 0 3px rgba(122, 168, 199, 0.18),
+    0 8px 22px rgba(23, 50, 77, 0.1);
+  outline: none;
+}

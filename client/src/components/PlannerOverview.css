@@ -1,8 +1,10 @@
 .planner-overview {
+  align-content: start;
   display: grid;
   gap: 1rem;
+  grid-auto-rows: max-content;
   min-width: 0;
-  padding: 0.4rem;
+  padding: 0.4rem 0.15rem 0.4rem 0.4rem;
 }
 
 .planner-trip-card {

@@ -387,6 +387,7 @@ function showActionError(setter, actionLabel, message) {
 function App() {
   const tripFormPanelRef = useRef(null);
   const itineraryPanelRef = useRef(null);
+  const plannerStackRef = useRef(null);
   const [activeView, setActiveView] = useState("home");
   const [theme, setTheme] = useState(getInitialTheme);
   const [authErrorMessage, setAuthErrorMessage] = useState("");
@@ -404,6 +405,7 @@ function App() {
   const [isLoadingTrips, setIsLoadingTrips] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [plannerOverviewHeight, setPlannerOverviewHeight] = useState(0);
   const plannerTrips = trips.filter((trip) => !trip.seeded);
   const inspirationTrips = trips.filter((trip) => trip.seeded);
   const plannerTripIdsKey = plannerTrips.map((trip) => trip._id).join("|");
@@ -431,6 +433,40 @@ function App() {
     document.body.dataset.theme = theme;
     window.localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
+
+  useEffect(() => {
+    function syncPlannerOverviewHeight() {
+      if (!plannerStackRef.current || window.innerWidth <= 840) {
+        setPlannerOverviewHeight(0);
+        return;
+      }
+
+      setPlannerOverviewHeight(plannerStackRef.current.offsetHeight);
+    }
+
+    syncPlannerOverviewHeight();
+
+    const resizeObserver = new ResizeObserver(() => {
+      syncPlannerOverviewHeight();
+    });
+
+    if (plannerStackRef.current) {
+      resizeObserver.observe(plannerStackRef.current);
+    }
+
+    window.addEventListener("resize", syncPlannerOverviewHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", syncPlannerOverviewHeight);
+    };
+  }, [
+    activeView,
+    editingActivity,
+    editingTrip,
+    plannerTrips.length,
+    selectedTripId,
+  ]);
 
   useEffect(() => {
     async function hydrateSession() {
@@ -928,54 +964,63 @@ function App() {
         </main>
       ) : activeView === "planner" ? (
         <main className="planner-layout">
-          <section
-            className="panel planner-panel planner-panel-form"
-            ref={tripFormPanelRef}
-          >
-            <div className="panel-header">
-              <div>
-                <h2>Trips</h2>
+          <div className="planner-stack" ref={plannerStackRef}>
+            <section
+              className="panel planner-panel planner-panel-form"
+              ref={tripFormPanelRef}
+            >
+              <div className="panel-header">
+                <div>
+                  <h2>Trips</h2>
+                  <p>
+                    {editingTrip
+                      ? `Editing ${editingTrip.destination}`
+                      : "Create and manage destination plans."}
+                  </p>
+                </div>
+              </div>
+              <TripForm
+                editingTrip={editingTrip}
+                selectedEndDate={calendarSelection.endDate}
+                selectedStartDate={calendarSelection.startDate}
+                suggestedStartDate={
+                  editingTrip ? "" : nextAllowedPlannerStartDate
+                }
+                onCancelEdit={() => setEditingTrip(null)}
+                onSubmit={handleTripCreate}
+              />
+            </section>
+
+            <section
+              className="panel planner-panel planner-panel-itinerary"
+              ref={itineraryPanelRef}
+            >
+              <div className="panel-header">
+                <h2>Itinerary</h2>
                 <p>
-                  {editingTrip
-                    ? `Editing ${editingTrip.destination}`
-                    : "Create and manage destination plans."}
+                  {editingActivity
+                    ? `Editing ${editingActivity.name}`
+                    : "Add activities to the currently selected trip."}
                 </p>
               </div>
-            </div>
-            <TripForm
-              editingTrip={editingTrip}
-              selectedEndDate={calendarSelection.endDate}
-              selectedStartDate={calendarSelection.startDate}
-              suggestedStartDate={
-                editingTrip ? "" : nextAllowedPlannerStartDate
-              }
-              onCancelEdit={() => setEditingTrip(null)}
-              onSubmit={handleTripCreate}
-            />
-          </section>
+              <ActivityForm
+                defaultDate={defaultActivityDate}
+                disabled={!selectedTripId}
+                editingActivity={editingActivity}
+                onCancelEdit={() => setEditingActivity(null)}
+                onSubmit={handleActivityCreate}
+              />
+            </section>
+          </div>
 
           <section
-            className="panel planner-panel planner-panel-itinerary"
-            ref={itineraryPanelRef}
+            className="panel planner-panel planner-panel-overview"
+            style={
+              plannerOverviewHeight
+                ? { height: `${plannerOverviewHeight}px` }
+                : undefined
+            }
           >
-            <div className="panel-header">
-              <h2>Itinerary</h2>
-              <p>
-                {editingActivity
-                  ? `Editing ${editingActivity.name}`
-                  : "Add activities to the currently selected trip."}
-              </p>
-            </div>
-            <ActivityForm
-              defaultDate={defaultActivityDate}
-              disabled={!selectedTripId}
-              editingActivity={editingActivity}
-              onCancelEdit={() => setEditingActivity(null)}
-              onSubmit={handleActivityCreate}
-            />
-          </section>
-
-          <section className="panel planner-panel planner-panel-overview">
             <div className="panel-header">
               <div>
                 <h2>Planned Trips</h2>

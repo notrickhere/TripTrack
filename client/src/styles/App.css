@@ -78,12 +78,10 @@
 }
 
 .planner-layout {
+  align-items: start;
   display: grid;
-  gap: 1.5rem;
   grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.2fr);
-  grid-template-areas:
-    "tripform overview"
-    "itinerary overview";
+  gap: 1.5rem;
 }
 
 .panel {
@@ -94,17 +92,35 @@
   padding: 1.5rem;
 }
 
-.planner-panel-form {
-  grid-area: tripform;
-}
-
-.planner-panel-itinerary {
-  grid-area: itinerary;
+.planner-stack {
+  display: grid;
+  gap: 0.85rem;
+  min-width: 0;
 }
 
 .planner-panel-overview {
-  grid-area: overview;
-  overflow: hidden;
+  align-self: start;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 1rem;
+  scrollbar-color: var(--accent) var(--surface-4);
+  scrollbar-width: auto;
+}
+
+.planner-panel-overview::-webkit-scrollbar {
+  width: 12px;
+}
+
+.planner-panel-overview::-webkit-scrollbar-track {
+  background: var(--surface-4);
+  border-radius: 999px;
+}
+
+.planner-panel-overview::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border: 2px solid var(--surface-4);
+  border-radius: 999px;
 }
 
 .panel-header h2 {
@@ -165,10 +181,12 @@
 @media (max-width: 840px) {
   .planner-layout {
     grid-template-columns: 1fr;
-    grid-template-areas:
-      "tripform"
-      "itinerary"
-      "overview";
+  }
+
+  .planner-panel-overview {
+    height: auto;
+    overflow: visible;
+    padding-right: 1.5rem;
   }
 
   .session-bar {

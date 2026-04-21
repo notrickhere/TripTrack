@@ -46,6 +46,7 @@ function PlannerOverview({
           key={trip._id}
         >
           <button
+            aria-label={`Select trip ${trip.destination}`}
             className="planner-trip-select"
             onClick={() => onSelectTrip(trip._id)}
             type="button"
@@ -65,10 +66,15 @@ function PlannerOverview({
           </button>
 
           <div className="planner-card-actions">
-            <button onClick={() => onEditTrip(trip)} type="button">
+            <button
+              aria-label={`Edit trip ${trip.destination}`}
+              onClick={() => onEditTrip(trip)}
+              type="button"
+            >
               Edit Trip
             </button>
             <button
+              aria-label={`Delete trip ${trip.destination}`}
               className="danger-button"
               onClick={() => onDeleteTrip(trip._id)}
               type="button"
@@ -82,6 +88,7 @@ function PlannerOverview({
               <p className="planner-activity-heading">Activities</p>
               <div className="planner-activity-actions">
                 <button
+                  aria-label={`Add activity to trip ${trip.destination}`}
                   className="planner-activity-add"
                   onClick={() => onAddActivity(trip._id)}
                   type="button"
@@ -110,12 +117,14 @@ function PlannerOverview({
                       </div>
                       <div className="planner-card-actions">
                         <button
+                          aria-label={`Edit activity ${toTitleCase(activity.name)} for trip ${trip.destination}`}
                           onClick={() => onEditActivity(activity, trip._id)}
                           type="button"
                         >
                           Edit
                         </button>
                         <button
+                          aria-label={`Delete activity ${toTitleCase(activity.name)} from trip ${trip.destination}`}
                           className="danger-button"
                           onClick={() => onDeleteActivity(activity._id)}
                           type="button"

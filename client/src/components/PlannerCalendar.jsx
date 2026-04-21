@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { formatDisplayDate, formatDisplayDateRange } from "../lib/date.js";
 import "./PlannerCalendar.css";
@@ -59,6 +59,12 @@ function sortDateKeys(firstDateKey, secondDateKey) {
     : [secondDateKey, firstDateKey];
 }
 
+function addDaysToDateKey(dateKey, numberOfDays) {
+  const date = new Date(`${dateKey}T00:00:00`);
+  date.setDate(date.getDate() + numberOfDays);
+  return formatDateKey(date);
+}
+
 function PlannerCalendar({
   activitiesByTripId,
   onDateRangeSelect,
@@ -66,7 +72,11 @@ function PlannerCalendar({
   trips,
 }) {
   const todayKey = formatDateKey(new Date());
+  const dayButtonRefs = useRef({});
   const [currentMonth, setCurrentMonth] = useState(getMonthStart(new Date()));
+  const [focusedDateKey, setFocusedDateKey] = useState(todayKey);
+  const [keyboardRangeAnchorDateKey, setKeyboardRangeAnchorDateKey] =
+    useState(todayKey);
   const [selectedDateKey, setSelectedDateKey] = useState(todayKey);
   const [dragStartDateKey, setDragStartDateKey] = useState("");
   const [dragEndDateKey, setDragEndDateKey] = useState("");
@@ -129,6 +139,15 @@ function PlannerCalendar({
       : [selectedDateKey, selectedDateKey];
 
   useEffect(() => {
+    setCurrentMonth(getMonthStart(new Date(`${focusedDateKey}T00:00:00`)));
+  }, [focusedDateKey]);
+
+  useEffect(() => {
+    const nextFocusedButton = dayButtonRefs.current[focusedDateKey];
+    nextFocusedButton?.focus();
+  }, [calendarDays, focusedDateKey]);
+
+  useEffect(() => {
     function handleMouseUp() {
       if (!isDragging || !dragStartDateKey || !dragEndDateKey) {
         return;
@@ -161,6 +180,8 @@ function PlannerCalendar({
   ]);
 
   function handleDayMouseDown(dateKey) {
+    setFocusedDateKey(dateKey);
+    setKeyboardRangeAnchorDateKey(dateKey);
     setDragStartDateKey(dateKey);
     setDragEndDateKey(dateKey);
     setDidDragRange(false);
@@ -180,10 +201,13 @@ function PlannerCalendar({
   }
 
   function handleDayMouseUp(dateKey) {
+    setFocusedDateKey(dateKey);
     setSelectedDateKey(dateKey);
   }
 
   function handleDayDoubleClick(dateKey) {
+    setFocusedDateKey(dateKey);
+    setKeyboardRangeAnchorDateKey(dateKey);
     setSelectedDateKey(dateKey);
     setDragStartDateKey("");
     setDragEndDateKey("");
@@ -193,21 +217,117 @@ function PlannerCalendar({
   }
 
   function handleMonthChange(event) {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), Number(event.target.value), 1),
+    const nextMonth = new Date(
+      currentMonth.getFullYear(),
+      Number(event.target.value),
+      1,
     );
+    const nextDateKey = formatDateKey(nextMonth);
+    setCurrentMonth(nextMonth);
+    setFocusedDateKey(nextDateKey);
+    setKeyboardRangeAnchorDateKey(nextDateKey);
+    setSelectedDateKey(nextDateKey);
   }
 
   function handleYearChange(event) {
-    setCurrentMonth(
-      new Date(Number(event.target.value), currentMonth.getMonth(), 1),
+    const nextMonth = new Date(
+      Number(event.target.value),
+      currentMonth.getMonth(),
+      1,
     );
+    const nextDateKey = formatDateKey(nextMonth);
+    setCurrentMonth(nextMonth);
+    setFocusedDateKey(nextDateKey);
+    setKeyboardRangeAnchorDateKey(nextDateKey);
+    setSelectedDateKey(nextDateKey);
   }
 
   function jumpToToday() {
     const today = new Date();
     setCurrentMonth(getMonthStart(today));
+    setFocusedDateKey(todayKey);
+    setKeyboardRangeAnchorDateKey(todayKey);
     setSelectedDateKey(todayKey);
+  }
+
+  function updateKeyboardRange(anchorDateKey, targetDateKey) {
+    setKeyboardRangeAnchorDateKey(anchorDateKey);
+    setSelectedDateKey(targetDateKey);
+    setDragStartDateKey(anchorDateKey);
+    setDragEndDateKey(targetDateKey);
+    setDidDragRange(anchorDateKey !== targetDateKey);
+    setIsDragging(false);
+  }
+
+  function commitKeyboardRange(dateKey) {
+    const [startDateKey, endDateKey] = sortDateKeys(
+      keyboardRangeAnchorDateKey || dateKey,
+      dateKey,
+    );
+
+    setFocusedDateKey(dateKey);
+    setSelectedDateKey(startDateKey);
+    setDragStartDateKey("");
+    setDragEndDateKey("");
+    setDidDragRange(false);
+    setIsDragging(false);
+    onDateRangeSelect?.(startDateKey, endDateKey);
+  }
+
+  function handleDayKeyDown(dateKey, event) {
+    const keyToDayOffset = {
+      ArrowDown: 7,
+      ArrowLeft: -1,
+      ArrowRight: 1,
+      ArrowUp: -7,
+    };
+
+    if (event.key in keyToDayOffset) {
+      event.preventDefault();
+      const nextDateKey = addDaysToDateKey(dateKey, keyToDayOffset[event.key]);
+      setFocusedDateKey(nextDateKey);
+
+      if (event.shiftKey) {
+        updateKeyboardRange(keyboardRangeAnchorDateKey || dateKey, nextDateKey);
+      } else {
+        setKeyboardRangeAnchorDateKey(nextDateKey);
+        setSelectedDateKey(nextDateKey);
+        setDragStartDateKey("");
+        setDragEndDateKey("");
+        setDidDragRange(false);
+        setIsDragging(false);
+      }
+
+      return;
+    }
+
+    if (event.key === " " || event.key === "Enter") {
+      event.preventDefault();
+
+      if (event.shiftKey) {
+        commitKeyboardRange(dateKey);
+        return;
+      }
+
+      setFocusedDateKey(dateKey);
+      setKeyboardRangeAnchorDateKey(dateKey);
+      setSelectedDateKey(dateKey);
+      setDragStartDateKey("");
+      setDragEndDateKey("");
+      setDidDragRange(false);
+      setIsDragging(false);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setKeyboardRangeAnchorDateKey(dateKey);
+      setSelectedDateKey(dateKey);
+      setDragStartDateKey("");
+      setDragEndDateKey("");
+      setDidDragRange(false);
+      setIsDragging(false);
+    }
   }
 
   return (
@@ -227,7 +347,9 @@ function PlannerCalendar({
               <div className="calendar-info-tooltip">
                 Single click a date to preview it below. Double click one date
                 or drag across multiple dates to open the planner with those
-                dates selected.
+                dates selected. With a keyboard, use arrow keys to move,
+                Shift+Arrow keys to build a range, and Shift+Enter to open the
+                planner for that range.
               </div>
             </div>
           </div>
@@ -300,6 +422,7 @@ function PlannerCalendar({
 
           return (
             <button
+              aria-pressed={isSelected}
               className={[
                 "calendar-day",
                 isCurrentMonth ? "current-month" : "outside-month",
@@ -311,9 +434,19 @@ function PlannerCalendar({
                 .join(" ")}
               key={dateKey}
               onDoubleClick={() => handleDayDoubleClick(dateKey)}
+              onFocus={() => setFocusedDateKey(dateKey)}
+              onKeyDown={(event) => handleDayKeyDown(dateKey, event)}
               onMouseDown={() => handleDayMouseDown(dateKey)}
               onMouseEnter={() => handleDayMouseEnter(dateKey)}
               onMouseUp={() => handleDayMouseUp(dateKey)}
+              ref={(element) => {
+                if (element) {
+                  dayButtonRefs.current[dateKey] = element;
+                } else {
+                  delete dayButtonRefs.current[dateKey];
+                }
+              }}
+              tabIndex={dateKey === focusedDateKey ? 0 : -1}
               type="button"
             >
               <div className="calendar-day-top">

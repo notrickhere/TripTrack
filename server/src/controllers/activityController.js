@@ -22,6 +22,13 @@ function getUserId(request) {
   return request.user?._id?.toString() || "";
 }
 
+function toTitleCase(value = "") {
+  return value.replace(/\w\S*/g, (word) => {
+    const normalizedWord = word.toLowerCase();
+    return normalizedWord.charAt(0).toUpperCase() + normalizedWord.slice(1);
+  });
+}
+
 export async function listActivities(request, response) {
   if (!request.query.tripId) {
     return response.json([]);
@@ -82,7 +89,7 @@ export async function createActivity(request, response) {
 
   const activity = {
     tripId,
-    name,
+    name: toTitleCase(name.trim()),
     description,
     date,
     seeded: false,
@@ -106,7 +113,7 @@ export async function updateActivity(request, response) {
   const { name, description = "", date, time = "" } = request.body;
 
   const update = {
-    name,
+    name: toTitleCase((name || "").trim()),
     description,
     date,
     time,

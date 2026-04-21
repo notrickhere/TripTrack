@@ -87,6 +87,13 @@ function formatDate(date) {
   return date.toISOString().slice(0, 10);
 }
 
+function toTitleCase(value = "") {
+  return value.replace(/\w\S*/g, (word) => {
+    const normalizedWord = word.toLowerCase();
+    return normalizedWord.charAt(0).toUpperCase() + normalizedWord.slice(1);
+  });
+}
+
 function normalizeTrip(row) {
   const startDate = parseDateString(row.startDate);
   const endDate = parseDateString(row.endDate);
@@ -136,7 +143,7 @@ function normalizeActivity(row, tripId, trip) {
     createdAt: timestamp,
     date: row.startDate || createActivityDate(trip.startDate, trip.endDate),
     description: row.activityDescription || "",
-    name: row.activityName,
+    name: toTitleCase(row.activityName),
     seeded: true,
     time: row.time || "",
     tripId: tripId.toString(),

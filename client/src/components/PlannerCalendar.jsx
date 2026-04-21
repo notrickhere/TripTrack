@@ -46,6 +46,13 @@ function isDateWithinRange(dateKey, startDate, endDate) {
   return dateKey >= startDate && dateKey <= endDate;
 }
 
+function toTitleCase(value = "") {
+  return value.replace(/\w\S*/g, (word) => {
+    const normalizedWord = word.toLowerCase();
+    return normalizedWord.charAt(0).toUpperCase() + normalizedWord.slice(1);
+  });
+}
+
 function sortDateKeys(firstDateKey, secondDateKey) {
   return firstDateKey <= secondDateKey
     ? [firstDateKey, secondDateKey]
@@ -246,7 +253,7 @@ function PlannerCalendar({
               <div className="calendar-day-content">
                 {matchingTrips.slice(0, 2).map((trip) => (
                   <span className="calendar-trip-pill" key={`${dateKey}-${trip._id}`}>
-                    {trip.destination}
+                    {toTitleCase(trip.destination)}
                   </span>
                 ))}
                 {matchingTrips.length > 2 ? (
@@ -293,7 +300,7 @@ function PlannerCalendar({
               <ul className="calendar-detail-list">
                 {selectedDayActivities.map((activity) => (
                   <li key={activity._id}>
-                    <strong>{activity.name}</strong>
+                    <strong>{toTitleCase(activity.name)}</strong>
                     <span>{activity.time || "Any time"}</span>
                     {activity.description ? <p>{activity.description}</p> : null}
                   </li>

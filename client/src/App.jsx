@@ -372,7 +372,7 @@ function showActionError(setter, actionLabel, message) {
 function App() {
   const tripFormPanelRef = useRef(null);
   const itineraryPanelRef = useRef(null);
-  const [activeView, setActiveView] = useState("planner");
+  const [activeView, setActiveView] = useState("login");
   const [authErrorMessage, setAuthErrorMessage] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [trips, setTrips] = useState([]);
@@ -415,8 +415,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!currentUser && ["calendar", "statistics", "timeline"].includes(activeView)) {
-      setActiveView("planner");
+    if (
+      !currentUser &&
+      ["calendar", "planner", "statistics", "timeline"].includes(activeView)
+    ) {
+      setActiveView("login");
     }
   }, [activeView, currentUser]);
 
@@ -830,6 +833,15 @@ function App() {
         </p>
         <div className="hero-controls">
           <div className="view-switcher">
+            {!currentUser ? (
+              <button
+                className={activeView === "login" ? "active-view" : ""}
+                onClick={() => setActiveView("login")}
+                type="button"
+              >
+                Log In
+              </button>
+            ) : null}
             <button
               className={activeView === "inspiration" ? "active-view" : ""}
               onClick={() => setActiveView("inspiration")}
@@ -882,87 +894,83 @@ function App() {
 
       {errorMessage ? <p className="status error">{errorMessage}</p> : null}
 
-      {activeView === "planner" ? (
-        currentUser ? (
-          <main className="planner-layout">
-            <section
-              className="panel planner-panel planner-panel-form"
-              ref={tripFormPanelRef}
-            >
-              <div className="panel-header">
-                <div>
-                  <h2>Trips</h2>
-                  <p>
-                    {editingTrip
-                      ? `Editing ${editingTrip.destination}`
-                      : "Create and manage destination plans."}
-                  </p>
-                </div>
-              </div>
-              <TripForm
-                editingTrip={editingTrip}
-                suggestedStartDate={
-                  editingTrip ? "" : nextAllowedPlannerStartDate
-                }
-                onCancelEdit={() => setEditingTrip(null)}
-                onSubmit={handleTripCreate}
-              />
-            </section>
-
-            <section
-              className="panel planner-panel planner-panel-itinerary"
-              ref={itineraryPanelRef}
-            >
-              <div className="panel-header">
-                <h2>Itinerary</h2>
+      {activeView === "login" ? (
+        <main>
+          <AuthPanel
+            errorMessage={authErrorMessage}
+            onLogin={handleLogin}
+            onRegister={handleRegister}
+          />
+        </main>
+      ) : activeView === "planner" ? (
+        <main className="planner-layout">
+          <section
+            className="panel planner-panel planner-panel-form"
+            ref={tripFormPanelRef}
+          >
+            <div className="panel-header">
+              <div>
+                <h2>Trips</h2>
                 <p>
-                  {editingActivity
-                    ? `Editing ${editingActivity.name}`
-                    : "Add activities to the currently selected trip."}
+                  {editingTrip
+                    ? `Editing ${editingTrip.destination}`
+                    : "Create and manage destination plans."}
                 </p>
               </div>
-              <ActivityForm
-                defaultDate={defaultActivityDate}
-                disabled={!selectedTripId}
-                editingActivity={editingActivity}
-                onCancelEdit={() => setEditingActivity(null)}
-                onSubmit={handleActivityCreate}
-              />
-            </section>
-
-            <section className="panel planner-panel planner-panel-overview">
-              <div className="panel-header">
-                <div>
-                  <h2>Planned Trips</h2>
-                  <p>
-                    View all planner trips with their nested activities in one
-                    place.
-                  </p>
-                </div>
-              </div>
-              <PlannerOverview
-                activitiesByTripId={activitiesByTripId}
-                isLoading={isLoadingTrips || isLoadingActivities}
-                onAddActivity={handleAddActivity}
-                onDeleteActivity={handleActivityDelete}
-                onDeleteTrip={handleTripDelete}
-                onEditActivity={handleActivityEdit}
-                onEditTrip={handleTripEdit}
-                onSelectTrip={setSelectedTripId}
-                selectedTripId={selectedTripId}
-                trips={plannerTrips}
-              />
-            </section>
-          </main>
-        ) : (
-          <main>
-            <AuthPanel
-              errorMessage={authErrorMessage}
-              onLogin={handleLogin}
-              onRegister={handleRegister}
+            </div>
+            <TripForm
+              editingTrip={editingTrip}
+              suggestedStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
+              onCancelEdit={() => setEditingTrip(null)}
+              onSubmit={handleTripCreate}
             />
-          </main>
-        )
+          </section>
+
+          <section
+            className="panel planner-panel planner-panel-itinerary"
+            ref={itineraryPanelRef}
+          >
+            <div className="panel-header">
+              <h2>Itinerary</h2>
+              <p>
+                {editingActivity
+                  ? `Editing ${editingActivity.name}`
+                  : "Add activities to the currently selected trip."}
+              </p>
+            </div>
+            <ActivityForm
+              defaultDate={defaultActivityDate}
+              disabled={!selectedTripId}
+              editingActivity={editingActivity}
+              onCancelEdit={() => setEditingActivity(null)}
+              onSubmit={handleActivityCreate}
+            />
+          </section>
+
+          <section className="panel planner-panel planner-panel-overview">
+            <div className="panel-header">
+              <div>
+                <h2>Planned Trips</h2>
+                <p>
+                  View all planner trips with their nested activities in one
+                  place.
+                </p>
+              </div>
+            </div>
+            <PlannerOverview
+              activitiesByTripId={activitiesByTripId}
+              isLoading={isLoadingTrips || isLoadingActivities}
+              onAddActivity={handleAddActivity}
+              onDeleteActivity={handleActivityDelete}
+              onDeleteTrip={handleTripDelete}
+              onEditActivity={handleActivityEdit}
+              onEditTrip={handleTripEdit}
+              onSelectTrip={setSelectedTripId}
+              selectedTripId={selectedTripId}
+              trips={plannerTrips}
+            />
+          </section>
+        </main>
       ) : activeView === "calendar" ? (
         <main>
           <PlannerCalendar

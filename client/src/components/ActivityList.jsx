@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 
+import { formatDisplayDate } from "../lib/date.js";
 import "./ActivityList.css";
 
 function toTitleCase(value = "") {
@@ -35,7 +36,7 @@ function ActivityList({
           <div className="activity-card-header">
             <h3>{toTitleCase(activity.name)}</h3>
             <span>
-              {activity.date}
+              {formatDisplayDate(activity.date)}
               {activity.time ? ` at ${activity.time}` : ""}
             </span>
           </div>

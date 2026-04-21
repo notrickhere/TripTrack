@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
+import { formatDisplayDateRange } from "../lib/date.js";
 import { getActivities } from "../lib/api.js";
 import "./InspirationBoard.css";
 
@@ -474,7 +475,7 @@ function InspirationBoard({
               <div>
                 <dt>Dates</dt>
                 <dd>
-                  {trip.startDate} to {trip.endDate}
+                  {formatDisplayDateRange(trip.startDate, trip.endDate)}
                 </dd>
               </div>
             </dl>

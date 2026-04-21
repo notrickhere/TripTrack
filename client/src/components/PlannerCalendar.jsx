@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 
+import { formatDisplayDate, formatDisplayDateRange } from "../lib/date.js";
 import "./PlannerCalendar.css";
 
 function getMonthStart(date) {
@@ -12,15 +13,6 @@ function formatDateKey(date) {
   const month = `${date.getMonth() + 1}`.padStart(2, "0");
   const day = `${date.getDate()}`.padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
-
-function formatLongDate(dateKey) {
-  return new Date(`${dateKey}T00:00:00`).toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
 }
 
 function formatMonthLabel(date) {
@@ -348,7 +340,7 @@ function PlannerCalendar({
 
       <div className="calendar-detail-panel">
         <div className="calendar-detail-header">
-          <h3>{formatLongDate(selectedDateKey)}</h3>
+          <h3>{formatDisplayDate(selectedDateKey)}</h3>
           {selectedDateKey === todayKey ? <span>Today</span> : null}
         </div>
 
@@ -362,7 +354,7 @@ function PlannerCalendar({
                     <button onClick={() => onTripSelect?.(trip)} type="button">
                       <strong>{trip.destination}</strong>
                       <span>
-                        {trip.startDate} to {trip.endDate}
+                        {formatDisplayDateRange(trip.startDate, trip.endDate)}
                       </span>
                     </button>
                   </li>

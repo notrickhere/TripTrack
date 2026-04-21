@@ -1,14 +1,7 @@
 import PropTypes from "prop-types";
 import { useMemo, useState } from "react";
+import { formatDisplayDate } from "../lib/date.js";
 import "./SimpleTripTimeline.css";
-
-function formatDate(dateString) {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 
 function getDaysBetween(startDate, endDate) {
   const start = new Date(startDate);
@@ -144,7 +137,8 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
                     </div>
 
                     <div className="trip-dates">
-                      {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
+                      {formatDisplayDate(trip.startDate)} -{" "}
+                      {formatDisplayDate(trip.endDate)}
                     </div>
 
                     <div className="trip-details">

@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 
+import { formatDisplayDateRange } from "../lib/date.js";
 import "./TripList.css";
 
 function toTitleCase(value = "") {
@@ -43,7 +44,7 @@ function TripList({
                 .join(" · ")}
             </span>
             <span>
-              {trip.startDate} to {trip.endDate}
+              {formatDisplayDateRange(trip.startDate, trip.endDate)}
             </span>
             {trip.notes ? (
               <span className="trip-card-notes">{toTitleCase(trip.notes)}</span>

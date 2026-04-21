@@ -1,14 +1,7 @@
 import PropTypes from "prop-types";
 import { useMemo, useState } from "react";
+import { formatDisplayDate } from "../lib/date.js";
 import "./TripStatistics.css";
-
-function formatDate(dateString) {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 
 function getDaysBetween(startDate, endDate) {
   const start = new Date(startDate);
@@ -244,7 +237,7 @@ function OverviewStats({ statistics }) {
             {statistics.temporal.upcomingTrips.map((trip) => (
               <div key={trip._id} className="upcoming-trip">
                 <div className="trip-destination">{trip.destination}</div>
-                <div className="trip-date">{formatDate(trip.startDate)}</div>
+                <div className="trip-date">{formatDisplayDate(trip.startDate)}</div>
               </div>
             ))}
           </div>
@@ -383,7 +376,7 @@ function DetailedStats({ statistics }) {
               <div key={trip._id} className="recent-trip">
                 <div className="recent-trip-header">
                   <strong>{trip.destination}</strong>
-                  <span>{formatDate(trip.endDate)}</span>
+                  <span>{formatDisplayDate(trip.endDate)}</span>
                 </div>
                 <div className="recent-trip-details">
                   {getDaysBetween(trip.startDate, trip.endDate)} days •{" "}

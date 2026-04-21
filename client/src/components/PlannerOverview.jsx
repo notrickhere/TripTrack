@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 
+import { formatDisplayDate, formatDisplayDateRange } from "../lib/date.js";
 import "./PlannerOverview.css";
 
 function toTitleCase(value = "") {
@@ -56,7 +57,7 @@ function PlannerOverview({
                 .join(" · ")}
             </span>
             <span>
-              {trip.startDate} to {trip.endDate}
+              {formatDisplayDateRange(trip.startDate, trip.endDate)}
             </span>
             {trip.notes ? (
               <span className="planner-trip-notes">
@@ -98,7 +99,7 @@ function PlannerOverview({
                     <div className="planner-activity-copy">
                       <strong>{toTitleCase(activity.name)}</strong>
                       <span>
-                        {activity.date}
+                        {formatDisplayDate(activity.date)}
                         {activity.time ? ` at ${activity.time}` : ""}
                       </span>
                       {activity.description ? (

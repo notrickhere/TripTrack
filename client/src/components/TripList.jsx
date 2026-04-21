@@ -31,6 +31,7 @@ function TripList({
       {trips.map((trip) => (
         <li className="trip-list-item" key={trip._id}>
           <button
+            aria-label={`Select trip ${trip.destination}`}
             className={
               trip._id === selectedTripId ? "trip-card active" : "trip-card"
             }
@@ -49,10 +50,15 @@ function TripList({
             ) : null}
           </button>
           <div className="card-actions">
-            <button onClick={() => onEditTrip(trip)} type="button">
+            <button
+              aria-label={`Edit trip ${trip.destination}`}
+              onClick={() => onEditTrip(trip)}
+              type="button"
+            >
               Edit
             </button>
             <button
+              aria-label={`Delete trip ${trip.destination}`}
               className="danger-button"
               onClick={() => onDeleteTrip(trip._id)}
               type="button"

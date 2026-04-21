@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useMemo, useState } from "react";
+
 import { formatDisplayDate } from "../lib/date.js";
 import "./SimpleTripTimeline.css";
 
@@ -22,7 +23,6 @@ function isInProgress(trip) {
 function SimpleTripTimeline({ trips, onTripSelect }) {
   const [selectedFilter, setSelectedFilter] = useState("all");
 
-  // Filter and sort trips
   const filteredTrips = useMemo(() => {
     let filtered = [...trips];
 
@@ -42,12 +42,12 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
         filtered = filtered.filter((trip) => !trip.seeded);
         break;
       default:
-        // Show all trips
         break;
     }
 
     return filtered.sort(
-      (a, b) => new Date(a.startDate) - new Date(b.startDate),
+      (firstTrip, secondTrip) =>
+        new Date(firstTrip.startDate) - new Date(secondTrip.startDate),
     );
   }, [trips, selectedFilter]);
 
@@ -73,10 +73,14 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
       <div className="timeline-header">
         <h2>My Trip Timeline</h2>
         <div className="timeline-controls">
+          <label className="timeline-filter-label" htmlFor="timeline-filter">
+            Filter trips
+          </label>
           <select
-            value={selectedFilter}
-            onChange={(e) => setSelectedFilter(e.target.value)}
             className="filter-select"
+            id="timeline-filter"
+            onChange={(event) => setSelectedFilter(event.target.value)}
+            value={selectedFilter}
           >
             <option value="all">All Trips</option>
             <option value="upcoming">Upcoming</option>
@@ -110,20 +114,19 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
               const duration = getDaysBetween(trip.startDate, trip.endDate);
 
               return (
-                <div
-                  key={trip._id}
+                <button
+                  aria-label={`Open ${trip.destination} in the planner`}
                   className={`timeline-trip ${status}`}
+                  key={trip._id}
                   onClick={() => onTripSelect?.(trip)}
+                  type="button"
                 >
-                  {/* Timeline connector line */}
                   {index > 0 && <div className="timeline-connector"></div>}
 
-                  {/* Trip marker dot */}
                   <div className="trip-marker">
                     <div className={`marker-dot ${status}`}></div>
                   </div>
 
-                  {/* Trip card */}
                   <div className="trip-card">
                     <div className="trip-header">
                       <h3>{trip.destination}</h3>
@@ -145,28 +148,28 @@ function SimpleTripTimeline({ trips, onTripSelect }) {
                       <span className="duration">
                         {duration} day{duration !== 1 ? "s" : ""}
                       </span>
-                      {trip.continent && (
+                      {trip.continent ? (
                         <>
                           <span className="separator">•</span>
                           <span className="continent">{trip.continent}</span>
                         </>
-                      )}
-                      {trip.country && trip.country !== trip.continent && (
+                      ) : null}
+                      {trip.country && trip.country !== trip.continent ? (
                         <>
                           <span className="separator">•</span>
                           <span className="country">{trip.country}</span>
                         </>
-                      )}
+                      ) : null}
                     </div>
 
-                    {trip.notes && (
+                    {trip.notes ? (
                       <div className="trip-notes">
                         {trip.notes.substring(0, 100)}
-                        {trip.notes.length > 100 && "..."}
+                        {trip.notes.length > 100 ? "..." : ""}
                       </div>
-                    )}
+                    ) : null}
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>

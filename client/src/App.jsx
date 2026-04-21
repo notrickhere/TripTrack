@@ -920,21 +920,12 @@ function App() {
                     place.
                   </p>
                 </div>
-                <button
-                  className="danger-ghost-button"
-                  disabled={plannerTrips.length === 0}
-                  onClick={handleDeleteAllPlannerTrips}
-                  type="button"
-                >
-                  Delete All Trips
-                </button>
               </div>
               <PlannerOverview
                 activitiesByTripId={activitiesByTripId}
                 isLoading={isLoadingTrips || isLoadingActivities}
                 onAddActivity={handleAddActivity}
                 onDeleteActivity={handleActivityDelete}
-                onDeleteAllActivities={handleDeleteAllActivities}
                 onDeleteTrip={handleTripDelete}
                 onEditActivity={handleActivityEdit}
                 onEditTrip={handleTripEdit}

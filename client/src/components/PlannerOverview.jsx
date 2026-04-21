@@ -14,7 +14,6 @@ function PlannerOverview({
   isLoading,
   onAddActivity,
   onDeleteActivity,
-  onDeleteAllActivities,
   onDeleteTrip,
   onEditActivity,
   onEditTrip,
@@ -90,14 +89,6 @@ function PlannerOverview({
                 >
                   Add Activity
                 </button>
-                <button
-                  className="planner-activity-clear"
-                  disabled={!activitiesByTripId[trip._id]?.length}
-                  onClick={() => onDeleteAllActivities(trip._id)}
-                  type="button"
-                >
-                  Delete All Activities
-                </button>
               </div>
             </div>
             {activitiesByTripId[trip._id]?.length ? (
@@ -159,7 +150,6 @@ PlannerOverview.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   onAddActivity: PropTypes.func.isRequired,
   onDeleteActivity: PropTypes.func.isRequired,
-  onDeleteAllActivities: PropTypes.func.isRequired,
   onDeleteTrip: PropTypes.func.isRequired,
   onEditActivity: PropTypes.func.isRequired,
   onEditTrip: PropTypes.func.isRequired,

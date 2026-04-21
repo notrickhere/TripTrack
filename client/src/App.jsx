@@ -381,6 +381,10 @@ function App() {
   const [activitiesByTripId, setActivitiesByTripId] = useState({});
   const [editingActivity, setEditingActivity] = useState(null);
   const [copyingTripId, setCopyingTripId] = useState("");
+  const [calendarSelection, setCalendarSelection] = useState({
+    endDate: "",
+    startDate: "",
+  });
   const [isLoadingTrips, setIsLoadingTrips] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -399,6 +403,13 @@ function App() {
   const nextAllowedPlannerStartDate = latestPlannerEndDate
     ? addDays(latestPlannerEndDate, 1)
     : "";
+
+  function handleCalendarRangeSelect(startDate, endDate) {
+    setCalendarSelection({ endDate, startDate });
+    setEditingTrip(null);
+    setActiveView("planner");
+    scrollToPanel(tripFormPanelRef);
+  }
 
   useEffect(() => {
     async function hydrateSession() {
@@ -545,6 +556,7 @@ function App() {
       const newTrip = await createTrip(formValues);
       setTrips((currentTrips) => [newTrip, ...currentTrips]);
       setSelectedTripId(newTrip._id);
+      setCalendarSelection({ endDate: "", startDate: "" });
     } catch (error) {
       showActionError(setErrorMessage, "save the trip", error.message);
     }
@@ -702,7 +714,7 @@ function App() {
         "copy the trip to your planner",
         "Create an account or login before copying trips to your planner.",
       );
-      setActiveView("planner");
+      setActiveView("login");
       return;
     }
 
@@ -753,6 +765,7 @@ function App() {
       }));
       setEditingTrip(null);
       setEditingActivity(null);
+      setCalendarSelection({ endDate: "", startDate: "" });
       setActiveView("planner");
     } catch (error) {
       showActionError(
@@ -771,6 +784,7 @@ function App() {
     try {
       const response = await login(credentials);
       setCurrentUser(response.user);
+      setCalendarSelection({ endDate: "", startDate: "" });
       setActiveView("calendar");
     } catch (error) {
       showActionError(setAuthErrorMessage, "log in", error.message);
@@ -783,6 +797,7 @@ function App() {
     try {
       const response = await register(formValues);
       setCurrentUser(response.user);
+      setCalendarSelection({ endDate: "", startDate: "" });
       setActiveView("calendar");
     } catch (error) {
       showActionError(setAuthErrorMessage, "register", error.message);
@@ -799,6 +814,7 @@ function App() {
     setCurrentUser(null);
     setSelectedTripId("");
     setActivitiesByTripId({});
+    setCalendarSelection({ endDate: "", startDate: "" });
     setEditingTrip(null);
     setEditingActivity(null);
   }
@@ -920,6 +936,8 @@ function App() {
             </div>
             <TripForm
               editingTrip={editingTrip}
+              selectedEndDate={calendarSelection.endDate}
+              selectedStartDate={calendarSelection.startDate}
               suggestedStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
               onCancelEdit={() => setEditingTrip(null)}
               onSubmit={handleTripCreate}
@@ -975,6 +993,7 @@ function App() {
         <main>
           <PlannerCalendar
             activitiesByTripId={activitiesByTripId}
+            onDateRangeSelect={handleCalendarRangeSelect}
             onTripSelect={(trip) => {
               setActiveView("planner");
               setSelectedTripId(trip._id);

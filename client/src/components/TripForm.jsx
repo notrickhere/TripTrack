@@ -22,14 +22,22 @@ const initialFormState = {
   notes: "",
 };
 
-function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
+function TripForm({
+  editingTrip,
+  selectedEndDate,
+  selectedStartDate,
+  suggestedStartDate,
+  onCancelEdit,
+  onSubmit,
+}) {
   const [formValues, setFormValues] = useState(initialFormState);
 
   useEffect(() => {
     if (!editingTrip) {
       setFormValues({
         ...initialFormState,
-        startDate: suggestedStartDate,
+        endDate: selectedEndDate || selectedStartDate || suggestedStartDate,
+        startDate: selectedStartDate || suggestedStartDate,
       });
       return;
     }
@@ -43,7 +51,7 @@ function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
       notes: editingTrip.notes || "",
       startDate: editingTrip.startDate,
     });
-  }, [editingTrip, suggestedStartDate]);
+  }, [editingTrip, selectedEndDate, selectedStartDate, suggestedStartDate]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -55,7 +63,8 @@ function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
     await onSubmit(formValues);
     setFormValues({
       ...initialFormState,
-      startDate: suggestedStartDate,
+      endDate: selectedEndDate || selectedStartDate || suggestedStartDate,
+      startDate: selectedStartDate || suggestedStartDate,
     });
   }
 
@@ -125,9 +134,13 @@ function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
           value={formValues.endDate}
         />
       </label>
-      {!editingTrip && suggestedStartDate ? (
+      {!editingTrip && (selectedStartDate || suggestedStartDate) ? (
         <p className="form-hint">
-          Suggested next trip start date: {suggestedStartDate}.
+          {selectedStartDate
+            ? selectedEndDate && selectedEndDate !== selectedStartDate
+              ? `Selected trip range: ${selectedStartDate} to ${selectedEndDate}.`
+              : `Selected trip date: ${selectedStartDate}.`
+            : `Suggested next trip start date: ${suggestedStartDate}.`}
         </p>
       ) : null}
       <label>
@@ -168,6 +181,8 @@ TripForm.propTypes = {
     notes: PropTypes.string,
     startDate: PropTypes.string.isRequired,
   }),
+  selectedEndDate: PropTypes.string,
+  selectedStartDate: PropTypes.string,
   suggestedStartDate: PropTypes.string,
   onCancelEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -175,6 +190,8 @@ TripForm.propTypes = {
 
 TripForm.defaultProps = {
   editingTrip: null,
+  selectedEndDate: "",
+  selectedStartDate: "",
   suggestedStartDate: "",
 };
 

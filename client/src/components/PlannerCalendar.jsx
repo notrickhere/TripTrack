@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import "./PlannerCalendar.css";
 
@@ -46,10 +46,24 @@ function isDateWithinRange(dateKey, startDate, endDate) {
   return dateKey >= startDate && dateKey <= endDate;
 }
 
-function PlannerCalendar({ activitiesByTripId, onTripSelect, trips }) {
+function sortDateKeys(firstDateKey, secondDateKey) {
+  return firstDateKey <= secondDateKey
+    ? [firstDateKey, secondDateKey]
+    : [secondDateKey, firstDateKey];
+}
+
+function PlannerCalendar({
+  activitiesByTripId,
+  onDateRangeSelect,
+  onTripSelect,
+  trips,
+}) {
   const todayKey = formatDateKey(new Date());
   const [currentMonth, setCurrentMonth] = useState(getMonthStart(new Date()));
   const [selectedDateKey, setSelectedDateKey] = useState(todayKey);
+  const [dragStartDateKey, setDragStartDateKey] = useState("");
+  const [dragEndDateKey, setDragEndDateKey] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   const calendarDays = useMemo(
     () => buildCalendarDays(currentMonth),
@@ -86,15 +100,53 @@ function PlannerCalendar({ activitiesByTripId, onTripSelect, trips }) {
     [activities, selectedDateKey],
   );
 
-  if (!trips.length) {
-    return (
-      <section className="planner-calendar">
-        <div className="calendar-empty">
-          <h2>Calendar View</h2>
-          <p>Add a trip to see your planner on a monthly calendar.</p>
-        </div>
-      </section>
-    );
+  const [rangeStartDateKey, rangeEndDateKey] =
+    dragStartDateKey && dragEndDateKey
+      ? sortDateKeys(dragStartDateKey, dragEndDateKey)
+      : [selectedDateKey, selectedDateKey];
+
+  useEffect(() => {
+    function handleMouseUp() {
+      if (!isDragging || !dragStartDateKey || !dragEndDateKey) {
+        return;
+      }
+
+      const [startDateKey, endDateKey] = sortDateKeys(
+        dragStartDateKey,
+        dragEndDateKey,
+      );
+      setIsDragging(false);
+      setSelectedDateKey(startDateKey);
+      onDateRangeSelect?.(startDateKey, endDateKey);
+    }
+
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => window.removeEventListener("mouseup", handleMouseUp);
+  }, [dragEndDateKey, dragStartDateKey, isDragging, onDateRangeSelect]);
+
+  function handleDayMouseDown(dateKey) {
+    setDragStartDateKey(dateKey);
+    setDragEndDateKey(dateKey);
+    setIsDragging(true);
+    setSelectedDateKey(dateKey);
+  }
+
+  function handleDayMouseEnter(dateKey) {
+    if (!isDragging) {
+      return;
+    }
+
+    setDragEndDateKey(dateKey);
+  }
+
+  function handleDayMouseUp(dateKey) {
+    const startDateKey = dragStartDateKey || dateKey;
+    const [rangeStart, rangeEnd] = sortDateKeys(startDateKey, dateKey);
+    setDragStartDateKey(rangeStart);
+    setDragEndDateKey(rangeEnd);
+    setIsDragging(false);
+    setSelectedDateKey(rangeStart);
+    onDateRangeSelect?.(rangeStart, rangeEnd);
   }
 
   return (
@@ -143,6 +195,13 @@ function PlannerCalendar({ activitiesByTripId, onTripSelect, trips }) {
         ))}
       </div>
 
+      {!trips.length ? (
+        <div className="calendar-empty">
+          <h3>No trips planned yet</h3>
+          <p>Select a single date or drag across dates to prefill a new trip.</p>
+        </div>
+      ) : null}
+
       <div className="calendar-grid">
         {calendarDays.map((day) => {
           const dateKey = formatDateKey(day);
@@ -152,19 +211,27 @@ function PlannerCalendar({ activitiesByTripId, onTripSelect, trips }) {
           const isCurrentMonth = day.getMonth() === currentMonth.getMonth();
           const isToday = dateKey === todayKey;
           const isSelected = dateKey === selectedDateKey;
+          const isInSelectedRange = isDateWithinRange(
+            dateKey,
+            rangeStartDateKey,
+            rangeEndDateKey,
+          );
 
           return (
             <button
               className={[
                 "calendar-day",
                 isCurrentMonth ? "current-month" : "outside-month",
+                isInSelectedRange ? "in-selected-range" : "",
                 isToday ? "today" : "",
                 isSelected ? "selected" : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
               key={dateKey}
-              onClick={() => setSelectedDateKey(dateKey)}
+              onMouseDown={() => handleDayMouseDown(dateKey)}
+              onMouseEnter={() => handleDayMouseEnter(dateKey)}
+              onMouseUp={() => handleDayMouseUp(dateKey)}
               type="button"
             >
               <div className="calendar-day-top">
@@ -254,6 +321,7 @@ PlannerCalendar.propTypes = {
       }),
     ),
   ).isRequired,
+  onDateRangeSelect: PropTypes.func,
   onTripSelect: PropTypes.func,
   trips: PropTypes.arrayOf(
     PropTypes.shape({

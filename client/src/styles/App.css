@@ -67,7 +67,8 @@
 }
 
 .session-bar button,
-.theme-toggle {
+.theme-toggle,
+.shortcut-help-button {
   background: var(--accent);
   border: 1px solid var(--accent);
   border-radius: 999px;
@@ -178,6 +179,90 @@
   margin: 0;
 }
 
+.shortcuts-backdrop {
+  align-items: center;
+  background: rgba(6, 15, 26, 0.56);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1.25rem;
+  position: fixed;
+  z-index: 1000;
+}
+
+.shortcuts-dialog {
+  max-width: 760px;
+  width: min(100%, 760px);
+}
+
+.shortcuts-dialog-header {
+  align-items: start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.shortcuts-dialog-header h2 {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.shortcuts-close-button {
+  background: var(--surface-4);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+}
+
+.shortcuts-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1.25rem;
+}
+
+.shortcuts-card {
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.shortcuts-card h3 {
+  margin-bottom: 0.8rem;
+  margin-top: 0;
+}
+
+.shortcuts-list {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.shortcuts-list div {
+  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 0.8rem;
+}
+
+.shortcuts-list div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.shortcuts-list dt {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.shortcuts-list dd {
+  color: var(--text-secondary);
+  margin: 0.3rem 0 0;
+}
+
 @media (max-width: 840px) {
   .planner-layout {
     grid-template-columns: 1fr;
@@ -201,5 +286,9 @@
   .site-footer {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .shortcuts-grid {
+    grid-template-columns: 1fr;
   }
 }

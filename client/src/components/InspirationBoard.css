@@ -33,7 +33,8 @@
 }
 
 .continent-filter button {
-  background: var(--surface-1);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-3) 84%, var(--card-overlay-1)), var(--surface-1));
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--accent);
@@ -44,8 +45,8 @@
 }
 
 .continent-filter .active-continent {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+  border-color: color-mix(in srgb, var(--accent-secondary) 60%, var(--accent));
   color: var(--surface-3);
 }
 
@@ -70,13 +71,13 @@
 
 .inspiration-card {
   background: linear-gradient(
-    180deg,
-    var(--surface-5),
-    var(--surface-1)
+    160deg,
+    color-mix(in srgb, var(--surface-5) 82%, var(--card-overlay-1)) 0%,
+    color-mix(in srgb, var(--surface-1) 92%, var(--card-overlay-2)) 100%
   );
   border: 1px solid var(--border-soft);
   border-radius: 22px;
-  box-shadow: 0 14px 30px rgba(25, 55, 84, 0.08);
+  box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -129,7 +130,7 @@
 }
 
 .copy-trip-button {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
   border: none;
   border-radius: 999px;
   color: var(--surface-3);
@@ -185,7 +186,8 @@
 }
 
 .pagination-bar button {
-  background: var(--surface-5);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-5) 84%, var(--card-overlay-1)), var(--surface-3));
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--accent);
@@ -212,13 +214,18 @@
 }
 
 .page-number-list .active-page-number {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+  border-color: color-mix(in srgb, var(--accent-secondary) 60%, var(--accent));
   color: var(--surface-3);
 }
 
 .inspiration-empty {
-  background: var(--surface-5);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-5) 86%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-2) 92%, var(--card-overlay-2)) 100%
+    );
   border: 1px dashed var(--border-strong);
   border-radius: 24px;
   padding: 2rem;

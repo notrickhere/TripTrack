@@ -316,7 +316,12 @@ function getContinentLabel(trip) {
   return "Other";
 }
 
-function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
+function InspirationBoard({
+  currentUser,
+  isCopyingTripId,
+  onCopyTripToPlanner,
+  trips,
+}) {
   const [activeContinent, setActiveContinent] = useState("All");
   const [activitiesByTripId, setActivitiesByTripId] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
@@ -374,30 +379,41 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
     (safeCurrentPage - 1) * pageSize,
     safeCurrentPage * pageSize,
   );
+  const featuredTripIdsKey = featuredTrips.map((trip) => trip._id).join("|");
 
   useEffect(() => {
     async function loadVisibleTripActivities() {
+      const missingTrips = featuredTrips.filter(
+        (trip) => !activitiesByTripId[trip._id],
+      );
+
+      if (missingTrips.length === 0) {
+        return;
+      }
+
       try {
         const activityEntries = await Promise.all(
-          featuredTrips.map(async (trip) => [
+          missingTrips.map(async (trip) => [
             trip._id,
             await getActivities(trip._id),
           ]),
         );
 
-        setActivitiesByTripId(Object.fromEntries(activityEntries));
+        setActivitiesByTripId((currentActivities) => ({
+          ...currentActivities,
+          ...Object.fromEntries(activityEntries),
+        }));
       } catch (_error) {
-        setActivitiesByTripId({});
+        setActivitiesByTripId((currentActivities) => currentActivities);
       }
     }
 
     if (featuredTrips.length === 0) {
-      setActivitiesByTripId({});
       return;
     }
 
     loadVisibleTripActivities();
-  }, [featuredTrips]);
+  }, [activitiesByTripId, featuredTripIdsKey, featuredTrips]);
 
   return (
     <section className="inspiration-board">
@@ -480,16 +496,18 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
               )}
             </div>
 
-            <button
-              className="copy-trip-button"
-              disabled={isCopyingTripId === trip._id}
-              onClick={() => onCopyTripToPlanner(trip)}
-              type="button"
-            >
-              {isCopyingTripId === trip._id
-                ? "Copying..."
-                : "Copy Itinerary to Planner"}
-            </button>
+            {currentUser ? (
+              <button
+                className="copy-trip-button"
+                disabled={isCopyingTripId === trip._id}
+                onClick={() => onCopyTripToPlanner(trip)}
+                type="button"
+              >
+                {isCopyingTripId === trip._id
+                  ? "Copying..."
+                  : "Copy Itinerary to Planner"}
+              </button>
+            ) : null}
           </article>
         ))}
       </div>
@@ -531,6 +549,10 @@ function InspirationBoard({ isCopyingTripId, onCopyTripToPlanner, trips }) {
 }
 
 InspirationBoard.propTypes = {
+  currentUser: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+  }),
   isCopyingTripId: PropTypes.string,
   onCopyTripToPlanner: PropTypes.func.isRequired,
   trips: PropTypes.arrayOf(
@@ -550,6 +572,7 @@ InspirationBoard.propTypes = {
 };
 
 InspirationBoard.defaultProps = {
+  currentUser: null,
   isCopyingTripId: "",
 };
 

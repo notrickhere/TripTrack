@@ -62,7 +62,7 @@ function TripForm({ editingTrip, suggestedStartDate, onCancelEdit, onSubmit }) {
   return (
     <form className="trip-form" onSubmit={handleSubmit}>
       <label>
-        Destination
+        Location
         <input
           name="destination"
           onChange={handleChange}

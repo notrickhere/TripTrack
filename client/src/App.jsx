@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import ActivityForm from "./components/ActivityForm.jsx";
 import AuthPanel from "./components/AuthPanel.jsx";
 import InspirationBoard from "./components/InspirationBoard.jsx";
+import PlannerCalendar from "./components/PlannerCalendar.jsx";
 import PlannerOverview from "./components/PlannerOverview.jsx";
 import TripForm from "./components/TripForm.jsx";
 import TripStatistics from "./components/TripStatistics.jsx";
@@ -404,6 +405,7 @@ function App() {
       try {
         const response = await getCurrentUser();
         setCurrentUser(response.user);
+        setActiveView("calendar");
       } catch (_error) {
         setCurrentUser(null);
       }
@@ -413,7 +415,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!currentUser && ["statistics", "timeline"].includes(activeView)) {
+    if (!currentUser && ["calendar", "statistics", "timeline"].includes(activeView)) {
       setActiveView("planner");
     }
   }, [activeView, currentUser]);
@@ -447,7 +449,8 @@ function App() {
   }, [plannerTrips]);
 
   useEffect(() => {
-    if (!selectedTripId) {
+    if (!currentUser || !selectedTripId) {
+      setIsLoadingActivities(false);
       return;
     }
 
@@ -467,9 +470,16 @@ function App() {
     }
 
     loadActivities();
-  }, [selectedTripId]);
+  }, [currentUser, selectedTripId]);
 
   useEffect(() => {
+    if (!currentUser) {
+      setActivitiesByTripId((currentActivities) =>
+        Object.keys(currentActivities).length ? {} : currentActivities,
+      );
+      return;
+    }
+
     async function loadPlannerActivities() {
       try {
         const activityEntries = await Promise.all(
@@ -758,6 +768,7 @@ function App() {
     try {
       const response = await login(credentials);
       setCurrentUser(response.user);
+      setActiveView("calendar");
     } catch (error) {
       showActionError(setAuthErrorMessage, "log in", error.message);
     }
@@ -769,6 +780,7 @@ function App() {
     try {
       const response = await register(formValues);
       setCurrentUser(response.user);
+      setActiveView("calendar");
     } catch (error) {
       showActionError(setAuthErrorMessage, "register", error.message);
     }
@@ -819,13 +831,6 @@ function App() {
         <div className="hero-controls">
           <div className="view-switcher">
             <button
-              className={activeView === "planner" ? "active-view" : ""}
-              onClick={() => setActiveView("planner")}
-              type="button"
-            >
-              Planner
-            </button>
-            <button
               className={activeView === "inspiration" ? "active-view" : ""}
               onClick={() => setActiveView("inspiration")}
               type="button"
@@ -834,6 +839,20 @@ function App() {
             </button>
             {currentUser ? (
               <>
+                <button
+                  className={activeView === "calendar" ? "active-view" : ""}
+                  onClick={() => setActiveView("calendar")}
+                  type="button"
+                >
+                  Calendar
+                </button>
+                <button
+                  className={activeView === "planner" ? "active-view" : ""}
+                  onClick={() => setActiveView("planner")}
+                  type="button"
+                >
+                  Planner
+                </button>
                 <button
                   className={activeView === "statistics" ? "active-view" : ""}
                   onClick={() => setActiveView("statistics")}
@@ -944,6 +963,17 @@ function App() {
             />
           </main>
         )
+      ) : activeView === "calendar" ? (
+        <main>
+          <PlannerCalendar
+            activitiesByTripId={activitiesByTripId}
+            onTripSelect={(trip) => {
+              setActiveView("planner");
+              setSelectedTripId(trip._id);
+            }}
+            trips={plannerTrips}
+          />
+        </main>
       ) : activeView === "timeline" ? (
         <main>
           <SimpleTripTimeline

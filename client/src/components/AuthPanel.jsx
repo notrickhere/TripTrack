@@ -14,8 +14,7 @@ const initialRegisterState = {
   password: "",
 };
 
-function AuthPanel({ errorMessage, onLogin, onRegister }) {
-  const [activeTab, setActiveTab] = useState("login");
+function AuthPanel({ errorMessage, mode, onLogin, onRegister }) {
   const [loginValues, setLoginValues] = useState(initialLoginState);
   const [registerValues, setRegisterValues] = useState(initialRegisterState);
 
@@ -45,33 +44,20 @@ function AuthPanel({ errorMessage, onLogin, onRegister }) {
     <section className="auth-panel">
       <div className="auth-panel-copy">
         <p className="eyebrow">Planner Access</p>
-        <h2>Sign in to manage your planner</h2>
+        <h2>
+          {mode === "register"
+            ? "Create an account to save your trips"
+            : "Sign in to manage your planner"}
+        </h2>
         <p>
           You can browse the inspiration board without an account, but planner
           trips and itinerary edits are private to each user.
         </p>
       </div>
 
-      <div className="auth-tabs">
-        <button
-          className={activeTab === "login" ? "active-auth-tab" : ""}
-          onClick={() => setActiveTab("login")}
-          type="button"
-        >
-          Login
-        </button>
-        <button
-          className={activeTab === "register" ? "active-auth-tab" : ""}
-          onClick={() => setActiveTab("register")}
-          type="button"
-        >
-          Register
-        </button>
-      </div>
-
       {errorMessage ? <p className="auth-error">{errorMessage}</p> : null}
 
-      {activeTab === "login" ? (
+      {mode === "login" ? (
         <form className="auth-form" onSubmit={handleLoginSubmit}>
           <label>
             Email
@@ -140,12 +126,14 @@ function AuthPanel({ errorMessage, onLogin, onRegister }) {
 
 AuthPanel.propTypes = {
   errorMessage: PropTypes.string,
+  mode: PropTypes.oneOf(["login", "register"]),
   onLogin: PropTypes.func.isRequired,
   onRegister: PropTypes.func.isRequired,
 };
 
 AuthPanel.defaultProps = {
   errorMessage: "",
+  mode: "login",
 };
 
 export default AuthPanel;

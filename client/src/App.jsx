@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import ActivityForm from "./components/ActivityForm.jsx";
 import AuthPanel from "./components/AuthPanel.jsx";
 import InspirationBoard from "./components/InspirationBoard.jsx";
+import LandingPage from "./components/LandingPage.jsx";
 import PlannerCalendar from "./components/PlannerCalendar.jsx";
 import PlannerOverview from "./components/PlannerOverview.jsx";
 import TripForm from "./components/TripForm.jsx";
@@ -386,7 +387,7 @@ function showActionError(setter, actionLabel, message) {
 function App() {
   const tripFormPanelRef = useRef(null);
   const itineraryPanelRef = useRef(null);
-  const [activeView, setActiveView] = useState("login");
+  const [activeView, setActiveView] = useState("home");
   const [theme, setTheme] = useState(getInitialTheme);
   const [authErrorMessage, setAuthErrorMessage] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
@@ -439,6 +440,7 @@ function App() {
         setActiveView("calendar");
       } catch (_error) {
         setCurrentUser(null);
+        setActiveView("home");
       }
     }
 
@@ -450,7 +452,7 @@ function App() {
       !currentUser &&
       ["calendar", "planner", "statistics", "timeline"].includes(activeView)
     ) {
-      setActiveView("login");
+      setActiveView("home");
     }
   }, [activeView, currentUser]);
 
@@ -676,7 +678,7 @@ function App() {
         "copy the trip to your planner",
         "Create an account or login before copying trips to your planner.",
       );
-      setActiveView("login");
+      setActiveView("home");
       return;
     }
 
@@ -779,6 +781,7 @@ function App() {
     setCalendarSelection({ endDate: "", startDate: "" });
     setEditingTrip(null);
     setEditingActivity(null);
+    setActiveView("home");
   }
 
   function handleTripEdit(trip) {
@@ -813,11 +816,29 @@ function App() {
           <div className="view-switcher">
             {!currentUser ? (
               <button
+                className={activeView === "home" ? "active-view" : ""}
+                onClick={() => setActiveView("home")}
+                type="button"
+              >
+                Home
+              </button>
+            ) : null}
+            {!currentUser ? (
+              <button
                 className={activeView === "login" ? "active-view" : ""}
                 onClick={() => setActiveView("login")}
                 type="button"
               >
                 Log In
+              </button>
+            ) : null}
+            {!currentUser ? (
+              <button
+                className={activeView === "register" ? "active-view" : ""}
+                onClick={() => setActiveView("register")}
+                type="button"
+              >
+                Register
               </button>
             ) : null}
             <button
@@ -885,10 +906,22 @@ function App() {
 
       {errorMessage ? <p className="status error">{errorMessage}</p> : null}
 
-      {activeView === "login" ? (
+      {activeView === "home" ? (
+        <main>
+          <LandingPage
+            currentUser={currentUser}
+            onBrowseInspiration={() => setActiveView("inspiration")}
+            onOpenRegister={() => setActiveView("register")}
+            onOpenPlanner={() =>
+              setActiveView(currentUser ? "calendar" : "login")
+            }
+          />
+        </main>
+      ) : activeView === "login" || activeView === "register" ? (
         <main>
           <AuthPanel
             errorMessage={authErrorMessage}
+            mode={activeView === "register" ? "register" : "login"}
             onLogin={handleLogin}
             onRegister={handleRegister}
           />

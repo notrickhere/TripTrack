@@ -42,10 +42,15 @@ function ActivityList({
           </div>
           {activity.description ? <p>{activity.description}</p> : null}
           <div className="card-actions">
-            <button onClick={() => onEditActivity(activity)} type="button">
+            <button
+              aria-label={`Edit activity ${toTitleCase(activity.name)}`}
+              onClick={() => onEditActivity(activity)}
+              type="button"
+            >
               Edit
             </button>
             <button
+              aria-label={`Delete activity ${toTitleCase(activity.name)}`}
               className="danger-button"
               onClick={() => onDeleteActivity(activity._id)}
               type="button"

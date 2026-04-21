@@ -7,10 +7,10 @@
 }
 
 .activity-card {
-  background: #fff7ec;
-  border: 1px solid #f1d4ab;
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
   border-radius: 18px;
-  color: #4a3314;
+  color: var(--text-primary);
   padding: 1rem;
 }
 
@@ -35,17 +35,17 @@
 }
 
 .card-actions button {
-  background: #fff;
-  border: 1px solid #d9b67d;
+  background: var(--surface-4);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
-  color: #5c3a11;
+  color: var(--accent);
   cursor: pointer;
   font: inherit;
   padding: 0.5rem 0.9rem;
 }
 
 .card-actions .danger-button {
-  background: #fff1f1;
-  border-color: #efc2c2;
-  color: #9a2f2f;
+  background: var(--danger-soft);
+  border-color: var(--danger-border);
+  color: var(--danger-text);
 }

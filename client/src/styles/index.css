@@ -1,15 +1,58 @@
 :root {
-  color: #142033;
-  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(73, 145, 186, 0.18),
-      transparent 30%
-    ),
+  --text-primary: #142033;
+  --text-secondary: #4a5d76;
+  --text-muted: #5a6d84;
+  --surface-1: rgba(255, 255, 255, 0.84);
+  --surface-2: #f5f9fc;
+  --surface-3: #ffffff;
+  --surface-4: #eef3f7;
+  --surface-5: rgba(255, 255, 255, 0.96);
+  --border-soft: rgba(151, 170, 190, 0.35);
+  --border-strong: rgba(162, 181, 199, 0.75);
+  --border-card: rgba(175, 191, 207, 0.75);
+  --accent: #17324d;
+  --accent-strong: #0a5c8f;
+  --danger-soft: #fff1f1;
+  --danger-border: #efc2c2;
+  --danger-text: #972c2c;
+  --input-border: #c6d0dc;
+  --input-bg: #ffffff;
+  --hover-ring: rgba(122, 168, 199, 0.18);
+  --hover-shadow: rgba(23, 50, 77, 0.14);
+  --app-background:
+    radial-gradient(circle at top left, rgba(73, 145, 186, 0.18), transparent 30%),
     linear-gradient(180deg, #f5f7fb 0%, #eef3f9 100%);
+  color: var(--text-primary);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  background: var(--app-background);
   line-height: 1.5;
   font-weight: 400;
+}
+
+body[data-theme="dark"] {
+  --text-primary: #edf4fb;
+  --text-secondary: #b9c7d7;
+  --text-muted: #90a4b8;
+  --surface-1: rgba(18, 28, 42, 0.92);
+  --surface-2: #162332;
+  --surface-3: #101a27;
+  --surface-4: #213143;
+  --surface-5: rgba(22, 35, 50, 0.98);
+  --border-soft: rgba(102, 125, 149, 0.42);
+  --border-strong: rgba(118, 145, 173, 0.58);
+  --border-card: rgba(93, 118, 143, 0.68);
+  --accent: #d9e8f7;
+  --accent-strong: #72b8f0;
+  --danger-soft: rgba(89, 37, 44, 0.72);
+  --danger-border: rgba(188, 110, 121, 0.45);
+  --danger-text: #ffb5bf;
+  --input-border: #50657d;
+  --input-bg: #111c29;
+  --hover-ring: rgba(114, 184, 240, 0.22);
+  --hover-shadow: rgba(0, 0, 0, 0.35);
+  --app-background:
+    radial-gradient(circle at top left, rgba(63, 112, 153, 0.22), transparent 30%),
+    linear-gradient(180deg, #08111c 0%, #0e1825 100%);
 }
 
 * {
@@ -17,8 +60,13 @@
 }
 
 body {
+  background: var(--app-background);
+  color: var(--text-primary);
   margin: 0;
   min-height: 100vh;
+  transition:
+    background 220ms ease,
+    color 220ms ease;
 }
 
 button,
@@ -36,8 +84,8 @@ button {
 
 button:hover:not(:disabled) {
   box-shadow:
-    0 0 0 3px rgba(122, 168, 199, 0.18),
-    0 10px 24px rgba(23, 50, 77, 0.14);
+    0 0 0 3px var(--hover-ring),
+    0 10px 24px var(--hover-shadow);
   transform: translateY(-1px);
 }
 
@@ -60,9 +108,17 @@ textarea:hover:not(:disabled),
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: rgba(122, 168, 199, 0.95);
+  border-color: var(--accent-strong);
   box-shadow:
-    0 0 0 3px rgba(122, 168, 199, 0.18),
+    0 0 0 3px var(--hover-ring),
     0 8px 22px rgba(23, 50, 77, 0.1);
   outline: none;
+}
+
+input,
+select,
+textarea {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
 }

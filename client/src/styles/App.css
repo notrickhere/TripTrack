@@ -9,7 +9,7 @@
 }
 
 .eyebrow {
-  color: #0a5c8f;
+  color: var(--accent-strong);
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -24,7 +24,7 @@
 }
 
 .hero-copy {
-  color: #4a5d76;
+  color: var(--text-secondary);
   font-size: 1.05rem;
   max-width: 42rem;
 }
@@ -43,10 +43,10 @@
 }
 
 .view-switcher button {
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(162, 181, 199, 0.75);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
-  color: #17324d;
+  color: var(--accent);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
@@ -54,21 +54,24 @@
 }
 
 .view-switcher .active-view {
-  background: #17324d;
-  border-color: #17324d;
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface-3);
 }
 
+.top-actions,
 .session-bar {
   align-items: center;
   display: flex;
+  gap: 0.7rem;
 }
 
-.session-bar button {
-  background: #17324d;
-  border: none;
+.session-bar button,
+.theme-toggle {
+  background: var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 999px;
-  color: #fff;
+  color: var(--surface-3);
   cursor: pointer;
   font: inherit;
   padding: 0.55rem 0.9rem;
@@ -84,8 +87,8 @@
 }
 
 .panel {
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(151, 170, 190, 0.35);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
   border-radius: 24px;
   box-shadow: 0 16px 45px rgba(25, 55, 84, 0.08);
   padding: 1.5rem;
@@ -110,15 +113,15 @@
 }
 
 .panel-header p {
-  color: #576b84;
+  color: var(--text-secondary);
   margin-top: 0;
 }
 
 .status.error {
-  background: #fff1f1;
-  border: 1px solid #f3c4c4;
+  background: var(--danger-soft);
+  border: 1px solid var(--danger-border);
   border-radius: 14px;
-  color: #8d2020;
+  color: var(--danger-text);
   margin-bottom: 1.5rem;
   padding: 0.85rem 1rem;
 }
@@ -131,10 +134,10 @@
 }
 
 .danger-ghost-button {
-  background: #fff3f3;
-  border: 1px solid #efc2c2;
+  background: var(--danger-soft);
+  border: 1px solid var(--danger-border);
   border-radius: 999px;
-  color: #972c2c;
+  color: var(--danger-text);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
@@ -147,8 +150,8 @@
 }
 
 .site-footer {
-  border-top: 1px solid rgba(151, 170, 190, 0.35);
-  color: #5a6d84;
+  border-top: 1px solid var(--border-soft);
+  color: var(--text-muted);
   display: flex;
   justify-content: space-between;
   margin-top: 2.5rem;

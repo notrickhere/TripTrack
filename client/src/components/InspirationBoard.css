@@ -15,7 +15,7 @@
 }
 
 .inspiration-header p:last-child {
-  color: #566980;
+  color: var(--text-secondary);
   margin: 0;
   max-width: 30rem;
 }
@@ -33,10 +33,10 @@
 }
 
 .continent-filter button {
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(170, 186, 203, 0.8);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
-  color: #17324d;
+  color: var(--accent);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
@@ -44,9 +44,9 @@
 }
 
 .continent-filter .active-continent {
-  background: #17324d;
-  border-color: #17324d;
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface-3);
 }
 
 .inspiration-search {
@@ -55,14 +55,14 @@
 }
 
 .inspiration-search span {
-  color: #17324d;
+  color: var(--accent);
   font-size: 0.92rem;
   font-weight: 700;
 }
 
 .inspiration-search input {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(170, 186, 203, 0.8);
+  background: var(--surface-5);
+  border: 1px solid var(--border-strong);
   border-radius: 16px;
   font: inherit;
   padding: 0.85rem 1rem;
@@ -71,33 +71,33 @@
 .inspiration-card {
   background: linear-gradient(
     180deg,
-    rgba(255, 250, 242, 0.98),
-    rgba(240, 247, 255, 0.98)
+    var(--surface-5),
+    var(--surface-1)
   );
-  border: 1px solid rgba(187, 202, 219, 0.7);
+  border: 1px solid var(--border-soft);
   border-radius: 22px;
   box-shadow: 0 14px 30px rgba(25, 55, 84, 0.08);
   padding: 1rem;
 }
 
 .inspiration-card h3 {
-  color: #12243a;
+  color: var(--text-primary);
   margin-bottom: 0.35rem;
 }
 
 .location-line {
-  color: #4b627c;
+  color: var(--text-secondary);
   margin-top: 0;
 }
 
 .mood-line {
-  color: #7c4b0d;
+  color: var(--accent-strong);
   font-weight: 600;
   margin: 0.85rem 0 0;
 }
 
 .continent-line {
-  color: #8a5c18;
+  color: var(--accent-strong);
   font-size: 0.88rem;
   font-weight: 700;
   margin: 0.25rem 0 0;
@@ -111,12 +111,12 @@
 }
 
 .trip-meta div {
-  border-top: 1px solid rgba(186, 200, 214, 0.7);
+  border-top: 1px solid var(--border-soft);
   padding-top: 0.75rem;
 }
 
 .trip-meta dt {
-  color: #61758d;
+  color: var(--text-muted);
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -127,10 +127,10 @@
 }
 
 .copy-trip-button {
-  background: #17324d;
+  background: var(--accent);
   border: none;
   border-radius: 999px;
-  color: #fff;
+  color: var(--surface-3);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
@@ -145,7 +145,7 @@
 }
 
 .card-itinerary-preview {
-  border-top: 1px solid rgba(186, 200, 214, 0.7);
+  border-top: 1px solid var(--border-soft);
   margin-top: 1rem;
   padding-top: 0.9rem;
 }
@@ -156,12 +156,12 @@
 }
 
 .card-itinerary-preview li {
-  color: #334d66;
+  color: var(--text-secondary);
   margin-bottom: 0.25rem;
 }
 
 .itinerary-heading {
-  color: #17324d;
+  color: var(--accent);
   font-size: 0.85rem;
   font-weight: 700;
   margin: 0;
@@ -169,7 +169,7 @@
 }
 
 .itinerary-empty {
-  color: #62758d;
+  color: var(--text-muted);
   margin: 0.45rem 0 0;
 }
 
@@ -182,10 +182,10 @@
 }
 
 .pagination-bar button {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(170, 186, 203, 0.8);
+  background: var(--surface-5);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
-  color: #17324d;
+  color: var(--accent);
   cursor: pointer;
   font: inherit;
   font-weight: 600;
@@ -209,14 +209,14 @@
 }
 
 .page-number-list .active-page-number {
-  background: #17324d;
-  border-color: #17324d;
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--surface-3);
 }
 
 .inspiration-empty {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px dashed #b7c6d5;
+  background: var(--surface-5);
+  border: 1px dashed var(--border-strong);
   border-radius: 24px;
   padding: 2rem;
   text-align: center;

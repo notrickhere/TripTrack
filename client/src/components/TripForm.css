@@ -7,11 +7,11 @@
   display: grid;
   gap: 0.35rem;
   font-size: 0.95rem;
-  color: #1c2434;
+  color: var(--text-primary);
 }
 
 .form-hint {
-  color: #5c7089;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin: -0.2rem 0 0;
 }
@@ -19,7 +19,7 @@
 .trip-form input,
 .trip-form select,
 .trip-form textarea {
-  border: 1px solid #c6d0dc;
+  border: 1px solid var(--input-border);
   border-radius: 12px;
   font: inherit;
   padding: 0.75rem 0.9rem;
@@ -27,7 +27,7 @@
 }
 
 .trip-form button {
-  background: #0a5c8f;
+  background: var(--accent-strong);
   border: none;
   border-radius: 999px;
   color: #fff;
@@ -43,6 +43,6 @@
 }
 
 .trip-form .secondary-button {
-  background: #dce6f0;
-  color: #17324d;
+  background: var(--surface-4);
+  color: var(--accent);
 }

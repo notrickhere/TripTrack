@@ -23,7 +23,7 @@
 
 .calendar-header p,
 .calendar-detail-card p {
-  color: #576b84;
+  color: var(--text-secondary);
   margin-bottom: 0;
   margin-top: 0.35rem;
 }
@@ -34,10 +34,10 @@
 
 .calendar-info-button {
   align-items: center;
-  background: #eff7fd;
-  border: 1px solid rgba(122, 168, 199, 0.75);
+  background: var(--surface-4);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
-  color: #0a5c8f;
+  color: var(--accent-strong);
   display: inline-flex;
   font-size: 0.82rem;
   font-weight: 700;
@@ -48,11 +48,11 @@
 }
 
 .calendar-info-tooltip {
-  background: rgba(236, 244, 251, 0.98);
-  border: 1px solid rgba(170, 195, 216, 0.85);
+  background: var(--surface-5);
+  border: 1px solid var(--border-strong);
   border-radius: 14px;
   box-shadow: 0 16px 40px rgba(23, 50, 77, 0.14);
-  color: #36516b;
+  color: var(--text-primary);
   font-size: 0.88rem;
   left: 0;
   line-height: 1.45;
@@ -88,10 +88,10 @@
 .calendar-controls button,
 .calendar-controls select,
 .calendar-detail-list button {
-  background: #fff;
-  border: 1px solid rgba(162, 181, 199, 0.75);
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
-  color: #17324d;
+  color: var(--accent);
   cursor: pointer;
   font: inherit;
   padding: 0.55rem 0.9rem;
@@ -104,7 +104,7 @@
 }
 
 .calendar-select-group span {
-  color: #5a6d84;
+  color: var(--text-muted);
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -123,15 +123,15 @@
 }
 
 .calendar-grid-header {
-  color: #5a6d84;
+  color: var(--text-muted);
   font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
 }
 
 .calendar-day {
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(151, 170, 190, 0.35);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
   border-radius: 20px;
   cursor: pointer;
   min-height: 126px;
@@ -140,16 +140,16 @@
 }
 
 .calendar-day.current-month {
-  color: #17324d;
+  color: var(--accent);
 }
 
 .calendar-day.outside-month {
-  color: #8a99ab;
+  color: var(--text-muted);
   opacity: 0.72;
 }
 
 .calendar-day.today {
-  border-color: #0a5c8f;
+  border-color: var(--accent-strong);
   box-shadow: 0 0 0 2px rgba(10, 92, 143, 0.14);
 }
 
@@ -176,9 +176,9 @@
 }
 
 .calendar-activity-count {
-  background: #eff7fd;
+  background: var(--surface-4);
   border-radius: 999px;
-  color: #0a5c8f;
+  color: var(--accent-strong);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 0.2rem 0.45rem;
@@ -202,18 +202,18 @@
 }
 
 .calendar-trip-pill {
-  background: #17324d;
-  color: #fff;
+  background: var(--accent);
+  color: var(--surface-3);
 }
 
 .calendar-more-pill {
-  background: #edf1f6;
-  color: #4b6077;
+  background: var(--surface-4);
+  color: var(--text-secondary);
 }
 
 .calendar-detail-panel {
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(151, 170, 190, 0.35);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
   border-radius: 24px;
   box-shadow: 0 16px 45px rgba(25, 55, 84, 0.08);
   padding: 1.25rem;
@@ -228,9 +228,9 @@
 }
 
 .calendar-detail-header span {
-  background: #0a5c8f;
+  background: var(--accent-strong);
   border-radius: 999px;
-  color: #fff;
+  color: var(--surface-3);
   font-size: 0.78rem;
   font-weight: 700;
   padding: 0.28rem 0.6rem;
@@ -243,8 +243,8 @@
 }
 
 .calendar-detail-card {
-  background: #fff;
-  border: 1px solid rgba(151, 170, 190, 0.2);
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
   border-radius: 18px;
   padding: 1rem;
 }
@@ -263,7 +263,7 @@
 }
 
 .calendar-detail-list li {
-  background: #f7fafd;
+  background: var(--surface-2);
   border-radius: 14px;
   display: grid;
   gap: 0.4rem;
@@ -283,18 +283,18 @@
 }
 
 .calendar-detail-list strong {
-  color: #17324d;
+  color: var(--accent);
 }
 
 .calendar-detail-list span,
 .calendar-detail-list p {
-  color: #5a6d84;
+  color: var(--text-muted);
   margin: 0;
 }
 
 .calendar-empty {
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(151, 170, 190, 0.35);
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
   border-radius: 24px;
   padding: 1.2rem 1.4rem;
 }

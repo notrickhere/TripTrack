@@ -24,8 +24,22 @@ import {
 } from "./lib/api.js";
 import "./styles/App.css";
 
+const THEME_STORAGE_KEY = "triptrack_theme";
+
 function formatDate(date) {
   return date.toISOString().slice(0, 10);
+}
+
+function getInitialTheme() {
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+
+  if (storedTheme === "dark" || storedTheme === "light") {
+    return storedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
 function addDays(startDateString, numberOfDays) {
@@ -373,6 +387,7 @@ function App() {
   const tripFormPanelRef = useRef(null);
   const itineraryPanelRef = useRef(null);
   const [activeView, setActiveView] = useState("login");
+  const [theme, setTheme] = useState(getInitialTheme);
   const [authErrorMessage, setAuthErrorMessage] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
   const [trips, setTrips] = useState([]);
@@ -410,6 +425,11 @@ function App() {
     setActiveView("planner");
     scrollToPanel(tripFormPanelRef);
   }
+
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme]);
 
   useEffect(() => {
     async function hydrateSession() {
@@ -898,13 +918,26 @@ function App() {
               </>
             ) : null}
           </div>
-          {currentUser ? (
-            <div className="session-bar">
-              <button onClick={handleLogout} type="button">
-                Logout
-              </button>
-            </div>
-          ) : null}
+          <div className="top-actions">
+            <button
+              className="theme-toggle"
+              onClick={() =>
+                setTheme((currentTheme) =>
+                  currentTheme === "dark" ? "light" : "dark",
+                )
+              }
+              type="button"
+            >
+              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </button>
+            {currentUser ? (
+              <div className="session-bar">
+                <button onClick={handleLogout} type="button">
+                  Logout
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
       </header>
 

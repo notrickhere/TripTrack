@@ -4,7 +4,7 @@
 }
 
 .activity-form label {
-  color: #1c2434;
+  color: var(--text-primary);
   display: grid;
   gap: 0.35rem;
   font-size: 0.95rem;
@@ -12,7 +12,7 @@
 
 .activity-form input,
 .activity-form textarea {
-  border: 1px solid #c6d0dc;
+  border: 1px solid var(--input-border);
   border-radius: 12px;
   font: inherit;
   padding: 0.75rem 0.9rem;
@@ -20,7 +20,7 @@
 }
 
 .activity-form button {
-  background: #17324d;
+  background: var(--accent);
   border: none;
   border-radius: 999px;
   color: #fff;
@@ -36,8 +36,8 @@
 }
 
 .activity-form .secondary-button {
-  background: #dfebf4;
-  color: #17324d;
+  background: var(--surface-4);
+  color: var(--accent);
 }
 
 .activity-form button:disabled,

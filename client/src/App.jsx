@@ -362,6 +362,12 @@ function scrollToPanel(panelRef) {
   });
 }
 
+function showActionError(setter, actionLabel, message) {
+  const errorMessage = message || `Failed to ${actionLabel}.`;
+  setter(errorMessage);
+  window.alert(errorMessage);
+}
+
 function App() {
   const tripFormPanelRef = useRef(null);
   const itineraryPanelRef = useRef(null);
@@ -405,6 +411,12 @@ function App() {
 
     hydrateSession();
   }, []);
+
+  useEffect(() => {
+    if (!currentUser && ["statistics", "timeline"].includes(activeView)) {
+      setActiveView("planner");
+    }
+  }, [activeView, currentUser]);
 
   useEffect(() => {
     async function loadTrips() {
@@ -488,66 +500,86 @@ function App() {
   async function handleTripCreate(formValues) {
     setErrorMessage("");
     if (!currentUser) {
-      setAuthErrorMessage("Login required to manage your planner.");
+      showActionError(
+        setAuthErrorMessage,
+        "manage your planner",
+        "Login required to manage your planner.",
+      );
       return;
     }
 
     if (formValues.endDate < formValues.startDate) {
-      setErrorMessage("A trip cannot end before it starts.");
-      return;
-    }
-
-    if (editingTrip) {
-      const savedTrip = await updateTrip(editingTrip._id, formValues);
-      setTrips((currentTrips) =>
-        currentTrips.map((trip) =>
-          trip._id === savedTrip._id ? savedTrip : trip,
-        ),
+      showActionError(
+        setErrorMessage,
+        "save the trip",
+        "A trip cannot end before it starts.",
       );
-      setEditingTrip(null);
       return;
     }
 
-    const newTrip = await createTrip(formValues);
-    setTrips((currentTrips) => [newTrip, ...currentTrips]);
-    setSelectedTripId(newTrip._id);
+    try {
+      if (editingTrip) {
+        const savedTrip = await updateTrip(editingTrip._id, formValues);
+        setTrips((currentTrips) =>
+          currentTrips.map((trip) =>
+            trip._id === savedTrip._id ? savedTrip : trip,
+          ),
+        );
+        setEditingTrip(null);
+        return;
+      }
+
+      const newTrip = await createTrip(formValues);
+      setTrips((currentTrips) => [newTrip, ...currentTrips]);
+      setSelectedTripId(newTrip._id);
+    } catch (error) {
+      showActionError(setErrorMessage, "save the trip", error.message);
+    }
   }
 
   async function handleActivityCreate(formValues) {
     setErrorMessage("");
     if (!currentUser) {
-      setAuthErrorMessage("Login required to manage your planner.");
+      showActionError(
+        setAuthErrorMessage,
+        "manage your planner",
+        "Login required to manage your planner.",
+      );
       return;
     }
 
-    if (editingActivity) {
-      const savedActivity = await updateActivity(
-        editingActivity._id,
-        formValues,
-      );
+    try {
+      if (editingActivity) {
+        const savedActivity = await updateActivity(
+          editingActivity._id,
+          formValues,
+        );
+        setActivitiesByTripId((currentActivities) => ({
+          ...currentActivities,
+          [selectedTripId]: (currentActivities[selectedTripId] || []).map(
+            (activity) =>
+              activity._id === savedActivity._id ? savedActivity : activity,
+          ),
+        }));
+        setEditingActivity(null);
+        return;
+      }
+
+      const newActivity = await createActivity({
+        ...formValues,
+        tripId: selectedTripId,
+      });
+
       setActivitiesByTripId((currentActivities) => ({
         ...currentActivities,
-        [selectedTripId]: (currentActivities[selectedTripId] || []).map(
-          (activity) =>
-            activity._id === savedActivity._id ? savedActivity : activity,
-        ),
+        [selectedTripId]: [
+          ...(currentActivities[selectedTripId] || []),
+          newActivity,
+        ],
       }));
-      setEditingActivity(null);
-      return;
+    } catch (error) {
+      showActionError(setErrorMessage, "save the activity", error.message);
     }
-
-    const newActivity = await createActivity({
-      ...formValues,
-      tripId: selectedTripId,
-    });
-
-    setActivitiesByTripId((currentActivities) => ({
-      ...currentActivities,
-      [selectedTripId]: [
-        ...(currentActivities[selectedTripId] || []),
-        newActivity,
-      ],
-    }));
   }
 
   async function handleTripDelete(tripId) {
@@ -652,7 +684,9 @@ function App() {
     setAuthErrorMessage("");
 
     if (!currentUser) {
-      setAuthErrorMessage(
+      showActionError(
+        setAuthErrorMessage,
+        "copy the trip to your planner",
         "Create an account or login before copying trips to your planner.",
       );
       setActiveView("planner");
@@ -708,7 +742,11 @@ function App() {
       setEditingActivity(null);
       setActiveView("planner");
     } catch (error) {
-      setErrorMessage(error.message);
+      showActionError(
+        setErrorMessage,
+        "copy the trip to your planner",
+        error.message,
+      );
     } finally {
       setCopyingTripId("");
     }
@@ -721,7 +759,7 @@ function App() {
       const response = await login(credentials);
       setCurrentUser(response.user);
     } catch (error) {
-      setAuthErrorMessage(error.message);
+      showActionError(setAuthErrorMessage, "log in", error.message);
     }
   }
 
@@ -732,7 +770,7 @@ function App() {
       const response = await register(formValues);
       setCurrentUser(response.user);
     } catch (error) {
-      setAuthErrorMessage(error.message);
+      showActionError(setAuthErrorMessage, "register", error.message);
     }
   }
 
@@ -794,20 +832,24 @@ function App() {
             >
               Inspiration
             </button>
-            <button
-              className={activeView === "statistics" ? "active-view" : ""}
-              onClick={() => setActiveView("statistics")}
-              type="button"
-            >
-              Statistics
-            </button>
-            <button
-              className={activeView === "timeline" ? "active-view" : ""}
-              onClick={() => setActiveView("timeline")}
-              type="button"
-            >
-              Timeline
-            </button>
+            {currentUser ? (
+              <>
+                <button
+                  className={activeView === "statistics" ? "active-view" : ""}
+                  onClick={() => setActiveView("statistics")}
+                  type="button"
+                >
+                  Statistics
+                </button>
+                <button
+                  className={activeView === "timeline" ? "active-view" : ""}
+                  onClick={() => setActiveView("timeline")}
+                  type="button"
+                >
+                  Timeline
+                </button>
+              </>
+            ) : null}
           </div>
           {currentUser ? (
             <div className="session-bar">
@@ -931,6 +973,7 @@ function App() {
       ) : (
         <main>
           <InspirationBoard
+            currentUser={currentUser}
             isCopyingTripId={copyingTripId}
             onCopyTripToPlanner={handleCopyTripToPlanner}
             trips={inspirationTrips}

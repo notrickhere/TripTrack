@@ -413,6 +413,7 @@ function PlannerCalendar({
           <label className="calendar-select-group">
             <span>Month</span>
             <select
+              aria-label="Select calendar month"
               onChange={handleMonthChange}
               value={currentMonth.getMonth()}
             >
@@ -426,6 +427,7 @@ function PlannerCalendar({
           <label className="calendar-select-group">
             <span>Year</span>
             <select
+              aria-label="Select calendar year"
               onChange={handleYearChange}
               value={currentMonth.getFullYear()}
             >
@@ -436,7 +438,7 @@ function PlannerCalendar({
               ))}
             </select>
           </label>
-          <button onClick={jumpToToday} type="button">
+          <button aria-label="Jump to today in the calendar" onClick={jumpToToday} type="button">
             Today
           </button>
         </div>
@@ -474,6 +476,15 @@ function PlannerCalendar({
 
           return (
             <button
+              aria-label={`Select ${formatDisplayDate(dateKey)}${
+                matchingTrips.length
+                  ? ` with ${matchingTrips.length} trip${matchingTrips.length === 1 ? "" : "s"}`
+                  : ""
+              }${
+                activityCountsByDate[dateKey]
+                  ? ` and ${activityCountsByDate[dateKey]} activit${activityCountsByDate[dateKey] === 1 ? "y" : "ies"}`
+                  : ""
+              }`}
               aria-pressed={isSelected}
               className={[
                 "calendar-day",
@@ -543,7 +554,11 @@ function PlannerCalendar({
               <ul className="calendar-detail-list">
                 {selectedDayTrips.map((trip) => (
                   <li key={trip._id}>
-                    <button onClick={() => onTripSelect?.(trip)} type="button">
+                    <button
+                      aria-label={`Open trip ${trip.destination} from calendar details`}
+                      onClick={() => onTripSelect?.(trip)}
+                      type="button"
+                    >
                       <strong>{trip.destination}</strong>
                       <span>
                         {formatDisplayDateRange(trip.startDate, trip.endDate)}

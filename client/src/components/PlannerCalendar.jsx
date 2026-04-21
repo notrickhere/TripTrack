@@ -65,6 +65,12 @@ function addDaysToDateKey(dateKey, numberOfDays) {
   return formatDateKey(date);
 }
 
+function addMonthsToDateKey(dateKey, numberOfMonths) {
+  const date = new Date(`${dateKey}T00:00:00`);
+  date.setMonth(date.getMonth() + numberOfMonths);
+  return formatDateKey(date);
+}
+
 function PlannerCalendar({
   activitiesByTripId,
   onDateRangeSelect,
@@ -285,6 +291,52 @@ function PlannerCalendar({
     if (event.key in keyToDayOffset) {
       event.preventDefault();
       const nextDateKey = addDaysToDateKey(dateKey, keyToDayOffset[event.key]);
+      setFocusedDateKey(nextDateKey);
+
+      if (event.shiftKey) {
+        updateKeyboardRange(keyboardRangeAnchorDateKey || dateKey, nextDateKey);
+      } else {
+        setKeyboardRangeAnchorDateKey(nextDateKey);
+        setSelectedDateKey(nextDateKey);
+        setDragStartDateKey("");
+        setDragEndDateKey("");
+        setDidDragRange(false);
+        setIsDragging(false);
+      }
+
+      return;
+    }
+
+    if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      const currentDate = new Date(`${dateKey}T00:00:00`);
+      const dayOffset =
+        event.key === "Home"
+          ? -currentDate.getDay()
+          : 6 - currentDate.getDay();
+      const nextDateKey = addDaysToDateKey(dateKey, dayOffset);
+      setFocusedDateKey(nextDateKey);
+
+      if (event.shiftKey) {
+        updateKeyboardRange(keyboardRangeAnchorDateKey || dateKey, nextDateKey);
+      } else {
+        setKeyboardRangeAnchorDateKey(nextDateKey);
+        setSelectedDateKey(nextDateKey);
+        setDragStartDateKey("");
+        setDragEndDateKey("");
+        setDidDragRange(false);
+        setIsDragging(false);
+      }
+
+      return;
+    }
+
+    if (event.key === "PageUp" || event.key === "PageDown") {
+      event.preventDefault();
+      const nextDateKey = addMonthsToDateKey(
+        dateKey,
+        event.key === "PageUp" ? -1 : 1,
+      );
       setFocusedDateKey(nextDateKey);
 
       if (event.shiftKey) {

@@ -43,7 +43,8 @@
 }
 
 .view-switcher button {
-  background: var(--surface-1);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-3) 88%, var(--card-overlay-1)), var(--surface-1));
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--accent);
@@ -53,9 +54,14 @@
   padding: 0.65rem 1rem;
 }
 
+.view-switcher button:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent-secondary) 45%, var(--border-strong));
+  color: var(--accent-hover);
+}
+
 .view-switcher .active-view {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+  border-color: color-mix(in srgb, var(--accent-secondary) 60%, var(--accent));
   color: var(--surface-3);
 }
 
@@ -69,13 +75,19 @@
 .session-bar button,
 .theme-toggle,
 .shortcut-help-button {
-  background: var(--accent);
-  border: 1px solid var(--accent);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+  border: 1px solid color-mix(in srgb, var(--accent-secondary) 54%, var(--accent));
   border-radius: 999px;
   color: var(--surface-3);
   cursor: pointer;
   font: inherit;
   padding: 0.55rem 0.9rem;
+}
+
+.session-bar button:hover:not(:disabled),
+.theme-toggle:hover:not(:disabled),
+.shortcut-help-button:hover:not(:disabled) {
+  border-color: var(--accent-secondary);
 }
 
 .planner-layout {
@@ -86,10 +98,15 @@
 }
 
 .panel {
-  background: var(--surface-1);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-5) 88%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-1) 92%, var(--card-overlay-2)) 100%
+    );
   border: 1px solid var(--border-soft);
   border-radius: 24px;
-  box-shadow: 0 16px 45px rgba(25, 55, 84, 0.08);
+  box-shadow: var(--card-shadow);
   padding: 1.5rem;
 }
 
@@ -144,10 +161,28 @@
 }
 
 .status.success {
-  background: color-mix(in srgb, var(--accent-strong) 12%, var(--surface-3));
-  border: 1px solid color-mix(in srgb, var(--accent-strong) 28%, transparent);
+  background: color-mix(in srgb, var(--info-soft) 72%, var(--surface-3));
+  border: 1px solid var(--info-border);
   border-radius: 14px;
-  color: var(--text-primary);
+  color: var(--info-text);
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+}
+
+.status.info {
+  background: var(--info-soft);
+  border: 1px solid var(--info-border);
+  border-radius: 14px;
+  color: var(--info-text);
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+}
+
+.status.warning {
+  background: var(--warning-soft);
+  border: 1px solid var(--warning-border);
+  border-radius: 14px;
+  color: var(--warning-text);
   margin-bottom: 1.5rem;
   padding: 0.85rem 1rem;
 }
@@ -217,7 +252,8 @@
 }
 
 .shortcuts-close-button {
-  background: var(--surface-4);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-4) 80%, var(--card-overlay-2)), var(--surface-3));
   border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--accent);
@@ -235,7 +271,12 @@
 }
 
 .shortcuts-card {
-  background: var(--surface-3);
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-3) 88%, var(--card-overlay-1)) 0%,
+      color-mix(in srgb, var(--surface-2) 94%, var(--card-overlay-2)) 100%
+    );
   border: 1px solid var(--border-soft);
   border-radius: 18px;
   padding: 1rem;

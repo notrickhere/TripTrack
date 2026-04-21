@@ -237,7 +237,9 @@ function OverviewStats({ statistics }) {
             {statistics.temporal.upcomingTrips.map((trip) => (
               <div key={trip._id} className="upcoming-trip">
                 <div className="trip-destination">{trip.destination}</div>
-                <div className="trip-date">{formatDisplayDate(trip.startDate)}</div>
+                <div className="trip-date">
+                  {formatDisplayDate(trip.startDate)}
+                </div>
               </div>
             ))}
           </div>

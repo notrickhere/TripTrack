@@ -648,27 +648,6 @@ function App() {
     }
   }
 
-  async function handleDeleteAllPlannerTrips() {
-    if (plannerTrips.length === 0) {
-      return;
-    }
-
-    const shouldDelete = window.confirm(
-      "Delete all planner trips and their activities? This will not remove inspiration trips.",
-    );
-
-    if (!shouldDelete) {
-      return;
-    }
-
-    setErrorMessage("");
-    await Promise.all(plannerTrips.map((trip) => deleteTrip(trip._id)));
-    setTrips((currentTrips) => currentTrips.filter((trip) => trip.seeded));
-    setSelectedTripId("");
-    setEditingTrip(null);
-    setEditingActivity(null);
-  }
-
   async function handleActivityDelete(activityId) {
     setErrorMessage("");
     await deleteActivity(activityId);
@@ -682,43 +661,6 @@ function App() {
     );
     setEditingActivity((currentActivity) =>
       currentActivity && currentActivity._id === activityId
-        ? null
-        : currentActivity,
-    );
-  }
-
-  async function handleDeleteAllActivities(tripId) {
-    const tripActivities = activitiesByTripId[tripId] || [];
-
-    if (tripActivities.length === 0) {
-      return;
-    }
-
-    const shouldDelete = window.confirm("Delete all activities for this trip?");
-
-    if (!shouldDelete) {
-      return;
-    }
-
-    setErrorMessage("");
-    await Promise.all(
-      tripActivities.map((activity) => deleteActivity(activity._id)),
-    );
-    setActivitiesByTripId((currentActivities) => ({
-      ...currentActivities,
-      [tripId]: [],
-    }));
-
-    if (selectedTripId === tripId) {
-      setActivitiesByTripId((currentActivities) => ({
-        ...currentActivities,
-        [tripId]: [],
-      }));
-    }
-
-    setEditingActivity((currentActivity) =>
-      currentActivity &&
-      tripActivities.some((activity) => activity._id === currentActivity._id)
         ? null
         : currentActivity,
     );
@@ -971,7 +913,9 @@ function App() {
               editingTrip={editingTrip}
               selectedEndDate={calendarSelection.endDate}
               selectedStartDate={calendarSelection.startDate}
-              suggestedStartDate={editingTrip ? "" : nextAllowedPlannerStartDate}
+              suggestedStartDate={
+                editingTrip ? "" : nextAllowedPlannerStartDate
+              }
               onCancelEdit={() => setEditingTrip(null)}
               onSubmit={handleTripCreate}
             />

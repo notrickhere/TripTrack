@@ -474,9 +474,7 @@ function InspirationBoard({
             <dl className="trip-meta">
               <div>
                 <dt>Dates</dt>
-                <dd>
-                  {formatDisplayDateRange(trip.startDate, trip.endDate)}
-                </dd>
+                <dd>{formatDisplayDateRange(trip.startDate, trip.endDate)}</dd>
               </div>
             </dl>
 

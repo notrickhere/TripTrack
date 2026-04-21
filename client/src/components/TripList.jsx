@@ -43,9 +43,7 @@ function TripList({
                 .filter(Boolean)
                 .join(" · ")}
             </span>
-            <span>
-              {formatDisplayDateRange(trip.startDate, trip.endDate)}
-            </span>
+            <span>{formatDisplayDateRange(trip.startDate, trip.endDate)}</span>
             {trip.notes ? (
               <span className="trip-card-notes">{toTitleCase(trip.notes)}</span>
             ) : null}

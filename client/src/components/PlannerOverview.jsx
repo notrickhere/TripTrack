@@ -56,9 +56,7 @@ function PlannerOverview({
                 .filter(Boolean)
                 .join(" · ")}
             </span>
-            <span>
-              {formatDisplayDateRange(trip.startDate, trip.endDate)}
-            </span>
+            <span>{formatDisplayDateRange(trip.startDate, trip.endDate)}</span>
             {trip.notes ? (
               <span className="planner-trip-notes">
                 {toTitleCase(trip.notes)}

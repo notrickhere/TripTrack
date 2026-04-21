@@ -15,13 +15,6 @@ function formatDateKey(date) {
   return `${year}-${month}-${day}`;
 }
 
-function formatMonthLabel(date) {
-  return date.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-}
-
 const MONTH_OPTIONS = [
   "January",
   "February",
@@ -201,21 +194,13 @@ function PlannerCalendar({
 
   function handleMonthChange(event) {
     setCurrentMonth(
-      new Date(
-        currentMonth.getFullYear(),
-        Number(event.target.value),
-        1,
-      ),
+      new Date(currentMonth.getFullYear(), Number(event.target.value), 1),
     );
   }
 
   function handleYearChange(event) {
     setCurrentMonth(
-      new Date(
-        Number(event.target.value),
-        currentMonth.getMonth(),
-        1,
-      ),
+      new Date(Number(event.target.value), currentMonth.getMonth(), 1),
     );
   }
 
@@ -246,7 +231,9 @@ function PlannerCalendar({
               </div>
             </div>
           </div>
-          <p>See trip spans and daily activities on a month-by-month schedule.</p>
+          <p>
+            See trip spans and daily activities on a month-by-month schedule.
+          </p>
         </div>
         <div className="calendar-controls">
           <label className="calendar-select-group">
@@ -290,7 +277,9 @@ function PlannerCalendar({
       {!trips.length ? (
         <div className="calendar-empty">
           <h3>No trips planned yet</h3>
-          <p>Select a single date or drag across dates to prefill a new trip.</p>
+          <p>
+            Select a single date or drag across dates to prefill a new trip.
+          </p>
         </div>
       ) : null}
 
@@ -338,7 +327,10 @@ function PlannerCalendar({
 
               <div className="calendar-day-content">
                 {matchingTrips.slice(0, 2).map((trip) => (
-                  <span className="calendar-trip-pill" key={`${dateKey}-${trip._id}`}>
+                  <span
+                    className="calendar-trip-pill"
+                    key={`${dateKey}-${trip._id}`}
+                  >
                     {toTitleCase(trip.destination)}
                   </span>
                 ))}
@@ -388,7 +380,9 @@ function PlannerCalendar({
                   <li key={activity._id}>
                     <strong>{toTitleCase(activity.name)}</strong>
                     <span>{activity.time || "Any time"}</span>
-                    {activity.description ? <p>{activity.description}</p> : null}
+                    {activity.description ? (
+                      <p>{activity.description}</p>
+                    ) : null}
                   </li>
                 ))}
               </ul>

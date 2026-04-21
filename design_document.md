@@ -6,11 +6,15 @@ The app answers the question: "How can I organize trip ideas and turn them into 
 ### Core Features
 
 - Public inspiration browsing without login.
+- Signed-out navigation with dedicated login and inspiration tabs.
 - Account-based planner access with registration and login.
 - Shared seeded inspiration trips with search, continent filters, and pagination.
 - Copy inspiration trips into a private planner.
-- Per-user planner trip management (add, edit, delete, delete all).
+- Calendar-first planner flow with month/year controls and daily previews.
+- Calendar date click, double-click, and drag interactions to prefill planner trip dates.
+- Per-user planner trip management (add, edit, delete).
 - Per-user itinerary activity management (add, edit, delete).
+- Timeline and statistics views for logged-in planner data.
 - Planner scheduling rules so new trips begin after previously planned trips end.
 - Separate local development support with Docker MongoDB and production deployment with MongoDB Atlas and Render.
 
@@ -92,7 +96,7 @@ The project uses MongoDB collections with a mix of shared seeded data and accoun
 - As a user, I want to edit or delete my planner trips so my plans stay accurate.
 - As a user, I want copied inspiration trips to become my own planner records so I do not modify shared seeded data.
 - As a user, I want my planner trips to be scheduled in order so overlapping trip planning is avoided.
-- As a user, I want to delete all planner trips at once so I can reset my planner quickly.
+- As a user, I want to select dates from a calendar so I can start planning visually.
 
 ### Tarun's User Stories
 
@@ -101,6 +105,7 @@ The project uses MongoDB collections with a mix of shared seeded data and accoun
 - As a user, I want to add itinerary activities to a selected trip so I can plan what I will do.
 - As a user, I want to edit or delete itinerary activities so my schedule stays up to date.
 - As a user, I want my planner data to be tied to my account so other users cannot edit it.
+- As a user, I want calendar, timeline, and statistics views so I can understand my plans in different ways.
 
 ## 4. Design Mockups
 
@@ -137,5 +142,6 @@ Figma link:
 - Tarun:
   - UI design direction and frontend interaction design.
   - Inspiration browsing experience and planner UX decisions.
+  - Calendar interactions, trip overview presentation, and planner polish.
   - Shared frontend/backend feature ideation.
   - Testing, bug fixing, and UI polish support.

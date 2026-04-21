@@ -27,14 +27,18 @@ The app is designed to make travel planning more structured by separating public
 ## Core Features
 
 - Browse seeded inspiration trips without logging in
+- Use a dedicated login/register tab when signed out
 - Filter inspiration by continent
 - Search inspiration trips by destination, city, country, mood, or timezone
 - Paginate through inspiration results
 - Copy inspiration trips into a personal planner
 - Register and log in to manage a personal planner
+- Land on a calendar-first planner workflow after login
+- View planner trips in calendar, planner, timeline, and statistics tabs
+- Select a calendar date to preview trips and activities for that day
+- Double click a date or drag a date range on the calendar to prefill a new trip
 - Create, edit, and delete planner trips
 - Create, edit, and delete planner itinerary activities
-- Delete all planner trips at once without affecting seeded inspiration data
 
 ## User Personas
 
@@ -72,7 +76,7 @@ The app is designed to make travel planning more structured by separating public
 ## Project Structure
 
 - `client/` - React frontend
-- `client/src/components/` - UI components for planner, inspiration, and auth
+- `client/src/components/` - UI components for planner, calendar, inspiration, timeline, statistics, and auth
 - `client/src/lib/` - frontend API helpers
 - `client/src/styles/` - shared frontend styles
 - `server/` - Express backend
@@ -227,10 +231,12 @@ SESSION_SECRET=replace_with_a_long_random_secret
 ## Authentication Behavior
 
 - Inspiration is public and uses shared seeded data
-- Planner access requires a user account
+- Logged-out navigation shows `Log In` and `Inspiration`
+- Planner, calendar, timeline, and statistics access require a user account
 - Authentication uses Passport local sessions stored in MongoDB
 - Planner trips and activities are private to the logged-in user
 - Copying an inspiration trip creates a new planner-owned trip and activities instead of editing seeded data
+- The inspiration copy action is hidden until a user logs in
 
 ## Seed Data
 
@@ -268,11 +274,20 @@ MONGODB_URI='your_atlas_connection_string' MONGO_DB_NAME=TripTrack npm run seed
 
 ## Current Functionality
 
-- Frontend: React with hooks, separate components, component-specific CSS, planner and inspiration views, and authentication UI
+- Frontend: React with hooks, separate components, component-specific CSS, a calendar-first planner flow, inspiration browsing, timeline/statistics views, and authentication UI
 - Backend: Node.js and Express API with auth routes, trip routes, activity routes, and protected planner CRUD
 - Database: MongoDB locally through Docker and MongoDB Atlas in production
 - State Management: Fetch API requests between React and the Express backend
 - Deployment: Express serves the built React app and API from one Render Web Service, with MongoDB Atlas as the production database
+
+## Planner Workflow
+
+- Logged-in users land on the `Calendar` tab by default
+- Single clicking a date updates the detail panel below the calendar
+- Double clicking one date opens the planner form with that date selected
+- Dragging across multiple dates opens the planner form with the selected start and end dates
+- The planner overview shows trip cards with horizontally scrollable activity cards
+- Displayed dates across the UI use the `MM/DD/YYYY` format
 
 ## GenAI Tool Usage
 

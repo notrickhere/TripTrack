@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { formatDisplayDate } from "../lib/date.js";
 import "./ActivityList.css";
 
+// Redundant
 function toTitleCase(value = "") {
   return value.replace(/\w\S*/g, (word) => {
     const normalizedWord = word.toLowerCase();
